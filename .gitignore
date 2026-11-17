@@ -1,0 +1,27 @@
+# 原始数据与赛事资料（体积大/不外传），通过 DATA_ROOT 指向本地
+B04赛题*/
+选手提交代码文件模板*/
+(公开)*
+*.csv
+*.parquet
+*.zip
+*.tar.gz
+
+# 运行输出
+output/*
+!output/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env
