@@ -129,8 +129,8 @@ def write_outputs(out_dir: str, scenario: str, version: str, pred: pd.DataFrame,
     os.makedirs(out_dir, exist_ok=True)
     p1 = os.path.join(out_dir, f"{scenario}_{version}_pulse_predictions.csv")
     p2 = os.path.join(out_dir, f"{scenario}_{version}_object_track_links.csv")
-    pred.to_csv(p1, index=False)
+    pred.to_csv(p1, index=False, lineterminator="\n")  # 与 Linux 评测环境一致，避免 Windows 下写出 CRLF
     links = links.copy()
     links["track_id"] = links["track_id"].astype("Int64")
-    links.to_csv(p2, index=False)
+    links.to_csv(p2, index=False, lineterminator="\n")
     return p1, p2
