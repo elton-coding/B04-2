@@ -1,4 +1,4 @@
-"""L4 型号识别、L5 工作状态识别（CPI 级分类 + 对象级证据累积 + 时序平滑）。"""
+"""L4 型号识别（判别式备选）、L5 工作状态识别（两级分类 + 多节点一致 + 跟踪段序号）。"""
 from __future__ import annotations
 
 import numpy as np
@@ -41,14 +41,51 @@ def vote_object_type(cp: pd.DataFrame, proba: pd.DataFrame, key: str = "object_i
 
 
 # ---------------------------------------------------------------- 状态识别
-STATE_FEATS = ["logn", "pri_eff", "pw", "jitter", "amp", "amp_rel", "amp_rel_roll", "amp_sd",
-               "log_gap_prev", "log_gap_next", "burst_n", "burst_pulses", "burst_pos", "drf_prev",
-               "drf_next", "type_code", "sensor_air"]
-STATE2_FEATS = STATE_FEATS + ["p_track", "ep_t", "ep_k", "ep_len_t", "ep_frac"]
+# 物理依据（训练集验证）：
+# - 雷达边扫边跟：跟踪驻留按固定重访周期（0.2/0.4 s）插入搜索序列，相邻 CPI 首尾相接；
+# - 同一发射在各节点状态相同 → 概率按发射平均；
+# - 粗跟位于"对某被跟踪目标"跟踪段的前若干次驻留；被跟踪目标 = 该发射幅度最大的节点。
+BASE_FEATS = ["logn", "pri_eff", "pw", "jitter", "amp", "amp_rel", "amp_rel_roll", "amp_sd",
+              "log_gap_prev", "log_gap_next", "burst_n", "burst_pulses", "burst_pos", "drf_prev",
+              "drf_next", "type_code", "sensor_air"]
+CTX_FEATS = ["has_pred", "has_succ", "amp_d_pred", "amp_d_succ", "chain_len", "chain_pos", "chain_rpos",
+             "enodes", "amp_minus_emax", "amp_rank_e", "ph_near", "rev_cnt", "rev_back"]
+STATE_FEATS = BASE_FEATS + CTX_FEATS
+EP_FEATS = ["ek", "etin", "elen", "erem", "egap"]
+STATE2_FEATS = STATE_FEATS + EP_FEATS
+
+
+def _revisit(cp: pd.DataFrame, period=200000.0, tol=300.0, mmax=5) -> pd.DataFrame:
+    """固定重访周期证据：同局部簇在 ±m·200 ms（±300 μs）处是否有 CPI。"""
+    out = pd.DataFrame(index=cp.index)
+    ph = cp.t0.values % period
+    out["ph_near"] = np.minimum(ph, period - ph)
+    rc = np.zeros(len(cp))
+    rb = np.zeros(len(cp))
+    for _, idx in cp.groupby("local_cluster_id").indices.items():
+        t = cp.t0.values[idx]
+        o = np.argsort(t)
+        ts = t[o]
+        cnt = np.zeros(len(idx))
+        back = np.zeros(len(idx))
+        for m in range(1, mmax + 1):
+            for sgn in (1, -1):
+                tg = ts + sgn * m * period
+                h = (np.searchsorted(ts, tg + tol) > np.searchsorted(ts, tg - tol)).astype(float)
+                cnt += h
+                if sgn < 0:
+                    back += h
+        rc[idx[o]] = cnt
+        rb[idx[o]] = back
+    out["rev_cnt"] = rc
+    out["rev_back"] = rb
+    return out
 
 
 def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
-    """cp 需含 local_cluster_id、obj_type 列；返回按 cp.index 对齐的特征表。"""
+    """cp 需含 local_cluster_id、obj_type、emission、object_id 列；返回按 cp.index 对齐的特征表。"""
+    from .anchor import DSU, contiguity_links
+
     d = cp.sort_values(["local_cluster_id", "t0"]).copy()
     g = d.groupby("local_cluster_id", sort=False)
     d["gap_prev"] = d.t0 - g.t1.shift()
@@ -64,7 +101,6 @@ def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
     d["burst_pulses"] = gb.n.transform("sum")
     d["burst_pos"] = gb.cumcount()
     d["amp_rel"] = d.amp - g.amp.transform("median")
-    # 30 s 滚动中位数幅度（相对抬升）
     d["tsec"] = d.t0 / 1e6
     roll = []
     for _, x in d.groupby("local_cluster_id", sort=False):
@@ -76,30 +112,75 @@ def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
     d["amp_sd"] = d.amp_sd.fillna(0)
     d["type_code"] = d.obj_type.map(type_codes).fillna(-1)
     d["sensor_air"] = (d.sh > 100).astype(int)
-    return d.loc[cp.index]
-
-
-def episode_features(d: pd.DataFrame, p_track: np.ndarray, gap_s: float = 3.0) -> pd.DataFrame:
-    """跟踪段（连续 p_track>0.5 的 CPI）内的相对时间：粗跟通常位于段首。"""
-    d = d.copy()
-    d["p_track"] = p_track
-    d = d.sort_values(["local_cluster_id", "t0"])
-    trk = d.p_track > 0.5
-    g = d.groupby("local_cluster_id", sort=False)
-    prev_trk_t = d.t1.where(trk).groupby(d.local_cluster_id).ffill().groupby(d.local_cluster_id).shift()
-    new_ep = trk & ((prev_trk_t.isna()) | ((d.t0 - prev_trk_t) > gap_s * 1e6))
-    ep = new_ep.cumsum().where(trk, -1)
-    d["ep"] = ep
-    e = d[trk].groupby("ep")
-    d["ep_t"] = np.nan
-    d.loc[trk, "ep_t"] = (d.t0 - e.t0.transform("min")).loc[trk[trk].index] / 1e6
-    d.loc[trk, "ep_k"] = e.cumcount()
-    d.loc[trk, "ep_len_t"] = ((e.t1.transform("max") - e.t0.transform("min")) / 1e6).loc[trk[trk].index]
-    d["ep_t"] = d.ep_t.fillna(-1)
-    d["ep_k"] = d.ep_k.fillna(-1)
-    d["ep_len_t"] = d.ep_len_t.fillna(-1)
-    d["ep_frac"] = np.where(d.ep_len_t > 0, d.ep_t / d.ep_len_t.clip(lower=1e-3), -1)
+    d = d.loc[cp.index]
+    # 首尾相接链（同节点，同一雷达连续发射）
+    c = cp.reset_index(drop=True)
+    L = contiguity_links(c)
+    n = len(c)
+    pred_of = np.full(n, -1)
+    succ_of = np.full(n, -1)
+    pred_of[L.b.values.astype(int)] = L.a.values.astype(int)
+    succ_of[L.a.values.astype(int)] = L.b.values.astype(int)
+    amp = c.amp.values
+    d["has_pred"] = (pred_of >= 0).astype(float)
+    d["has_succ"] = (succ_of >= 0).astype(float)
+    d["amp_d_pred"] = np.where(pred_of >= 0, amp - amp[np.clip(pred_of, 0, None)], 0.0)
+    d["amp_d_succ"] = np.where(succ_of >= 0, amp - amp[np.clip(succ_of, 0, None)], 0.0)
+    dsu = DSU(n)
+    for x, y in zip(L.a.values, L.b.values):
+        dsu.p[dsu.find(int(y))] = dsu.find(int(x))
+    ch = np.array([dsu.find(i) for i in range(n)])
+    tmp = pd.DataFrame({"ch": ch, "t0": c.t0.values}).sort_values("t0")
+    gc = tmp.groupby("ch")
+    tmp["len"] = gc.t0.transform("size")
+    tmp["pos"] = gc.cumcount()
+    tmp = tmp.sort_index()
+    d["chain_len"] = tmp["len"].values
+    d["chain_pos"] = tmp["pos"].values
+    d["chain_rpos"] = d.chain_len - 1 - d.chain_pos
+    # 同一发射的多节点上下文
+    ge = cp.groupby("emission")
+    d["enodes"] = ge.platform_id.transform("nunique").values
+    d["amp_minus_emax"] = (cp.amp - ge.amp.transform("max")).values
+    d["amp_rank_e"] = ge.amp.rank(ascending=False).values
+    rv = _revisit(cp)
+    for col in rv.columns:
+        d[col] = rv[col].values
+    d["emission"] = cp.emission.values
+    d["object_id"] = cp.object_id.values
     return d
+
+
+def _emission_mean_prob(p: np.ndarray, emission: np.ndarray) -> np.ndarray:
+    p = np.clip(p, 1e-6, 1 - 1e-6)
+    lo = pd.Series(np.log(p / (1 - p))).groupby(emission).transform("mean").values
+    return 1.0 / (1.0 + np.exp(-lo))
+
+
+def episode_features(feat: pd.DataFrame, trk: np.ndarray, gap_s: float = 1.5) -> pd.DataFrame:
+    """对每个 (对象, 被跟踪节点) 的跟踪驻留序列计算段内序号/时间（以发射为单位）。"""
+    out = np.full((len(feat), len(EP_FEATS)), -1.0)
+    d = pd.DataFrame({"obj": feat.object_id.values, "em": feat.emission.values, "t0": feat.t0.values,
+                      "amp": feat.amp.values, "plat": feat.platform_id.values})[trk]
+    if len(d):
+        i_max = d.groupby("em").amp.idxmax()
+        em = d.groupby("em").agg(obj=("obj", "first"), t0=("t0", "min"))
+        em["node"] = d.plat.loc[i_max.loc[em.index].values].values
+        em = em.sort_values("t0")
+        g = em.groupby(["obj", "node"])
+        em["gap"] = g.t0.diff() / 1e6
+        em["new"] = em.gap.isna() | (em.gap > gap_s)
+        em["ep"] = em.groupby(["obj", "node"]).new.cumsum()
+        ge = em.groupby(["obj", "node", "ep"])
+        em["ek"] = ge.cumcount()
+        em["etin"] = (em.t0 - ge.t0.transform("min")) / 1e6
+        em["elen"] = ge.t0.transform("size")
+        em["erem"] = em.elen - 1 - em.ek
+        em["egap"] = em.gap.fillna(99).clip(upper=99)
+        vals = em[EP_FEATS].reindex(feat.emission.values).values
+        m = trk & ~np.isnan(vals[:, 0])
+        out[m] = vals[m]
+    return pd.DataFrame(out, index=feat.index, columns=EP_FEATS)
 
 
 def _hgb():
@@ -109,22 +190,19 @@ def _hgb():
 
 def fit_state_models(feat: pd.DataFrame, y: pd.Series):
     w = np.log2(feat.n.values + 1)
-    m1 = _hgb().fit(feat[STATE_FEATS].values, (y.values > 0).astype(int), sample_weight=w)
-    p = m1.predict_proba(feat[STATE_FEATS].values)[:, 1]
-    d = episode_features(feat, p)
-    yy = y.loc[d.index]
-    sel = (d.p_track > 0.5).values & (yy.values > 0)
-    m2 = _hgb().fit(d[STATE2_FEATS].values[sel], (yy.values[sel] == 2).astype(int),
-                    sample_weight=np.log2(d.n.values[sel] + 1))
+    yv = y.values
+    m1 = _hgb().fit(feat[STATE_FEATS].values, (yv > 0).astype(int), sample_weight=w)
+    p = _emission_mean_prob(m1.predict_proba(feat[STATE_FEATS].values)[:, 1], feat.emission.values)
+    trk = p > 0.5
+    f2 = pd.concat([feat, episode_features(feat, trk)], axis=1)
+    sel = trk & (yv > 0)
+    m2 = _hgb().fit(f2[STATE2_FEATS].values[sel], (yv[sel] == 2).astype(int), sample_weight=w[sel])
     return m1, m2
 
 
 def predict_states(m1, m2, feat: pd.DataFrame) -> pd.Series:
-    p = m1.predict_proba(feat[STATE_FEATS].values)[:, 1]
-    d = episode_features(feat, p)
-    out = pd.Series(0, index=d.index, dtype=np.int64)
-    trk = (d.p_track > 0.5).values
-    if trk.any():
-        p2 = m2.predict_proba(d[STATE2_FEATS].values[trk])[:, 1]
-        out[trk] = np.where(p2 > 0.5, 2, 1)
-    return out.loc[feat.index]
+    p = _emission_mean_prob(m1.predict_proba(feat[STATE_FEATS].values)[:, 1], feat.emission.values)
+    trk = p > 0.5
+    f2 = pd.concat([feat, episode_features(feat, trk)], axis=1)
+    p2 = _emission_mean_prob(m2.predict_proba(f2[STATE2_FEATS].values)[:, 1], feat.emission.values)
+    return pd.Series(np.where(trk, np.where(p2 > 0.5, 2, 1), 0), index=feat.index, dtype=np.int64)
