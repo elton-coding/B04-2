@@ -28,6 +28,8 @@ python src/train.py --data-root <训练数据目录> --split-s 300
 python src/train.py --data-root <训练数据目录> --save models/b04_models.joblib
 # 打包提交
 python tools/pack.py --team <队名> --version v1
+# Linux/Docker 验证（在 WSL Ubuntu 中执行，流程同评测服务）
+bash tools/validate_docker.sh dist/<队名>_code_v1.zip <测试数据目录>
 ```
 
 ## Docker
