@@ -30,7 +30,31 @@ def parse_args():
     ap.add_argument("--out-dir", default=os.environ.get("OUTPUT_DIR", "/output"))
     ap.add_argument("--config", default=os.path.join(ROOT, "config", "default.yaml"))
     ap.add_argument("--models", default=os.path.join(ROOT, "models", "b04_models.joblib"))
+    ap.add_argument("--report", action="store_true",
+                    help="额外生成态势要素、本体图谱与态势报告到 <out-dir>/report/（--task report 等效）")
     return ap.parse_args()
+
+
+def make_report(a, b, pred, links, extras, kn, out_dir):
+    import json
+
+    from b04 import agent, ontology, report
+    from b04.association import track_table
+    from b04.situation import build_facts
+
+    log = logging.getLogger("b04")
+    tracks = track_table(b, extras["base_time"]) if len(b) else b
+    facts = build_facts(a, b, pred, links, extras, kn, tracks)
+    os.makedirs(out_dir, exist_ok=True)
+    sc = facts["scenario"]
+    stem = os.path.join(out_dir, f"{sc['scenario_id']}_{sc['data_version']}")
+    with open(stem + "_facts.json", "w", encoding="utf-8") as f:
+        json.dump(facts, f, ensure_ascii=False, indent=1, default=str)
+    info = ontology.export(facts, kn, out_dir)
+    nar = agent.narrative(facts)
+    log.info("本体三元组 %d；大模型研判：%s", info["triples"], "已生成" if nar else "未启用/降级为模板")
+    path = report.write_report(facts, a, pred, tracks, kn, out_dir, nar)
+    log.info("态势报告：%s", path)
 
 
 def main():
@@ -48,12 +72,17 @@ def main():
         log.info("场景 %s_%s: A=%d 脉冲, B=%d 点 / %d 航迹", sid, ver, len(a), len(b),
                  b.track_id.nunique() if len(b) else 0)
         try:
-            pred, links, _ = run_scenario(a, b, models, kn, cfg)
+            pred, links, extras = run_scenario(a, b, models, kn, cfg)
             errs = io.validate_outputs(a, b, pred, links)
             if errs:
                 log.warning("格式自检问题: %s", errs)
             p1, p2 = io.write_outputs(args.out_dir, sid, ver, pred, links)
             log.info("已写出 %s, %s", p1, p2)
+            if args.report or args.task in ("report", "full") or os.environ.get("B04_REPORT") == "1":
+                try:
+                    make_report(a, b, pred, links, extras, kn, os.path.join(args.out_dir, "report"))
+                except Exception:  # 报告失败不影响结果表
+                    traceback.print_exc()
         except Exception:
             failed += 1
             traceback.print_exc()

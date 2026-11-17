@@ -15,6 +15,9 @@
 | `recognize.py` | L5 状态：两级 GBDT（搜索/跟踪 → 粗跟/精跟），首尾相接/多节点/固定重访/跟踪段序号特征，按发射平均 |
 | `tracking.py` | L3 节点内 CPI 串接、L6 跨节点同源 CPI 匹配与约束融合、对象级合并（型号似然 + 全局发射时序无冲突）、小对象并入 |
 | `association.py` | L7 A-B 关联：方位残差命中率 + 领域/散射等级规则 + 匈牙利指派 |
+| `situation.py` | 态势要素抽取：运动方式、伴随/接近、跟踪照射、观测关系、把握度（事实 JSON） |
+| `ontology.py` | 电磁目标本体（RDF/OWL）→ Turtle / JSON-LD / 交互式图谱 HTML |
+| `report.py` / `agent.py` | D4 结构态势报告（HTML→PDF）；可选大模型研判（环境变量注入、事实锁定校验、失败降级） |
 | `pipeline.py` | 单场景端到端 |
 | `evaluate.py` | 本地评分器（ARI / 成对 F1 / 准确率 / 关联准确率） |
 
@@ -28,10 +31,13 @@ DATA_ROOT=<测试数据目录> python src/main.py --task all --test --out-dir ./
 # 训练 + 本地评估（--split-s 300：前 300 s 训练、后段评估；默认模拟 3% 漏脉冲）
 python src/train.py --data-root <训练数据目录> --split-s 300
 python src/train.py --data-root <训练数据目录> --save models/b04_models.joblib
+# 态势要素 + 本体图谱 + 态势报告（输出到 ./output/report/）
+DATA_ROOT=<测试数据目录> python src/main.py --task report --out-dir ./output
+powershell -File tools/html2pdf.ps1 -Html output/report/<场景>_<版本>_situation_report.html
 # 打包提交
-python tools/pack.py --team <队名> --version v1
+python tools/pack.py --team 同频队 --version v3
 # Linux/Docker 验证（在 WSL Ubuntu 中执行，流程同评测服务）
-bash tools/validate_docker.sh dist/<队名>_code_v1.zip <测试数据目录>
+bash tools/validate_docker.sh dist/同频队_code_v3.zip <测试数据目录>
 ```
 
 ## Docker

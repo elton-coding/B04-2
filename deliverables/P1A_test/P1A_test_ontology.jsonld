@@ -1,0 +1,7972 @@
+[
+ {
+  "@id": "urn:b04:P1A_test:local_26",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 26"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 38139
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#ObservationNode",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "本方观测节点"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_云巡一型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "云巡一型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_巡查飞行器"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_5_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 22
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 128
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 106
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N3f88368b479a4fff8edc5b4fe6ecd8e9"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "140.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "196.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3f88368b479a4fff8edc5b4fe6ecd8e9",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 128
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_33",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 33"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1203
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "81.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:node_103002",
+  "@type": [
+   "urn:b04:onto#ObservationNode"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "节点 103002"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "盘旋"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 664690
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "68.1"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_2_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 728
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 718
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N7897fae52f5a4e3090cdb7cade2d8642"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ]
+ },
+ {
+  "@id": "_:N7897fae52f5a4e3090cdb7cade2d8642",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 728
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#FusedObject",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "融合对象（跨平台统一辐射源）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_39",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 39"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_11"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 27667
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "12.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "264.6"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#supportedBy",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "证据支持"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_云巡二型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "云巡二型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_巡查飞行器"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#TrackingRelation",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "跟踪照射关系"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_5",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 5"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 221218
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "277.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_34",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 34"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 49597
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "8.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_4_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 9
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 14
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N1e556ac23769426daafc633bb0c347a8"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "140.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "268.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ]
+ },
+ {
+  "@id": "_:N1e556ac23769426daafc633bb0c347a8",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 14
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_19",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 19"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 43176
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_30",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 30"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 20259
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "44.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "102.7"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R07",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R07"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_海援一型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "medium,large"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#Domain",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "领域"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_4_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 9
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 38
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 29
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Na973c560d9d94e8ca1cde06864266f1e"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "297.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ]
+ },
+ {
+  "@id": "_:Na973c560d9d94e8ca1cde06864266f1e",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 38
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_云桥二型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "云桥二型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_中继飞行器"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#partOf",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "归并为"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R02",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R02"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_云巡二型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "small,medium"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_27",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 27"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 853
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "176.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "274.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_6_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 234
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 224
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N6e1698c53a80464f9308cc59878f1129"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "123.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ]
+ },
+ {
+  "@id": "_:N6e1698c53a80464f9308cc59878f1129",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 234
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#inScenario",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "属于场景"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_6_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 24
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 78
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 54
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N24898777e33d4e7b9d2d68e986f114e7"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ]
+ },
+ {
+  "@id": "_:N24898777e33d4e7b9d2d68e986f114e7",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 78
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_12_15",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 259
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.95"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_12"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_15"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.4"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N819f31f4aefd4a01917aa9a6a613fda0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N819f31f4aefd4a01917aa9a6a613fda0",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:scenario",
+  "@type": [
+   "urn:b04:onto#Scenario"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "P1A_test"
+   }
+  ],
+  "urn:b04:onto#base_time": [
+   {
+    "@value": "2026-11-11 09:00:00"
+   }
+  ],
+  "urn:b04:onto#duration_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 8600592
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_28",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 28"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 652362
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_5_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 0
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nd3d2797057b34bb2974a32847348ff69"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "16.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "197.2"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nd3d2797057b34bb2974a32847348ff69",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_6",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 6"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 241429
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_16",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 16"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "8.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_10",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 10"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 161693
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.3"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#inDomain",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "所在领域"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_6",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 6"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R04"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_4"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1300512
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.777"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.017"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.205"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N3564a214a0a54103a550b6a675c64b49"
+   },
+   {
+    "@id": "_:N7b240e1ac3a145908dd375063d809814"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3564a214a0a54103a550b6a675c64b49",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.05"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R04：多 CPI 波形指纹似然累积，较次优 R03 平均每 CPI 高 6.05 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N7b240e1ac3a145908dd375063d809814",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.972"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.47"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 4 方位命中率 0.972，残差中位数 0.47°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_1",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 1"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 411844
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#Evidence",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "证据"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_1",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 1"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R03"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_5"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1091670
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.644"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.01"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.346"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N3a5d22c888ec4888950148c3ad67aace"
+   },
+   {
+    "@id": "_:N83eecf45be7247d6a9ed8850e44d8f3b"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3a5d22c888ec4888950148c3ad67aace",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.34"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R03：多 CPI 波形指纹似然累积，较次优 R04 平均每 CPI 高 7.34 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N83eecf45be7247d6a9ed8850e44d8f3b",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.99"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.19"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 5 方位命中率 0.99，残差中位数 0.19°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_云桥一型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "云桥一型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_中继飞行器"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_18",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 18"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 19507
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "8.3"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_25",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 25"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4332
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "66.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "197.1"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_海巡一型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "海巡一型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_工作艇"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_38",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 38"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_10"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 18884
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "64.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "110.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_12",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 12"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 413285
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_9",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 9"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "11.1"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_1_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 36
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 26
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nc1648824f93842e785e3087eb0bb81dd"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "79.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "93.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nc1648824f93842e785e3087eb0bb81dd",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 36
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R04",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R04"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_云桥二型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "medium,large"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_13",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 13"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.9"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_2_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 40
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 455
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 415
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N48e8ae14aee14581a0ccf5a4d4921f95"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "14.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ]
+ },
+ {
+  "@id": "_:N48e8ae14aee14581a0ccf5a4d4921f95",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 455
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_24",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 24"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 631593
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#dom_sea",
+  "@type": [
+   "urn:b04:onto#Domain"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "海面"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_29",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 29"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 2977
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "72.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "106.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_1_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Naefb20d16d27454f8e3e37ec8e9ca433"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "123.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "225.2"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ]
+ },
+ {
+  "@id": "_:Naefb20d16d27454f8e3e37ec8e9ca433",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_7_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 14
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ncea371cd030c4bc9b6098be0d3e33e2c"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "126.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "131.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ncea371cd030c4bc9b6098be0d3e33e2c",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 14
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_15",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 15"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.1"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_8_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 22
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 53
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 31
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nafcf4ed6983f442e9b8b1c24c97275aa"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "33.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "246.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nafcf4ed6983f442e9b8b1c24c97275aa",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 53
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#Track",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_15",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 15"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 17629
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "268.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R08",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R08"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_海援二型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "medium,large"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_海援一型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "海援一型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_勤务船"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_14",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 14"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_2_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 31
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 322
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 291
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N89e61b59287443908f6f0220926f29d6"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "15.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "189.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ]
+ },
+ {
+  "@id": "_:N89e61b59287443908f6f0220926f29d6",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 322
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_3",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 3"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R07"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_11"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1221793
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.672"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.024"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.304"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ne60b6fa9b6c74dd999760aff991ed60d"
+   },
+   {
+    "@id": "_:Ne1809b938fd442cc93f5b525c345f15c"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.3"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ne60b6fa9b6c74dd999760aff991ed60d",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.65"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R07：多 CPI 波形指纹似然累积，较次优 R08 平均每 CPI 高 6.65 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ne1809b938fd442cc93f5b525c345f15c",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.44"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 11 方位命中率 1.0，残差中位数 0.44°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#mountedOn",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "型号对应平台型号"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_海巡二型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "海巡二型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_工作艇"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_4",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 4"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 370103
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "4.5"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_1",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 1"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2400.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.83"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "盘旋"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "medium"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "86.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_9",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 9"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 233595
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "15.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "277.2"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_13",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 13"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 152245
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "35.5"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_10",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 10"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "medium"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.9"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:node_103001",
+  "@type": [
+   "urn:b04:onto#ObservationNode"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "节点 103001"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1179764
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "68.5"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.1"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "277.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_5",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 5"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "4000.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.36"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "109.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_3",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 3"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3000.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "盘旋"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "81.5"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_41",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 41"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_11"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 43259
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "284.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R01",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R01"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_云巡一型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "small,medium"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_3_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 22
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 365
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 343
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ncfa20c141dd94d22b9d7a8d50bdb786f"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "59.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.6"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ncfa20c141dd94d22b9d7a8d50bdb786f",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 365
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_8",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 8"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 467980
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_11",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 11"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "8.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_9_13",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 617
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 35
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.85"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_9"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_13"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.2"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N05b9a33fb1694e3d94e5b06d46882fb8"
+   }
+  ]
+ },
+ {
+  "@id": "_:N05b9a33fb1694e3d94e5b06d46882fb8",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_35",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 35"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 12844
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_2",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 2"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R08"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_12"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1398426
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.879"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.012"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.11"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Na00df21f736947fbacb9daf37b26bc34"
+   },
+   {
+    "@id": "_:N3811613aaf0441dfb2cc8dacc82ad430"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:Na00df21f736947fbacb9daf37b26bc34",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "4.79"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R08：多 CPI 波形指纹似然累积，较次优 R07 平均每 CPI 高 4.79 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3811613aaf0441dfb2cc8dacc82ad430",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.966"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.5"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 12 方位命中率 0.966，残差中位数 0.5°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_9_12",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 788
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 65
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.67"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_9"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_12"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "11.7"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N3c892e2ddd334906ad59c9d1dac47833"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3c892e2ddd334906ad59c9d1dac47833",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_31",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 31"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 539058
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_5_6",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 13788
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 874
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.05"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_5"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_6"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "178.8"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N2c54a4bc631a4e8e90562eb142ae66bc"
+   }
+  ]
+ },
+ {
+  "@id": "_:N2c54a4bc631a4e8e90562eb142ae66bc",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R05",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R05"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_海巡一型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "small,medium"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_13_15",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "伴随/编队"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 160
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 6
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_13"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_15"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.1"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N557ec6b8c18445849f7cea4901f9a765"
+   }
+  ]
+ },
+ {
+  "@id": "_:N557ec6b8c18445849f7cea4901f9a765",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_2_7",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "伴随/编队"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 391
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 119
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_2"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_7"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.7"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nc2ae96c9bcc94020a05a9f5fdacef91d"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nc2ae96c9bcc94020a05a9f5fdacef91d",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#Scenario",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "场景"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#RadarModel",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "探测器型号"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_5",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 5"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R05"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_9"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 705028
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.845"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.009"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.146"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N61d50e162bcc43bdabd1c48737b3a857"
+   },
+   {
+    "@id": "_:Na9f386cde09146939472cb4317c81560"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N61d50e162bcc43bdabd1c48737b3a857",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.91"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R05：多 CPI 波形指纹似然累积，较次优 R06 平均每 CPI 高 6.91 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:Na9f386cde09146939472cb4317c81560",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.24"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 9 方位命中率 1.0，残差中位数 0.24°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_7",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 7"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 467799
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_8",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 8"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3100.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "82.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#cat_工作艇",
+  "@type": [
+   "urn:b04:onto#PlatformCategory"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "工作艇"
+   }
+  ],
+  "urn:b04:onto#inDomain": [
+   {
+    "@id": "urn:b04:onto#dom_sea"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#relA",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "关系一方"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:node_104001",
+  "@type": [
+   "urn:b04:onto#ObservationNode"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "节点 104001"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 2351830
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3.0"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_6",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 6"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3500.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.64"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "69.9"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_3_8",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "伴随/编队"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 145
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 16
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_3"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_8"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.9"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ne38d1d4e374d4afea2397e9ab6456c8a"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ne38d1d4e374d4afea2397e9ab6456c8a",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_1_2",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 2954
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 182
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.18"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_1"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_2"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "83.7"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N59a8b5d750394a33b32da7f70c21510f"
+   }
+  ]
+ },
+ {
+  "@id": "_:N59a8b5d750394a33b32da7f70c21510f",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_36",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 36"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 653072
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R06",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R06"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_海巡二型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "small,medium"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_6_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 135
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 125
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nc81db43e85ba4cd7bbdf8ccdf9d6b5e3"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "56.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "287.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nc81db43e85ba4cd7bbdf8ccdf9d6b5e3",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 135
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_7",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 7"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R06"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 695686
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.813"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.009"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.178"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N070f2b7ec1904e02babf74b446d4ff99"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N070f2b7ec1904e02babf74b446d4ff99",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.62"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R06：多 CPI 波形指纹似然累积，较次优 R05 平均每 CPI 高 6.62 nats"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_3_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 40
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 657
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 617
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ncd21643b8367403b9aebf5622a4b2c92"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ncd21643b8367403b9aebf5622a4b2c92",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 657
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_4",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 4"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3500.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.56"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "机动"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "medium"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "78.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#observedBy",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "被节点观测"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_21",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 21"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 87652
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "64.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "263.8"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_4_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 203
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 193
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N05c3e7d76f2747699c01254f8fff0b53"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "164.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.3"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ]
+ },
+ {
+  "@id": "_:N05c3e7d76f2747699c01254f8fff0b53",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 203
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#inCategory",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "属于类别"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_3",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 3"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 276053
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.9"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_2",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 2"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 33670
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "59.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "247.5"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_1_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 20
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 673
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 653
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N50934ff2ad574a1392a696430898d9fc"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "16.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ]
+ },
+ {
+  "@id": "_:N50934ff2ad574a1392a696430898d9fc",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 673
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_32",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 32"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 539655
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_11_16",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "伴随/编队"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 209
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 42
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_11"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_16"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.1"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Ne2618faa1f134e678e7f1d06a5d99544"
+   }
+  ]
+ },
+ {
+  "@id": "_:Ne2618faa1f134e678e7f1d06a5d99544",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_37",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 37"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_10"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 47632
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "135.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "208.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_2_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 2
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nce9d3d17228548d59bdb739ed6952c48"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "50.3"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "264.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_2"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nce9d3d17228548d59bdb739ed6952c48",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 5
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_6_8",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 7345
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 577
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.07"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_6"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_8"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "118.4"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N554bca0ede264fb896cbedd34f5e44d8"
+   }
+  ]
+ },
+ {
+  "@id": "_:N554bca0ede264fb896cbedd34f5e44d8",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:node_104002",
+  "@type": [
+   "urn:b04:onto#ObservationNode"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "节点 104002"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4404308
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.0"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_5_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 43
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 689
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 646
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N8377c4306a7e4ee9be117d06f92fed56"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ]
+ },
+ {
+  "@id": "_:N8377c4306a7e4ee9be117d06f92fed56",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 689
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#hasRadarModel",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "挂载型号"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#model_R03",
+  "@type": [
+   "urn:b04:onto#RadarModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@value": "R03"
+   }
+  ],
+  "urn:b04:onto#mountedOn": [
+   {
+    "@id": "urn:b04:onto#pm_云桥一型"
+   }
+  ],
+  "urn:b04:onto#rcsCandidates": [
+   {
+    "@value": "medium,large"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#PlatformCategory",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "平台类别"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_16",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 16"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 7720
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_9_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nee843677be7e40b2a3522dc3dc6a7565"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "150.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "249.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nee843677be7e40b2a3522dc3dc6a7565",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_8",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 8"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R04"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_3"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1101949
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.933"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.025"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.042"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N32776d5b35de4d95acbeb6ffbdb8b536"
+   },
+   {
+    "@id": "_:N7cf789b8ef3b4d06b1f635af58c66798"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N32776d5b35de4d95acbeb6ffbdb8b536",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.04"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R04：多 CPI 波形指纹似然累积，较次优 R03 平均每 CPI 高 6.04 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N7cf789b8ef3b4d06b1f635af58c66798",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.17"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 3 方位命中率 1.0，残差中位数 0.17°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_3_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 56
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 531
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 475
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N526a1fe0b49040f4bb48e3091f3e5498"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "21.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "247.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ]
+ },
+ {
+  "@id": "_:N526a1fe0b49040f4bb48e3091f3e5498",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 531
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_7_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 11
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 291
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 280
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N9e4778b7e6964d6a9c36b9d9db500e45"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "12.6"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ]
+ },
+ {
+  "@id": "_:N9e4778b7e6964d6a9c36b9d9db500e45",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 291
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#relB",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "关系另一方"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_40",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 40"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_11"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 47066
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_11",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 11"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R02"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_1"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 117992
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.416"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.19"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.395"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nd6f10d2ca1b84baab30ea22eb1de2144"
+   },
+   {
+    "@id": "_:N3b8af50508df41109ebcfe5b02cd8201"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nd6f10d2ca1b84baab30ea22eb1de2144",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.71"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R02：多 CPI 波形指纹似然累积，较次优 R01 平均每 CPI 高 5.71 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3b8af50508df41109ebcfe5b02cd8201",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.915"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.8"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 1 方位命中率 0.915，残差中位数 0.8°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#dom_air",
+  "@type": [
+   "urn:b04:onto#Domain"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "空中"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#LocalEmitter",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部辐射源（节点内聚类）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#TestArea",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "试验海区"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_20",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 20"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 625279
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_7_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 549
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 548
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N689804f920124c3d8311521fc92442eb"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_7"
+   }
+  ]
+ },
+ {
+  "@id": "_:N689804f920124c3d8311521fc92442eb",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 549
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_3_104001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 11
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 501
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 490
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N41387153d36445dd81889f17167af022"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "83.8"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ]
+ },
+ {
+  "@id": "_:N41387153d36445dd81889f17167af022",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 501
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_7",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 7"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2700.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.72"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "盘旋"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "87.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_2",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 2"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "空中"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2700.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.74"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "盘旋"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "small"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "86.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#PlatformModel",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "平台型号"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_10",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 10"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R02"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_2"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 66516
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.276"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.142"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.582"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nfa1b33d4a59542a48432ac00c974a78e"
+   },
+   {
+    "@id": "_:N4a3a0eb50494456eba7143c200a26592"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "64.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "208.4"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nfa1b33d4a59542a48432ac00c974a78e",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.45"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R02：多 CPI 波形指纹似然累积，较次优 R01 平均每 CPI 高 6.45 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:N4a3a0eb50494456eba7143c200a26592",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.16"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 2 方位命中率 1.0，残差中位数 0.16°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_22",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 22"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 47135
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "13.9"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "287.4"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_1_7",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3206
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 119
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.2"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_1"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_7"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "86.8"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nfb19b4c8ded5457fad51d2490a5800ef"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nfb19b4c8ded5457fad51d2490a5800ef",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_11",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 11"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_3"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 413220
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "2.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_8_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 9
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 55
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 46
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N845384c3a65d4ef08295d8a44d1ba02c"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "78.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "288.2"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_8"
+   }
+  ]
+ },
+ {
+  "@id": "_:N845384c3a65d4ef08295d8a44d1ba02c",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 55
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_9_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 21
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 662
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 641
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N1eb3724d3e354cc2af4541ac6ebbe130"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "3.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ]
+ },
+ {
+  "@id": "_:N1eb3724d3e354cc2af4541ac6ebbe130",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 662
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_9_15",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 541
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 66
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.84"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_9"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_15"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "7.5"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N52d67d3b018a4f0bbf00486788945074"
+   }
+  ]
+ },
+ {
+  "@id": "_:N52d67d3b018a4f0bbf00486788945074",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_1_104002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 718
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 708
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nd0f8b35a5c894a40914a64ab8323ddf2"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "14.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_104002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_1"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nd0f8b35a5c894a40914a64ab8323ddf2",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 718
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_3_6",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 7269
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 662
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.07"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_3"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_6"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "121.7"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N1c7ec695e15b40fe89887f397e1a8116"
+   }
+  ]
+ },
+ {
+  "@id": "_:N1c7ec695e15b40fe89887f397e1a8116",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_14",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 14"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_4"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 6710
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "23.3"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "240.3"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:track_12",
+  "@type": [
+   "urn:b04:onto#Track"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "航迹 12"
+   }
+  ],
+  "urn:b04:onto#domain": [
+   {
+    "@value": "海面"
+   }
+  ],
+  "urn:b04:onto#height_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#in_area_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "1.0"
+   }
+  ],
+  "urn:b04:onto#pattern": [
+   {
+    "@value": "直线航行"
+   }
+  ],
+  "urn:b04:onto#rcs": [
+   {
+    "@value": "large"
+   }
+  ],
+  "urn:b04:onto#speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.0"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#MotionRelation",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#Class"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "运动关系（伴随/接近）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#tracker",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "跟踪方"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#cat_巡查飞行器",
+  "@type": [
+   "urn:b04:onto#PlatformCategory"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "巡查飞行器"
+   }
+  ],
+  "urn:b04:onto#inDomain": [
+   {
+    "@id": "urn:b04:onto#dom_air"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#cat_勤务船",
+  "@type": [
+   "urn:b04:onto#PlatformCategory"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "勤务船"
+   }
+  ],
+  "urn:b04:onto#inDomain": [
+   {
+    "@id": "urn:b04:onto#dom_sea"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_9",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 9"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R06"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#linkedTrack": [
+   {
+    "@id": "urn:b04:P1A_test:track_10"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 716716
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.827"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.008"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.166"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N8ea00cefa6d242589fa3104ecf63275c"
+   },
+   {
+    "@id": "_:Nd28b7e34937d4cdc9871e3f56ebb7b01"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ]
+ },
+ {
+  "@id": "_:N8ea00cefa6d242589fa3104ecf63275c",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "6.43"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R06：多 CPI 波形指纹似然累积，较次优 R05 平均每 CPI 高 6.43 nats"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nd28b7e34937d4cdc9871e3f56ebb7b01",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#hit": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.993"
+   }
+  ],
+  "urn:b04:onto#med_res_deg": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.21"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "与航迹 10 方位命中率 0.993，残差中位数 0.21°"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_17",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 17"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 17066
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "55.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "237.7"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#pm_海援二型",
+  "@type": [
+   "urn:b04:onto#PlatformModel"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "海援二型"
+   }
+  ],
+  "urn:b04:onto#inCategory": [
+   {
+    "@id": "urn:b04:onto#cat_勤务船"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_9_103001",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 1
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 3
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N3df87d57f20345e398a293da8fd055e1"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "113.4"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "260.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103001"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ]
+ },
+ {
+  "@id": "_:N3df87d57f20345e398a293da8fd055e1",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 4
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#linkedTrack",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "关联航迹"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_5_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 6
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 102
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 96
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N46ae4e1eeae54b0ea9c1a2b60a773d3c"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "40.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "77.4"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_5"
+   }
+  ]
+ },
+ {
+  "@id": "_:N46ae4e1eeae54b0ea9c1a2b60a773d3c",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 102
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:tracking_9_103002",
+  "@type": [
+   "urn:b04:onto#TrackingRelation"
+  ],
+  "urn:b04:onto#coarse": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 10
+   }
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 349
+   }
+  ],
+  "urn:b04:onto#fine": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 339
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:N01d4cb5feed243ae915c031ca5cd0505"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "13.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "300.0"
+   }
+  ],
+  "urn:b04:onto#trackedNode": [
+   {
+    "@id": "urn:b04:P1A_test:node_103002"
+   }
+  ],
+  "urn:b04:onto#tracker": [
+   {
+    "@id": "urn:b04:P1A_test:object_9"
+   }
+  ]
+ },
+ {
+  "@id": "_:N01d4cb5feed243ae915c031ca5cd0505",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#dwells": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 349
+   }
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:rel_12_13",
+  "@type": [
+   "urn:b04:onto#MotionRelation"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "近距接近"
+   }
+  ],
+  "urn:b04:onto#dist_med_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 241
+   }
+  ],
+  "urn:b04:onto#dist_min_m": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 34
+   }
+  ],
+  "urn:b04:onto#near_frac": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.95"
+   }
+  ],
+  "urn:b04:onto#relA": [
+   {
+    "@id": "urn:b04:P1A_test:track_12"
+   }
+  ],
+  "urn:b04:onto#relB": [
+   {
+    "@id": "urn:b04:P1A_test:track_13"
+   }
+  ],
+  "urn:b04:onto#rel_speed_med": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.0"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nbf592026eca24ea9aa85c30fee6da7a6"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nbf592026eca24ea9aa85c30fee6da7a6",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "观测事实"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "B 类航迹位置序列计算的距离与相对速度"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#cat_中继飞行器",
+  "@type": [
+   "urn:b04:onto#PlatformCategory"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "中继飞行器"
+   }
+  ],
+  "urn:b04:onto#inDomain": [
+   {
+    "@id": "urn:b04:onto#dom_air"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:onto#trackedNode",
+  "@type": [
+   "http://www.w3.org/2002/07/owl#ObjectProperty"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "被跟踪节点"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:object_4",
+  "@type": [
+   "urn:b04:onto#FusedObject"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "对象 4"
+   }
+  ],
+  "urn:b04:onto#hasRadarModel": [
+   {
+    "@id": "urn:b04:onto#model_R01"
+   }
+  ],
+  "urn:b04:onto#inScenario": [
+   {
+    "@id": "urn:b04:P1A_test:scenario"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 184304
+   }
+  ],
+  "urn:b04:onto#stateFrac_搜索": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.61"
+   }
+  ],
+  "urn:b04:onto#stateFrac_粗跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.071"
+   }
+  ],
+  "urn:b04:onto#stateFrac_精跟踪": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.318"
+   }
+  ],
+  "urn:b04:onto#supportedBy": [
+   {
+    "@id": "_:Nb96c0a4dc2494659b321c0c6d86610f3"
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.2"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.4"
+   }
+  ]
+ },
+ {
+  "@id": "_:Nb96c0a4dc2494659b321c0c6d86610f3",
+  "@type": [
+   "urn:b04:onto#Evidence"
+  ],
+  "urn:b04:onto#epistemicStatus": [
+   {
+    "@language": "zh",
+    "@value": "推断"
+   }
+  ],
+  "urn:b04:onto#margin": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "5.35"
+   }
+  ],
+  "urn:b04:onto#text": [
+   {
+    "@language": "zh",
+    "@value": "型号 R01：多 CPI 波形指纹似然累积，较次优 R02 平均每 CPI 高 5.35 nats"
+   }
+  ]
+ },
+ {
+  "@id": "urn:b04:P1A_test:local_23",
+  "@type": [
+   "urn:b04:onto#LocalEmitter"
+  ],
+  "http://www.w3.org/2000/01/rdf-schema#label": [
+   {
+    "@language": "zh",
+    "@value": "局部簇 23"
+   }
+  ],
+  "urn:b04:onto#observedBy": [
+   {
+    "@id": "urn:b04:P1A_test:node_104001"
+   }
+  ],
+  "urn:b04:onto#partOf": [
+   {
+    "@id": "urn:b04:P1A_test:object_6"
+   }
+  ],
+  "urn:b04:onto#pulses": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#integer",
+    "@value": 534132
+   }
+  ],
+  "urn:b04:onto#t_first_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "0.0"
+   }
+  ],
+  "urn:b04:onto#t_last_s": [
+   {
+    "@type": "http://www.w3.org/2001/XMLSchema#decimal",
+    "@value": "299.8"
+   }
+  ]
+ }
+]

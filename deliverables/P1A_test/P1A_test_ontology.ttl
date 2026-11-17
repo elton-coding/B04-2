@@ -1,0 +1,1501 @@
+@prefix b04: <urn:b04:onto#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:b04:P1A_test:local_1> a b04:LocalEmitter ;
+    rdfs:label "局部簇 1"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_1> ;
+    b04:pulses 411844 ;
+    b04:t_first_s 0.1 ;
+    b04:t_last_s 260.3 .
+
+<urn:b04:P1A_test:local_10> a b04:LocalEmitter ;
+    rdfs:label "局部簇 10"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_3> ;
+    b04:pulses 161693 ;
+    b04:t_first_s 0.3 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_11> a b04:LocalEmitter ;
+    rdfs:label "局部簇 11"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_3> ;
+    b04:pulses 413220 ;
+    b04:t_first_s 2.2 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_12> a b04:LocalEmitter ;
+    rdfs:label "局部簇 12"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_3> ;
+    b04:pulses 413285 ;
+    b04:t_first_s 2.2 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_13> a b04:LocalEmitter ;
+    rdfs:label "局部簇 13"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_4> ;
+    b04:pulses 152245 ;
+    b04:t_first_s 35.5 ;
+    b04:t_last_s 260.3 .
+
+<urn:b04:P1A_test:local_14> a b04:LocalEmitter ;
+    rdfs:label "局部簇 14"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_4> ;
+    b04:pulses 6710 ;
+    b04:t_first_s 23.3 ;
+    b04:t_last_s 240.3 .
+
+<urn:b04:P1A_test:local_15> a b04:LocalEmitter ;
+    rdfs:label "局部簇 15"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_4> ;
+    b04:pulses 17629 ;
+    b04:t_first_s 2.0 ;
+    b04:t_last_s 268.0 .
+
+<urn:b04:P1A_test:local_16> a b04:LocalEmitter ;
+    rdfs:label "局部簇 16"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_4> ;
+    b04:pulses 7720 ;
+    b04:t_first_s 0.2 ;
+    b04:t_last_s 299.4 .
+
+<urn:b04:P1A_test:local_17> a b04:LocalEmitter ;
+    rdfs:label "局部簇 17"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_5> ;
+    b04:pulses 17066 ;
+    b04:t_first_s 55.2 ;
+    b04:t_last_s 237.7 .
+
+<urn:b04:P1A_test:local_18> a b04:LocalEmitter ;
+    rdfs:label "局部簇 18"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_5> ;
+    b04:pulses 19507 ;
+    b04:t_first_s 8.3 ;
+    b04:t_last_s 299.8 .
+
+<urn:b04:P1A_test:local_19> a b04:LocalEmitter ;
+    rdfs:label "局部簇 19"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_5> ;
+    b04:pulses 43176 ;
+    b04:t_first_s 3.1 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_2> a b04:LocalEmitter ;
+    rdfs:label "局部簇 2"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_1> ;
+    b04:pulses 33670 ;
+    b04:t_first_s 59.6 ;
+    b04:t_last_s 247.5 .
+
+<urn:b04:P1A_test:local_20> a b04:LocalEmitter ;
+    rdfs:label "局部簇 20"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_5> ;
+    b04:pulses 625279 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_21> a b04:LocalEmitter ;
+    rdfs:label "局部簇 21"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_6> ;
+    b04:pulses 87652 ;
+    b04:t_first_s 64.6 ;
+    b04:t_last_s 263.8 .
+
+<urn:b04:P1A_test:local_22> a b04:LocalEmitter ;
+    rdfs:label "局部簇 22"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_6> ;
+    b04:pulses 47135 ;
+    b04:t_first_s 13.9 ;
+    b04:t_last_s 287.4 .
+
+<urn:b04:P1A_test:local_23> a b04:LocalEmitter ;
+    rdfs:label "局部簇 23"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_6> ;
+    b04:pulses 534132 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 299.8 .
+
+<urn:b04:P1A_test:local_24> a b04:LocalEmitter ;
+    rdfs:label "局部簇 24"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_6> ;
+    b04:pulses 631593 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 299.8 .
+
+<urn:b04:P1A_test:local_25> a b04:LocalEmitter ;
+    rdfs:label "局部簇 25"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_7> ;
+    b04:pulses 4332 ;
+    b04:t_first_s 66.1 ;
+    b04:t_last_s 197.1 .
+
+<urn:b04:P1A_test:local_26> a b04:LocalEmitter ;
+    rdfs:label "局部簇 26"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_7> ;
+    b04:pulses 38139 ;
+    b04:t_first_s 6.6 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_27> a b04:LocalEmitter ;
+    rdfs:label "局部簇 27"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_7> ;
+    b04:pulses 853 ;
+    b04:t_first_s 176.1 ;
+    b04:t_last_s 274.8 .
+
+<urn:b04:P1A_test:local_28> a b04:LocalEmitter ;
+    rdfs:label "局部簇 28"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_7> ;
+    b04:pulses 652362 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_29> a b04:LocalEmitter ;
+    rdfs:label "局部簇 29"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_8> ;
+    b04:pulses 2977 ;
+    b04:t_first_s 72.2 ;
+    b04:t_last_s 106.8 .
+
+<urn:b04:P1A_test:local_3> a b04:LocalEmitter ;
+    rdfs:label "局部簇 3"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_1> ;
+    b04:pulses 276053 ;
+    b04:t_first_s 5.9 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_30> a b04:LocalEmitter ;
+    rdfs:label "局部簇 30"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_8> ;
+    b04:pulses 20259 ;
+    b04:t_first_s 44.6 ;
+    b04:t_last_s 102.7 .
+
+<urn:b04:P1A_test:local_31> a b04:LocalEmitter ;
+    rdfs:label "局部簇 31"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_8> ;
+    b04:pulses 539058 ;
+    b04:t_first_s 0.2 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_32> a b04:LocalEmitter ;
+    rdfs:label "局部簇 32"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_8> ;
+    b04:pulses 539655 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_33> a b04:LocalEmitter ;
+    rdfs:label "局部簇 33"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_9> ;
+    b04:pulses 1203 ;
+    b04:t_first_s 81.1 ;
+    b04:t_last_s 260.4 .
+
+<urn:b04:P1A_test:local_34> a b04:LocalEmitter ;
+    rdfs:label "局部簇 34"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_9> ;
+    b04:pulses 49597 ;
+    b04:t_first_s 8.4 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_35> a b04:LocalEmitter ;
+    rdfs:label "局部簇 35"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_9> ;
+    b04:pulses 12844 ;
+    b04:t_first_s 3.2 ;
+    b04:t_last_s 299.3 .
+
+<urn:b04:P1A_test:local_36> a b04:LocalEmitter ;
+    rdfs:label "局部簇 36"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_9> ;
+    b04:pulses 653072 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_37> a b04:LocalEmitter ;
+    rdfs:label "局部簇 37"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_10> ;
+    b04:pulses 47632 ;
+    b04:t_first_s 135.8 ;
+    b04:t_last_s 208.4 .
+
+<urn:b04:P1A_test:local_38> a b04:LocalEmitter ;
+    rdfs:label "局部簇 38"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_10> ;
+    b04:pulses 18884 ;
+    b04:t_first_s 64.2 ;
+    b04:t_last_s 110.4 .
+
+<urn:b04:P1A_test:local_39> a b04:LocalEmitter ;
+    rdfs:label "局部簇 39"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_11> ;
+    b04:pulses 27667 ;
+    b04:t_first_s 12.4 ;
+    b04:t_last_s 264.6 .
+
+<urn:b04:P1A_test:local_4> a b04:LocalEmitter ;
+    rdfs:label "局部簇 4"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_1> ;
+    b04:pulses 370103 ;
+    b04:t_first_s 4.5 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_40> a b04:LocalEmitter ;
+    rdfs:label "局部簇 40"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_11> ;
+    b04:pulses 47066 ;
+    b04:t_first_s 2.2 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_41> a b04:LocalEmitter ;
+    rdfs:label "局部簇 41"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_11> ;
+    b04:pulses 43259 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 284.4 .
+
+<urn:b04:P1A_test:local_5> a b04:LocalEmitter ;
+    rdfs:label "局部簇 5"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_2> ;
+    b04:pulses 221218 ;
+    b04:t_first_s 7.0 ;
+    b04:t_last_s 277.3 .
+
+<urn:b04:P1A_test:local_6> a b04:LocalEmitter ;
+    rdfs:label "局部簇 6"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103002> ;
+    b04:partOf <urn:b04:P1A_test:object_2> ;
+    b04:pulses 241429 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_7> a b04:LocalEmitter ;
+    rdfs:label "局部簇 7"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104001> ;
+    b04:partOf <urn:b04:P1A_test:object_2> ;
+    b04:pulses 467799 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_8> a b04:LocalEmitter ;
+    rdfs:label "局部簇 8"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_104002> ;
+    b04:partOf <urn:b04:P1A_test:object_2> ;
+    b04:pulses 467980 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:local_9> a b04:LocalEmitter ;
+    rdfs:label "局部簇 9"@zh ;
+    b04:observedBy <urn:b04:P1A_test:node_103001> ;
+    b04:partOf <urn:b04:P1A_test:object_3> ;
+    b04:pulses 233595 ;
+    b04:t_first_s 15.2 ;
+    b04:t_last_s 277.2 .
+
+<urn:b04:P1A_test:rel_11_16> a b04:MotionRelation ;
+    rdfs:label "伴随/编队"@zh ;
+    b04:dist_med_m 209 ;
+    b04:dist_min_m 42 ;
+    b04:near_frac 1.0 ;
+    b04:relA <urn:b04:P1A_test:track_11> ;
+    b04:relB <urn:b04:P1A_test:track_16> ;
+    b04:rel_speed_med 1.1 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_12_13> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 241 ;
+    b04:dist_min_m 34 ;
+    b04:near_frac 0.95 ;
+    b04:relA <urn:b04:P1A_test:track_12> ;
+    b04:relB <urn:b04:P1A_test:track_13> ;
+    b04:rel_speed_med 5.0 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_12_15> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 259 ;
+    b04:dist_min_m 3 ;
+    b04:near_frac 0.95 ;
+    b04:relA <urn:b04:P1A_test:track_12> ;
+    b04:relB <urn:b04:P1A_test:track_15> ;
+    b04:rel_speed_med 6.4 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_13_15> a b04:MotionRelation ;
+    rdfs:label "伴随/编队"@zh ;
+    b04:dist_med_m 160 ;
+    b04:dist_min_m 6 ;
+    b04:near_frac 1.0 ;
+    b04:relA <urn:b04:P1A_test:track_13> ;
+    b04:relB <urn:b04:P1A_test:track_15> ;
+    b04:rel_speed_med 1.1 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_1_2> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 2954 ;
+    b04:dist_min_m 182 ;
+    b04:near_frac 0.18 ;
+    b04:relA <urn:b04:P1A_test:track_1> ;
+    b04:relB <urn:b04:P1A_test:track_2> ;
+    b04:rel_speed_med 83.7 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_1_7> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 3206 ;
+    b04:dist_min_m 119 ;
+    b04:near_frac 0.2 ;
+    b04:relA <urn:b04:P1A_test:track_1> ;
+    b04:relB <urn:b04:P1A_test:track_7> ;
+    b04:rel_speed_med 86.8 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_2_7> a b04:MotionRelation ;
+    rdfs:label "伴随/编队"@zh ;
+    b04:dist_med_m 391 ;
+    b04:dist_min_m 119 ;
+    b04:near_frac 1.0 ;
+    b04:relA <urn:b04:P1A_test:track_2> ;
+    b04:relB <urn:b04:P1A_test:track_7> ;
+    b04:rel_speed_med 5.7 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_3_6> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 7269 ;
+    b04:dist_min_m 662 ;
+    b04:near_frac 0.07 ;
+    b04:relA <urn:b04:P1A_test:track_3> ;
+    b04:relB <urn:b04:P1A_test:track_6> ;
+    b04:rel_speed_med 121.7 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_3_8> a b04:MotionRelation ;
+    rdfs:label "伴随/编队"@zh ;
+    b04:dist_med_m 145 ;
+    b04:dist_min_m 16 ;
+    b04:near_frac 1.0 ;
+    b04:relA <urn:b04:P1A_test:track_3> ;
+    b04:relB <urn:b04:P1A_test:track_8> ;
+    b04:rel_speed_med 5.9 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_5_6> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 13788 ;
+    b04:dist_min_m 874 ;
+    b04:near_frac 0.05 ;
+    b04:relA <urn:b04:P1A_test:track_5> ;
+    b04:relB <urn:b04:P1A_test:track_6> ;
+    b04:rel_speed_med 178.8 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_6_8> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 7345 ;
+    b04:dist_min_m 577 ;
+    b04:near_frac 0.07 ;
+    b04:relA <urn:b04:P1A_test:track_6> ;
+    b04:relB <urn:b04:P1A_test:track_8> ;
+    b04:rel_speed_med 118.4 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_9_12> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 788 ;
+    b04:dist_min_m 65 ;
+    b04:near_frac 0.67 ;
+    b04:relA <urn:b04:P1A_test:track_9> ;
+    b04:relB <urn:b04:P1A_test:track_12> ;
+    b04:rel_speed_med 11.7 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_9_13> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 617 ;
+    b04:dist_min_m 35 ;
+    b04:near_frac 0.85 ;
+    b04:relA <urn:b04:P1A_test:track_9> ;
+    b04:relB <urn:b04:P1A_test:track_13> ;
+    b04:rel_speed_med 7.2 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:rel_9_15> a b04:MotionRelation ;
+    rdfs:label "近距接近"@zh ;
+    b04:dist_med_m 541 ;
+    b04:dist_min_m 66 ;
+    b04:near_frac 0.84 ;
+    b04:relA <urn:b04:P1A_test:track_9> ;
+    b04:relB <urn:b04:P1A_test:track_15> ;
+    b04:rel_speed_med 7.5 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "观测事实"@zh ;
+            b04:text "B 类航迹位置序列计算的距离与相对速度"@zh ] .
+
+<urn:b04:P1A_test:track_14> a b04:Track ;
+    rdfs:label "航迹 14"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "small" ;
+    b04:speed_med 6.3 .
+
+<urn:b04:P1A_test:tracking_1_103001> a b04:TrackingRelation ;
+    b04:coarse 1 ;
+    b04:dwells 4 ;
+    b04:fine 3 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 4 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 123.6 ;
+    b04:t_last_s 225.2 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_1> .
+
+<urn:b04:P1A_test:tracking_1_103002> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 36 ;
+    b04:fine 26 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 36 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 79.8 ;
+    b04:t_last_s 93.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_1> .
+
+<urn:b04:P1A_test:tracking_1_104001> a b04:TrackingRelation ;
+    b04:coarse 20 ;
+    b04:dwells 673 ;
+    b04:fine 653 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 673 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 16.8 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_1> .
+
+<urn:b04:P1A_test:tracking_1_104002> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 718 ;
+    b04:fine 708 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 718 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 14.2 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_1> .
+
+<urn:b04:P1A_test:tracking_2_103001> a b04:TrackingRelation ;
+    b04:coarse 31 ;
+    b04:dwells 322 ;
+    b04:fine 291 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 322 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 15.4 ;
+    b04:t_last_s 189.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_2> .
+
+<urn:b04:P1A_test:tracking_2_103002> a b04:TrackingRelation ;
+    b04:coarse 40 ;
+    b04:dwells 455 ;
+    b04:fine 415 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 455 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 14.0 ;
+    b04:t_last_s 300.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_2> .
+
+<urn:b04:P1A_test:tracking_2_104001> a b04:TrackingRelation ;
+    b04:coarse 2 ;
+    b04:dwells 5 ;
+    b04:fine 3 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 5 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 50.3 ;
+    b04:t_last_s 264.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_2> .
+
+<urn:b04:P1A_test:tracking_2_104002> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 728 ;
+    b04:fine 718 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 728 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 5.2 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_2> .
+
+<urn:b04:P1A_test:tracking_3_103001> a b04:TrackingRelation ;
+    b04:coarse 56 ;
+    b04:dwells 531 ;
+    b04:fine 475 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 531 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 21.4 ;
+    b04:t_last_s 247.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_3> .
+
+<urn:b04:P1A_test:tracking_3_103002> a b04:TrackingRelation ;
+    b04:coarse 22 ;
+    b04:dwells 365 ;
+    b04:fine 343 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 365 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 59.4 ;
+    b04:t_last_s 299.6 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_3> .
+
+<urn:b04:P1A_test:tracking_3_104001> a b04:TrackingRelation ;
+    b04:coarse 11 ;
+    b04:dwells 501 ;
+    b04:fine 490 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 501 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 83.8 ;
+    b04:t_last_s 300.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_3> .
+
+<urn:b04:P1A_test:tracking_3_104002> a b04:TrackingRelation ;
+    b04:coarse 40 ;
+    b04:dwells 657 ;
+    b04:fine 617 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 657 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 2.6 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_3> .
+
+<urn:b04:P1A_test:tracking_4_103001> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 203 ;
+    b04:fine 193 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 203 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 164.8 ;
+    b04:t_last_s 260.3 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_4> .
+
+<urn:b04:P1A_test:tracking_4_104001> a b04:TrackingRelation ;
+    b04:coarse 9 ;
+    b04:dwells 14 ;
+    b04:fine 5 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 14 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 140.6 ;
+    b04:t_last_s 268.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_4> .
+
+<urn:b04:P1A_test:tracking_4_104002> a b04:TrackingRelation ;
+    b04:coarse 9 ;
+    b04:dwells 38 ;
+    b04:fine 29 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 38 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 0.2 ;
+    b04:t_last_s 297.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_4> .
+
+<urn:b04:P1A_test:tracking_5_103001> a b04:TrackingRelation ;
+    b04:coarse 22 ;
+    b04:dwells 128 ;
+    b04:fine 106 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 128 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 140.8 ;
+    b04:t_last_s 196.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_5> .
+
+<urn:b04:P1A_test:tracking_5_103002> a b04:TrackingRelation ;
+    b04:coarse 6 ;
+    b04:dwells 102 ;
+    b04:fine 96 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 102 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 40.2 ;
+    b04:t_last_s 77.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_5> .
+
+<urn:b04:P1A_test:tracking_5_104001> a b04:TrackingRelation ;
+    b04:coarse 0 ;
+    b04:dwells 5 ;
+    b04:fine 5 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 5 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 16.6 ;
+    b04:t_last_s 197.2 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_5> .
+
+<urn:b04:P1A_test:tracking_5_104002> a b04:TrackingRelation ;
+    b04:coarse 43 ;
+    b04:dwells 689 ;
+    b04:fine 646 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 689 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 3.4 ;
+    b04:t_last_s 300.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_5> .
+
+<urn:b04:P1A_test:tracking_6_103001> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 234 ;
+    b04:fine 224 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 234 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 123.6 ;
+    b04:t_last_s 260.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_6> .
+
+<urn:b04:P1A_test:tracking_6_103002> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 135 ;
+    b04:fine 125 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 135 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 56.8 ;
+    b04:t_last_s 287.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_6> .
+
+<urn:b04:P1A_test:tracking_6_104001> a b04:TrackingRelation ;
+    b04:coarse 24 ;
+    b04:dwells 78 ;
+    b04:fine 54 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 78 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 7.2 ;
+    b04:t_last_s 299.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_6> .
+
+<urn:b04:P1A_test:tracking_7_103001> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 14 ;
+    b04:fine 4 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 14 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 126.2 ;
+    b04:t_last_s 131.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_7> .
+
+<urn:b04:P1A_test:tracking_7_103002> a b04:TrackingRelation ;
+    b04:coarse 11 ;
+    b04:dwells 291 ;
+    b04:fine 280 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 291 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 12.6 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_7> .
+
+<urn:b04:P1A_test:tracking_7_104002> a b04:TrackingRelation ;
+    b04:coarse 1 ;
+    b04:dwells 549 ;
+    b04:fine 548 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 549 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 2.8 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_7> .
+
+<urn:b04:P1A_test:tracking_8_104001> a b04:TrackingRelation ;
+    b04:coarse 22 ;
+    b04:dwells 53 ;
+    b04:fine 31 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 53 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 33.8 ;
+    b04:t_last_s 246.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_8> .
+
+<urn:b04:P1A_test:tracking_8_104002> a b04:TrackingRelation ;
+    b04:coarse 9 ;
+    b04:dwells 55 ;
+    b04:fine 46 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 55 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 78.0 ;
+    b04:t_last_s 288.2 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_8> .
+
+<urn:b04:P1A_test:tracking_9_103001> a b04:TrackingRelation ;
+    b04:coarse 1 ;
+    b04:dwells 4 ;
+    b04:fine 3 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 4 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 113.4 ;
+    b04:t_last_s 260.4 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103001> ;
+    b04:tracker <urn:b04:P1A_test:object_9> .
+
+<urn:b04:P1A_test:tracking_9_103002> a b04:TrackingRelation ;
+    b04:coarse 10 ;
+    b04:dwells 349 ;
+    b04:fine 339 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 349 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 13.2 ;
+    b04:t_last_s 300.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_103002> ;
+    b04:tracker <urn:b04:P1A_test:object_9> .
+
+<urn:b04:P1A_test:tracking_9_104001> a b04:TrackingRelation ;
+    b04:coarse 1 ;
+    b04:dwells 4 ;
+    b04:fine 3 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 4 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 150.0 ;
+    b04:t_last_s 249.0 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104001> ;
+    b04:tracker <urn:b04:P1A_test:object_9> .
+
+<urn:b04:P1A_test:tracking_9_104002> a b04:TrackingRelation ;
+    b04:coarse 21 ;
+    b04:dwells 662 ;
+    b04:fine 641 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:dwells 662 ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:text "跟踪驻留中该节点接收幅度显著高于该对象常态（主瓣持续照射）"@zh ] ;
+    b04:t_first_s 3.0 ;
+    b04:t_last_s 299.8 ;
+    b04:trackedNode <urn:b04:P1A_test:node_104002> ;
+    b04:tracker <urn:b04:P1A_test:object_9> .
+
+b04:TestArea a owl:Class ;
+    rdfs:label "试验海区"@zh .
+
+b04:hasRadarModel a owl:ObjectProperty ;
+    rdfs:label "挂载型号"@zh .
+
+b04:inCategory a owl:ObjectProperty ;
+    rdfs:label "属于类别"@zh .
+
+b04:inDomain a owl:ObjectProperty ;
+    rdfs:label "所在领域"@zh .
+
+b04:inScenario a owl:ObjectProperty ;
+    rdfs:label "属于场景"@zh .
+
+b04:linkedTrack a owl:ObjectProperty ;
+    rdfs:label "关联航迹"@zh .
+
+b04:mountedOn a owl:ObjectProperty ;
+    rdfs:label "型号对应平台型号"@zh .
+
+b04:observedBy a owl:ObjectProperty ;
+    rdfs:label "被节点观测"@zh .
+
+b04:partOf a owl:ObjectProperty ;
+    rdfs:label "归并为"@zh .
+
+b04:relA a owl:ObjectProperty ;
+    rdfs:label "关系一方"@zh .
+
+b04:relB a owl:ObjectProperty ;
+    rdfs:label "关系另一方"@zh .
+
+b04:supportedBy a owl:ObjectProperty ;
+    rdfs:label "证据支持"@zh .
+
+b04:trackedNode a owl:ObjectProperty ;
+    rdfs:label "被跟踪节点"@zh .
+
+b04:tracker a owl:ObjectProperty ;
+    rdfs:label "跟踪方"@zh .
+
+<urn:b04:P1A_test:track_10> a b04:Track ;
+    rdfs:label "航迹 10"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "机动" ;
+    b04:rcs "medium" ;
+    b04:speed_med 6.9 .
+
+<urn:b04:P1A_test:track_16> a b04:Track ;
+    rdfs:label "航迹 16"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "large" ;
+    b04:speed_med 8.0 .
+
+<urn:b04:P1A_test:track_4> a b04:Track ;
+    rdfs:label "航迹 4"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 3500.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.56 ;
+    b04:pattern "机动" ;
+    b04:rcs "medium" ;
+    b04:speed_med 78.3 .
+
+b04:Scenario a owl:Class ;
+    rdfs:label "场景"@zh .
+
+b04:model_R01 a b04:RadarModel ;
+    rdfs:label "R01" ;
+    b04:mountedOn b04:pm_云巡一型 ;
+    b04:rcsCandidates "small,medium" .
+
+b04:model_R03 a b04:RadarModel ;
+    rdfs:label "R03" ;
+    b04:mountedOn b04:pm_云桥一型 ;
+    b04:rcsCandidates "medium,large" .
+
+b04:model_R05 a b04:RadarModel ;
+    rdfs:label "R05" ;
+    b04:mountedOn b04:pm_海巡一型 ;
+    b04:rcsCandidates "small,medium" .
+
+b04:model_R07 a b04:RadarModel ;
+    rdfs:label "R07" ;
+    b04:mountedOn b04:pm_海援一型 ;
+    b04:rcsCandidates "medium,large" .
+
+b04:model_R08 a b04:RadarModel ;
+    rdfs:label "R08" ;
+    b04:mountedOn b04:pm_海援二型 ;
+    b04:rcsCandidates "medium,large" .
+
+b04:pm_云巡一型 a b04:PlatformModel ;
+    rdfs:label "云巡一型"@zh ;
+    b04:inCategory b04:cat_巡查飞行器 .
+
+b04:pm_云巡二型 a b04:PlatformModel ;
+    rdfs:label "云巡二型"@zh ;
+    b04:inCategory b04:cat_巡查飞行器 .
+
+b04:pm_云桥一型 a b04:PlatformModel ;
+    rdfs:label "云桥一型"@zh ;
+    b04:inCategory b04:cat_中继飞行器 .
+
+b04:pm_云桥二型 a b04:PlatformModel ;
+    rdfs:label "云桥二型"@zh ;
+    b04:inCategory b04:cat_中继飞行器 .
+
+b04:pm_海巡一型 a b04:PlatformModel ;
+    rdfs:label "海巡一型"@zh ;
+    b04:inCategory b04:cat_工作艇 .
+
+b04:pm_海巡二型 a b04:PlatformModel ;
+    rdfs:label "海巡二型"@zh ;
+    b04:inCategory b04:cat_工作艇 .
+
+b04:pm_海援一型 a b04:PlatformModel ;
+    rdfs:label "海援一型"@zh ;
+    b04:inCategory b04:cat_勤务船 .
+
+b04:pm_海援二型 a b04:PlatformModel ;
+    rdfs:label "海援二型"@zh ;
+    b04:inCategory b04:cat_勤务船 .
+
+<urn:b04:P1A_test:object_10> a b04:FusedObject ;
+    rdfs:label "对象 10"@zh ;
+    b04:hasRadarModel b04:model_R02 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_2> ;
+    b04:pulses 66516 ;
+    b04:stateFrac_搜索 0.276 ;
+    b04:stateFrac_粗跟踪 0.142 ;
+    b04:stateFrac_精跟踪 0.582 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 1.0 ;
+            b04:med_res_deg 0.16 ;
+            b04:text "与航迹 2 方位命中率 1.0，残差中位数 0.16°"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.45 ;
+            b04:text "型号 R02：多 CPI 波形指纹似然累积，较次优 R01 平均每 CPI 高 6.45 nats"@zh ] ;
+    b04:t_first_s 64.2 ;
+    b04:t_last_s 208.4 .
+
+<urn:b04:P1A_test:track_11> a b04:Track ;
+    rdfs:label "航迹 11"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "large" ;
+    b04:speed_med 8.4 .
+
+<urn:b04:P1A_test:track_5> a b04:Track ;
+    rdfs:label "航迹 5"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 4000.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.36 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "large" ;
+    b04:speed_med 109.8 .
+
+<urn:b04:P1A_test:track_7> a b04:Track ;
+    rdfs:label "航迹 7"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 2700.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.72 ;
+    b04:pattern "盘旋" ;
+    b04:rcs "small" ;
+    b04:speed_med 87.4 .
+
+<urn:b04:P1A_test:track_8> a b04:Track ;
+    rdfs:label "航迹 8"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 3100.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "机动" ;
+    b04:rcs "large" ;
+    b04:speed_med 82.3 .
+
+b04:Domain a owl:Class ;
+    rdfs:label "领域"@zh .
+
+b04:cat_中继飞行器 a b04:PlatformCategory ;
+    rdfs:label "中继飞行器"@zh ;
+    b04:inDomain b04:dom_air .
+
+b04:cat_勤务船 a b04:PlatformCategory ;
+    rdfs:label "勤务船"@zh ;
+    b04:inDomain b04:dom_sea .
+
+b04:cat_巡查飞行器 a b04:PlatformCategory ;
+    rdfs:label "巡查飞行器"@zh ;
+    b04:inDomain b04:dom_air .
+
+b04:cat_工作艇 a b04:PlatformCategory ;
+    rdfs:label "工作艇"@zh ;
+    b04:inDomain b04:dom_sea .
+
+b04:dom_air a b04:Domain ;
+    rdfs:label "空中"@zh .
+
+b04:dom_sea a b04:Domain ;
+    rdfs:label "海面"@zh .
+
+b04:model_R02 a b04:RadarModel ;
+    rdfs:label "R02" ;
+    b04:mountedOn b04:pm_云巡二型 ;
+    b04:rcsCandidates "small,medium" .
+
+b04:model_R04 a b04:RadarModel ;
+    rdfs:label "R04" ;
+    b04:mountedOn b04:pm_云桥二型 ;
+    b04:rcsCandidates "medium,large" .
+
+b04:model_R06 a b04:RadarModel ;
+    rdfs:label "R06" ;
+    b04:mountedOn b04:pm_海巡二型 ;
+    b04:rcsCandidates "small,medium" .
+
+<urn:b04:P1A_test:object_11> a b04:FusedObject ;
+    rdfs:label "对象 11"@zh ;
+    b04:hasRadarModel b04:model_R02 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_1> ;
+    b04:pulses 117992 ;
+    b04:stateFrac_搜索 0.416 ;
+    b04:stateFrac_粗跟踪 0.19 ;
+    b04:stateFrac_精跟踪 0.395 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 0.915 ;
+            b04:med_res_deg 0.8 ;
+            b04:text "与航迹 1 方位命中率 0.915，残差中位数 0.8°"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 5.71 ;
+            b04:text "型号 R02：多 CPI 波形指纹似然累积，较次优 R01 平均每 CPI 高 5.71 nats"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:track_1> a b04:Track ;
+    rdfs:label "航迹 1"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 2400.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.83 ;
+    b04:pattern "盘旋" ;
+    b04:rcs "medium" ;
+    b04:speed_med 86.0 .
+
+<urn:b04:P1A_test:track_13> a b04:Track ;
+    rdfs:label "航迹 13"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "机动" ;
+    b04:rcs "large" ;
+    b04:speed_med 5.9 .
+
+<urn:b04:P1A_test:track_15> a b04:Track ;
+    rdfs:label "航迹 15"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "机动" ;
+    b04:rcs "small" ;
+    b04:speed_med 6.1 .
+
+<urn:b04:P1A_test:track_2> a b04:Track ;
+    rdfs:label "航迹 2"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 2700.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.74 ;
+    b04:pattern "盘旋" ;
+    b04:rcs "small" ;
+    b04:speed_med 86.4 .
+
+<urn:b04:P1A_test:track_3> a b04:Track ;
+    rdfs:label "航迹 3"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 3000.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "盘旋" ;
+    b04:rcs "large" ;
+    b04:speed_med 81.5 .
+
+<urn:b04:P1A_test:track_6> a b04:Track ;
+    rdfs:label "航迹 6"@zh ;
+    b04:domain "空中" ;
+    b04:height_m 3500.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 0.64 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "small" ;
+    b04:speed_med 69.9 .
+
+<urn:b04:P1A_test:track_12> a b04:Track ;
+    rdfs:label "航迹 12"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "直线航行" ;
+    b04:rcs "large" ;
+    b04:speed_med 6.0 .
+
+<urn:b04:P1A_test:track_9> a b04:Track ;
+    rdfs:label "航迹 9"@zh ;
+    b04:domain "海面" ;
+    b04:height_m 0.0 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:in_area_frac 1.0 ;
+    b04:pattern "机动" ;
+    b04:rcs "small" ;
+    b04:speed_med 11.1 .
+
+b04:ObservationNode a owl:Class ;
+    rdfs:label "本方观测节点"@zh .
+
+b04:PlatformCategory a owl:Class ;
+    rdfs:label "平台类别"@zh .
+
+<urn:b04:P1A_test:object_8> a b04:FusedObject ;
+    rdfs:label "对象 8"@zh ;
+    b04:hasRadarModel b04:model_R04 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_3> ;
+    b04:pulses 1101949 ;
+    b04:stateFrac_搜索 0.933 ;
+    b04:stateFrac_粗跟踪 0.025 ;
+    b04:stateFrac_精跟踪 0.042 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.04 ;
+            b04:text "型号 R04：多 CPI 波形指纹似然累积，较次优 R03 平均每 CPI 高 6.04 nats"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 1.0 ;
+            b04:med_res_deg 0.17 ;
+            b04:text "与航迹 3 方位命中率 1.0，残差中位数 0.17°"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_4> a b04:FusedObject ;
+    rdfs:label "对象 4"@zh ;
+    b04:hasRadarModel b04:model_R01 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pulses 184304 ;
+    b04:stateFrac_搜索 0.61 ;
+    b04:stateFrac_粗跟踪 0.071 ;
+    b04:stateFrac_精跟踪 0.318 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 5.35 ;
+            b04:text "型号 R01：多 CPI 波形指纹似然累积，较次优 R02 平均每 CPI 高 5.35 nats"@zh ] ;
+    b04:t_first_s 0.2 ;
+    b04:t_last_s 299.4 .
+
+<urn:b04:P1A_test:object_6> a b04:FusedObject ;
+    rdfs:label "对象 6"@zh ;
+    b04:hasRadarModel b04:model_R04 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_4> ;
+    b04:pulses 1300512 ;
+    b04:stateFrac_搜索 0.777 ;
+    b04:stateFrac_粗跟踪 0.017 ;
+    b04:stateFrac_精跟踪 0.205 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.05 ;
+            b04:text "型号 R04：多 CPI 波形指纹似然累积，较次优 R03 平均每 CPI 高 6.05 nats"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 0.972 ;
+            b04:med_res_deg 0.47 ;
+            b04:text "与航迹 4 方位命中率 0.972，残差中位数 0.47°"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 299.8 .
+
+<urn:b04:P1A_test:object_7> a b04:FusedObject ;
+    rdfs:label "对象 7"@zh ;
+    b04:hasRadarModel b04:model_R06 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pulses 695686 ;
+    b04:stateFrac_搜索 0.813 ;
+    b04:stateFrac_粗跟踪 0.009 ;
+    b04:stateFrac_精跟踪 0.178 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.62 ;
+            b04:text "型号 R06：多 CPI 波形指纹似然累积，较次优 R05 平均每 CPI 高 6.62 nats"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_1> a b04:FusedObject ;
+    rdfs:label "对象 1"@zh ;
+    b04:hasRadarModel b04:model_R03 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_5> ;
+    b04:pulses 1091670 ;
+    b04:stateFrac_搜索 0.644 ;
+    b04:stateFrac_粗跟踪 0.01 ;
+    b04:stateFrac_精跟踪 0.346 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 7.34 ;
+            b04:text "型号 R03：多 CPI 波形指纹似然累积，较次优 R04 平均每 CPI 高 7.34 nats"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 0.99 ;
+            b04:med_res_deg 0.19 ;
+            b04:text "与航迹 5 方位命中率 0.99，残差中位数 0.19°"@zh ] ;
+    b04:t_first_s 0.1 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_2> a b04:FusedObject ;
+    rdfs:label "对象 2"@zh ;
+    b04:hasRadarModel b04:model_R08 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_12> ;
+    b04:pulses 1398426 ;
+    b04:stateFrac_搜索 0.879 ;
+    b04:stateFrac_粗跟踪 0.012 ;
+    b04:stateFrac_精跟踪 0.11 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 0.966 ;
+            b04:med_res_deg 0.5 ;
+            b04:text "与航迹 12 方位命中率 0.966，残差中位数 0.5°"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 4.79 ;
+            b04:text "型号 R08：多 CPI 波形指纹似然累积，较次优 R07 平均每 CPI 高 4.79 nats"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_3> a b04:FusedObject ;
+    rdfs:label "对象 3"@zh ;
+    b04:hasRadarModel b04:model_R07 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_11> ;
+    b04:pulses 1221793 ;
+    b04:stateFrac_搜索 0.672 ;
+    b04:stateFrac_粗跟踪 0.024 ;
+    b04:stateFrac_精跟踪 0.304 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 1.0 ;
+            b04:med_res_deg 0.44 ;
+            b04:text "与航迹 11 方位命中率 1.0，残差中位数 0.44°"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.65 ;
+            b04:text "型号 R07：多 CPI 波形指纹似然累积，较次优 R08 平均每 CPI 高 6.65 nats"@zh ] ;
+    b04:t_first_s 0.3 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_5> a b04:FusedObject ;
+    rdfs:label "对象 5"@zh ;
+    b04:hasRadarModel b04:model_R05 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_9> ;
+    b04:pulses 705028 ;
+    b04:stateFrac_搜索 0.845 ;
+    b04:stateFrac_粗跟踪 0.009 ;
+    b04:stateFrac_精跟踪 0.146 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.91 ;
+            b04:text "型号 R05：多 CPI 波形指纹似然累积，较次优 R06 平均每 CPI 高 6.91 nats"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 1.0 ;
+            b04:med_res_deg 0.24 ;
+            b04:text "与航迹 9 方位命中率 1.0，残差中位数 0.24°"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:object_9> a b04:FusedObject ;
+    rdfs:label "对象 9"@zh ;
+    b04:hasRadarModel b04:model_R06 ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:linkedTrack <urn:b04:P1A_test:track_10> ;
+    b04:pulses 716716 ;
+    b04:stateFrac_搜索 0.827 ;
+    b04:stateFrac_粗跟踪 0.008 ;
+    b04:stateFrac_精跟踪 0.166 ;
+    b04:supportedBy [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:margin 6.43 ;
+            b04:text "型号 R06：多 CPI 波形指纹似然累积，较次优 R05 平均每 CPI 高 6.43 nats"@zh ],
+        [ a b04:Evidence ;
+            b04:epistemicStatus "推断"@zh ;
+            b04:hit 0.993 ;
+            b04:med_res_deg 0.21 ;
+            b04:text "与航迹 10 方位命中率 0.993，残差中位数 0.21°"@zh ] ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+b04:PlatformModel a owl:Class ;
+    rdfs:label "平台型号"@zh .
+
+b04:RadarModel a owl:Class ;
+    rdfs:label "探测器型号"@zh .
+
+b04:FusedObject a owl:Class ;
+    rdfs:label "融合对象（跨平台统一辐射源）"@zh .
+
+b04:MotionRelation a owl:Class ;
+    rdfs:label "运动关系（伴随/接近）"@zh .
+
+b04:Track a owl:Class ;
+    rdfs:label "B 类航迹"@zh .
+
+<urn:b04:P1A_test:node_103001> a b04:ObservationNode ;
+    rdfs:label "节点 103001"@zh ;
+    b04:domain "空中" ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pattern "机动" ;
+    b04:pulses 1179764 ;
+    b04:speed_med 68.5 ;
+    b04:t_first_s 0.1 ;
+    b04:t_last_s 277.3 .
+
+<urn:b04:P1A_test:node_103002> a b04:ObservationNode ;
+    rdfs:label "节点 103002"@zh ;
+    b04:domain "空中" ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pattern "盘旋" ;
+    b04:pulses 664690 ;
+    b04:speed_med 68.1 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:node_104001> a b04:ObservationNode ;
+    rdfs:label "节点 104001"@zh ;
+    b04:domain "海面" ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pattern "直线航行" ;
+    b04:pulses 2351830 ;
+    b04:speed_med 3.0 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:node_104002> a b04:ObservationNode ;
+    rdfs:label "节点 104002"@zh ;
+    b04:domain "海面" ;
+    b04:inScenario <urn:b04:P1A_test:scenario> ;
+    b04:pattern "直线航行" ;
+    b04:pulses 4404308 ;
+    b04:speed_med 7.0 ;
+    b04:t_first_s 0.0 ;
+    b04:t_last_s 300.0 .
+
+<urn:b04:P1A_test:scenario> a b04:Scenario ;
+    rdfs:label "P1A_test" ;
+    b04:base_time "2026-11-11 09:00:00" ;
+    b04:duration_s 300.0 ;
+    b04:pulses 8600592 .
+
+b04:TrackingRelation a owl:Class ;
+    rdfs:label "跟踪照射关系"@zh .
+
+b04:LocalEmitter a owl:Class ;
+    rdfs:label "局部辐射源（节点内聚类）"@zh .
+
+b04:Evidence a owl:Class ;
+    rdfs:label "证据"@zh .
+
