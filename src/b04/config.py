@@ -40,7 +40,7 @@ DEFAULT = {
         "pw_tol": 0.15,
         "pri_tol": 0.05,
         "min_pairs": 3,
-        "conflict_frac": 0.05,      # 合并时允许的冲突 CPI 比例（较小对象）
+        "conflict_frac": 0.12,      # 合并时允许的冲突 CPI 比例（同一辐射源因抖动串接伪影约 1–6%，不同辐射源 >30%）
     },
     "anchor": {
         "sigma_air": 0.3,           # 发射-航迹方位残差标准差（空中/海面节点，训练集实测）
@@ -55,6 +55,17 @@ DEFAULT = {
         "min_margin": 4.0,          # 最优/次优航迹综合代价差
         "prop_gap_s": 3.0,          # 标签沿片段传播的最大时间间隔
         "prop_doa_deg": 2.0,
+    },
+    "refine": {
+        "enabled": True,
+        "iters": 2,
+        "min_gain": 6.0,
+        "type_w": 1.0,              # 型号项权重
+        "geo_cap": 9.0,             # 几何项（残差平方/连续性偏差）单 CPI 上限            # 改归所需最小得分增益
+        "conflict_pen": 8.0,        # 时序互斥冲突惩罚（每 CPI 权重；软证据，抖动型号串接有自重叠伪影）
+        "type_gate": 15.0,          # 单元在对象型号下的似然比最优型号低于此值（nats）则禁止归入
+        "noinfo_pen": 2.0,          # 无几何信息时的中性惩罚
+        "cont_max_gap_s": 30.0,     # 方位连续性的最大时间间隔
     },
     "link": {
         "res_margin_deg": 2.0,      # 方位残差容差 = 节点 DOA 误差 + 余量

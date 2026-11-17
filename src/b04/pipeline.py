@@ -12,6 +12,7 @@ from .anchor import (anchor_assign, build_emissions, build_groups, contiguity_li
 from .association import associate, scenario_base_time, track_table
 from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
+from .refine import refine_objects
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
 from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects
 
@@ -55,6 +56,7 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
 
     lab = np.full(len(cp), -1, np.int64)
     ttype = {}
+    R = rgate = None
     if cfg["anchor"].get("enabled", True) and b is not None and len(b):
         tracks = track_table(b, scenario_base_time(a))
         lab, info = anchor_assign(cp, proba, groups, tracks, knowledge, cfg)
@@ -62,9 +64,11 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
         if cfg["anchor"].get("frag_veto", True):
             lab = veto_by_fragment(cp, lab, frag, info["R"], info["gate"], cfg["anchor"].get("veto_min_hit", 0.6))
         lab = _unify_by_emission(lab, groups)
+        cp["anchor_direct"] = lab  # 直接锚定（未经传播），精修时锁定
         lab = propagate_labels(cp, lab, frag, proba, info["ttype"], info["tids"], cfg, info["R"], info["gate"])
         lab = _unify_by_emission(lab, groups)
         ttype = info["ttype"]
+        R, rgate = info["R"], info["gate"]
         w = cp.n.values
         tm.lap(f"航迹锚定 (锚定脉冲 {w[lab >= 0].sum() / w.sum():.1%}, 航迹型号 {len(ttype)})")
     cp["anchor"] = lab
@@ -87,6 +91,12 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     ot = vote_object_type(cp, proba)
     obj = merge_objects(cp, obj, ot, cfg, proba)
     obj = absorb_small(cp, obj, proba, cfg)
+    if cfg.get("refine", {}).get("enabled", True) and R is not None:  # 无航迹时仅靠方位连续，证据不足，验证显示有害
+        t_r = time.time()
+        locked = cp["anchor_direct"].values >= 0 if "anchor_direct" in cp.columns else None
+        obj = refine_objects(cp, obj, groups, proba, cfg, R, rgate, locked)
+        obj = absorb_small(cp, obj, proba, cfg)
+        log.info("对象级精修 %.1f s", time.time() - t_r)
     cp["object_id"] = obj
     tm.lap(f"对象形成 ({obj.max() + 1})")
     cp["frag"] = frag
