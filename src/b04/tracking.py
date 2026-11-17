@@ -174,8 +174,12 @@ def _conflicts(a0, a1, arf, apri, b0, b1, brf, bpri, maxdur, margin, rf_tol, pri
     return cnt
 
 
-def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: dict) -> np.ndarray:
-    """同型号、全局发射时序无冲突、且同节点方位衔接连续的对象合并。"""
+def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: dict,
+                  proba: pd.DataFrame | None = None) -> np.ndarray:
+    """型号相容、全局发射时序无冲突、且同节点方位衔接连续的对象合并。
+
+    型号相容：合并后最优型号的对数似然相对各自最优之和的损失（按较小对象 CPI 权重归一）
+    不超过 type_loss_max；无 proba 时退化为型号相等。"""
     tc, fc = cfg["track"], cfg["fusion"]
     cp = cp.assign(obj=obj)
     pri = np.where(cp.jitter.values > 0, -1.0, cp.pri.fillna(-1).values)
@@ -187,6 +191,23 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
         x = x.sort_values("t0")
         groups[int(o)] = x
     types = obj_type.to_dict()
+    S, W = {}, {}
+    if proba is not None:
+        wv = np.log2(cp.n.values + 1)
+        LLw = pd.DataFrame(np.log(np.clip(proba.values, 1e-4, 1)) * wv[:, None], index=cp.index, columns=proba.columns)
+        for k, x in groups.items():
+            S[k] = LLw.loc[x.index].sum().values
+            W[k] = wv[cp.index.get_indexer(x.index)].sum()
+    classes = list(proba.columns) if proba is not None else []
+    loss_max = tc.get("type_loss_max", 0.5)
+
+    def type_ok(ka, kb):
+        if proba is None:
+            return types.get(ka) == types.get(kb), types.get(ka)
+        joint = S[ka] + S[kb]
+        loss = (S[ka].max() + S[kb].max() - joint.max()) / max(min(W[ka], W[kb]), 1e-9)
+        return loss <= loss_max, classes[int(np.argmax(joint))]
+
     doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
 
     def arrays(x, t):
@@ -221,13 +242,13 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
         best = None
         for i, ka in enumerate(keys):
             for kb in keys[i + 1:]:
-                if types.get(ka) != types.get(kb):
+                ok, t = type_ok(ka, kb)
+                if not ok:
                     continue
                 xa, xb = groups[ka], groups[kb]
                 small = min(len(xa), len(xb))
-                t = types.get(ka)
                 c = _conflicts(*arrays(xa, t), *arrays(xb, t), maxdur, margin, fc["rf_tol"], fc["pri_tol"])
-                if c > max(2, 0.01 * small):
+                if c > max(2, fc.get("conflict_frac", 0.01) * small):
                     continue
                 ev, good = doa_consistent(xa, xb)
                 if ev > 0 and good == 0:
@@ -239,8 +260,58 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
             _, ka, kb = best
             groups[ka] = pd.concat([groups[ka], groups[kb]]).sort_values("t0")
             del groups[kb]
+            if proba is not None:
+                S[ka] = S[ka] + S.pop(kb)
+                W[ka] = W[ka] + W.pop(kb)
+                types[ka] = classes[int(np.argmax(S[ka]))]
             changed = True
     new = pd.Series(0, index=cp.index, dtype=np.int64)
     for k, (o, x) in enumerate(sorted(groups.items())):
         new.loc[x.index] = k
     return new.loc[cp.index].values
+
+
+def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict) -> np.ndarray:
+    """小对象（脉冲数低于阈值）并入同节点上方位最连续、型号相容的大对象；找不到则保留。"""
+    tc = cfg["track"]
+    obj = obj.copy()
+    size = pd.Series(cp.n.values).groupby(obj).sum()
+    small = size[size < tc["min_obj_pulses"]].index
+    big = size[size >= tc["min_obj_pulses"]].index
+    if len(small) == 0 or len(big) == 0:
+        return obj
+    wv = np.log2(cp.n.values + 1)
+    LL = pd.DataFrame(np.log(np.clip(proba.values, 1e-4, 1)) * wv[:, None]).groupby(obj).sum()
+    Wt = pd.Series(wv).groupby(obj).sum()
+    doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
+    tiny_thr = tc.get("tiny_obj_pulses", 2000)
+    for s_o in small:
+        xs = np.where(obj == s_o)[0]
+        cands = []  # (cost, b_o, devmed, loss)
+        for b_o in big:
+            loss = (LL.loc[s_o].max() + LL.loc[b_o].max() - (LL.loc[s_o] + LL.loc[b_o]).max()) / Wt.loc[s_o]
+            devs = []
+            for pid in np.unique(cp.platform_id.values[xs]):
+                xb = np.where((obj == b_o) & (cp.platform_id.values == pid))[0]
+                if len(xb) == 0:
+                    continue
+                xb = xb[np.argsort(cp.t0.values[xb])]
+                for i in xs[cp.platform_id.values[xs] == pid]:
+                    k = np.searchsorted(cp.t0.values[xb], cp.t0.values[i])
+                    near = [q for q in (k - 1, k) if 0 <= q < len(xb)]
+                    q = min(near, key=lambda q: abs(cp.t0.values[xb[q]] - cp.t0.values[i]))
+                    gap_s = abs(cp.t0.values[xb[q]] - cp.t0.values[i]) / 1e6
+                    tol = 2 * doa_err[cp.sh.values[i] > 100] + tc["doa_rate_air"] * gap_s
+                    devs.append(abs(float(angdiff(cp.doa.values[i], cp.doa.values[xb[q]]))) / tol)
+            if not devs:
+                continue
+            dm = float(np.median(devs))
+            cands.append((dm + loss, b_o, dm, loss))
+        if not cands:
+            continue
+        ok = [c for c in cands if c[2] <= 1.0 and c[3] <= tc.get("absorb_type_loss_max", 3.0)]
+        if ok:
+            obj[xs] = min(ok)[1]
+        elif size.loc[s_o] < tiny_thr:  # 极小对象：独立成对象证据不足，并入综合代价最小者
+            obj[xs] = min(cands)[1]
+    return pd.factorize(obj)[0]

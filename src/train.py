@@ -21,6 +21,7 @@ from b04 import io  # noqa: E402
 from b04.config import load_config, load_knowledge  # noqa: E402
 from b04.cpi import extract_cpis  # noqa: E402
 from b04.evaluate import score  # noqa: E402
+from b04.fingerprint import fit_fingerprint  # noqa: E402
 from b04.pipeline import cluster_and_type, run_scenario  # noqa: E402
 from b04.recognize import fit_state_models, fit_type_model, state_features  # noqa: E402
 
@@ -42,9 +43,12 @@ def main():
     ap.add_argument("--drop-rate", type=float, default=0.03,
                     help="训练时随机丢弃脉冲比例，模拟测试集约 3%% 的漏脉冲")
     ap.add_argument("--config", default=os.path.join(ROOT, "config", "default.yaml"))
+    ap.add_argument("--type-model", default="", help="覆盖配置：fingerprint | gbdt")
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     cfg = load_config(args.config)
+    if args.type_model:
+        cfg["recognize"]["type_model"] = args.type_model
     kn = load_knowledge(os.path.join(ROOT, "config", "knowledge.yaml"))
     data = io.load_inputs(args.data_root)
     for (sid, ver), (a, b) in data.items():
@@ -62,21 +66,33 @@ def main():
         trn = (cp.t0 < split_us) if split_us > 0 else np.ones(len(cp), bool)
         type_clf = fit_type_model(cp[trn], cp.cls[trn])
         classes = sorted(kn["models"].keys())
-        models = {"type": type_clf, "type_codes": {c: i for i, c in enumerate(classes)}}
+        fp = fit_fingerprint(cp[trn], cp.cls[trn])
+        models = {"type": type_clf, "fp": fp, "type_codes": {c: i for i, c in enumerate(classes)}}
         # 2) 状态模型：在预测得到的局部簇上构造特征，保证训练/推理一致
-        _, cp2, _ = cluster_and_type(a, models, kn, cfg)
+        _, cp2, _ = cluster_and_type(a, models, kn, cfg, b)
         cp2 = cp2.join(cpi_labels(a, cpi_of), on="cpi")
         feat = state_features(cp2, models["type_codes"])
         trn2 = (feat.t0 < split_us) if split_us > 0 else np.ones(len(feat), bool)
         m1, m2 = fit_state_models(feat[trn2], cp2.st[trn2])
         models.update({"state1": m1, "state2": m2, "sklearn": sklearn.__version__})
         # 3) 端到端评估
-        pred, links, _ = run_scenario(a, b, models, kn, cfg)
+        pred, links, extras = run_scenario(a, b, models, kn, cfg)
         errs = io.validate_outputs(a, b, pred, links)
         logging.info("格式自检: %s", errs or "通过")
         ev_a = a[a.toa >= split_us] if split_us > 0 else a
         res = score(ev_a, b, pred[pred.pulse_id.isin(ev_a.pulse_id)], links)
         print(json.dumps(res, ensure_ascii=False, indent=1))
+        m = ev_a[["pulse_id", "target_id"]].merge(pred, on="pulse_id")
+        summ = m.groupby("object_id").agg(pulses=("pulse_id", "size"), type=("target_class", "first"),
+                                          tid=("target_id", lambda s: s.value_counts().index[0]),
+                                          share=("target_id", lambda s: round(s.value_counts(normalize=True).iloc[0], 3)))
+        summ = summ.join(links.set_index("object_id")[["track_id", "link_status"]])
+        sc = extras["scores"]
+        if len(sc):
+            sc = sc.assign(object_id=sc.object_id + 1).sort_values("hit", ascending=False).drop_duplicates("object_id")
+            summ = summ.join(sc.set_index("object_id")[["track_id", "hit", "med_res", "feasible"]].add_prefix("best_"))
+        summ["true_track"] = summ.tid.map({v: k for k, v in b.groupby("track_id").target_id.first().items()})
+        print(summ.sort_values("pulses", ascending=False).to_string())
         if args.save:
             os.makedirs(os.path.dirname(args.save), exist_ok=True)
             joblib.dump(models, args.save, compress=3)

@@ -24,6 +24,13 @@ DEFAULT = {
         "doa_rate_sea": 0.6,
         "overlap_eps_us": 5.0,
         "min_type_compat": 0.05,
+        "type_loss_max": 0.5,       # 对象合并的型号似然损失上限（nats / CPI 权重）
+        "min_obj_pulses": 5000,     # 小于此脉冲数的对象尝试并入大对象
+        "absorb_type_loss_max": 3.0,
+        "tiny_obj_pulses": 2000,    # 小于此脉冲数的对象强制并入最相近对象  # 小对象证据少，型号约束放宽，以方位连续为主
+    },
+    "recognize": {
+        "type_model": "fingerprint",  # fingerprint（生成式、无先验）| gbdt
     },
     "fusion": {
         "max_delay_us": 400.0,      # 跨节点同源 CPI 起止时刻差上限（基线/光速 + 截断余量）
@@ -31,6 +38,18 @@ DEFAULT = {
         "pw_tol": 0.15,
         "pri_tol": 0.05,
         "min_pairs": 3,
+        "conflict_frac": 0.05,      # 合并时允许的冲突 CPI 比例（较小对象）
+    },
+    "anchor": {
+        "sigma_air": 0.3,           # 发射-航迹方位残差标准差（空中/海面节点，训练集实测）
+        "sigma_sea": 0.55,
+        "gate_air": 1.2,            # 单个 CPI 残差硬门限
+        "gate_sea": 2.6,
+        "min_track_support": 5000,  # 航迹判型所需唯一匹配脉冲数
+        "min_type_prob": 0.05,
+        "min_margin": 4.0,          # 最优/次优航迹综合代价差
+        "prop_gap_s": 3.0,          # 标签沿片段传播的最大时间间隔
+        "prop_doa_deg": 2.0,
     },
     "link": {
         "res_margin_deg": 2.0,      # 方位残差容差 = 节点 DOA 误差 + 余量

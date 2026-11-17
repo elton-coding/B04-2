@@ -12,7 +12,7 @@ def scenario_base_time(a: pd.DataFrame) -> pd.Timestamp:
     """场景零点：datetime - toa 的中位数（toa 以场景起点为零，单位 μs）。"""
     s = a[["datetime", "toa"]].dropna().sample(min(len(a), 200000), random_state=0)
     base = s.datetime - pd.to_timedelta(s.toa, unit="us")
-    return base.median().floor("s")
+    return base.median().round("s")  # floor 会因 toa>0 落到前一秒，造成 1 s 时间偏差
 
 
 def track_table(b: pd.DataFrame, base: pd.Timestamp) -> pd.DataFrame:
@@ -78,7 +78,7 @@ def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.T
                 ok &= rcs in m.get("rcs", [rcs])
         feas.append(ok)
     sc["feasible"] = feas
-    sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.01 * sc.med_res, 10.0)
+    sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.01 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
     oi = {o: i for i, o in enumerate(objects)}
     tids = sorted(tracks.track_id.unique())
     ti = {t: i for i, t in enumerate(tids)}
