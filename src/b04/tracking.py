@@ -1,0 +1,246 @@
+"""L3 节点内 CPI 串接（局部辐射源片段）与 L6 跨平台融合。"""
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+from numba import njit
+
+from .geo import angdiff
+
+
+# ---------------------------------------------------------------- 节点内片段
+def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg: dict) -> np.ndarray:
+    """逐节点按时间顺序做 CPI→辐射源的门限关联，返回每个 CPI 的片段号。"""
+    tc = cfg["track"]
+    doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
+    classes = list(proba.columns)
+    air_mask = np.array([domain_air.get(c, True) for c in classes])
+    P = proba.values
+    frag = np.full(len(cp), -1, np.int64)
+    nxt = 0
+    for pid, idx in cp.groupby("platform_id", sort=True).indices.items():
+        idx = idx[np.argsort(cp.t0.values[idx], kind="stable")]
+        node_air = float(np.nanmedian(cp.sh.values[idx])) > 100
+        e = doa_err[node_air]
+        tracks = []  # dict: id, t1, doa, sd, p(sum), n
+        for i in idx:
+            t0, t1, doa, n = cp.t0.values[i], cp.t1.values[i], cp.doa.values[i], cp.n.values[i]
+            p = P[i]
+            sd_c = e / np.sqrt(3.0) / np.sqrt(max(n, 1))
+            best, best_cost = None, 1e18
+            alive = []
+            for tr in tracks:
+                gap_s = (t0 - tr["t1"]) / 1e6
+                if gap_s > tc["max_gap_s"]:
+                    continue
+                alive.append(tr)
+                if t0 < tr["t1"] - tc["overlap_eps_us"]:
+                    continue
+                pt = tr["p"] / tr["p"].sum()
+                compat = float(np.dot(p, pt))
+                if compat < tc["min_type_compat"]:
+                    continue
+                is_air = float(np.dot(pt, air_mask)) > 0.5
+                rate = tc["doa_rate_air"] if is_air else tc["doa_rate_sea"]
+                gate = 3.0 * np.hypot(sd_c, tr["sd"]) + 0.5 + rate * max(gap_s, 0.0)
+                dd = abs(float(angdiff(doa, tr["doa"])))
+                if dd > gate:
+                    continue
+                cost = dd / gate + 0.5 * (1.0 - compat) + 0.2 * max(gap_s, 0.0) / tc["max_gap_s"]
+                if cost < best_cost:
+                    best, best_cost = tr, cost
+            tracks = alive
+            if best is None:
+                best = {"id": nxt, "t1": t1, "doa": doa, "sd": sd_c, "p": p * np.log2(n + 1)}
+                nxt += 1
+                tracks.append(best)
+            else:
+                best["t1"] = max(best["t1"], t1)
+                best["doa"] = doa
+                best["sd"] = sd_c
+                best["p"] = best["p"] + p * np.log2(n + 1)
+            frag[i] = best["id"]
+    return frag
+
+
+# ---------------------------------------------------------------- 跨节点同源 CPI
+def match_cross_platform(cp: pd.DataFrame, cfg: dict) -> pd.DataFrame:
+    """同一发射在不同节点上形成的 CPI：时间近同（传播时延差）、RF/PW/PRI 一致。"""
+    fc = cfg["fusion"]
+    d = cp[["cpi", "platform_id", "t0", "t1", "rf", "pw", "pri", "jitter", "n"]].copy()
+    d["prikey"] = np.where(d.jitter > 0, -1, np.round(d.pri.fillna(-1))).astype(np.int64)
+    d = d.sort_values("t0")
+    plats = sorted(d.platform_id.unique())
+    res = []
+    for i, pa in enumerate(plats):
+        for pb in plats[i + 1:]:
+            A = d[d.platform_id == pa]
+            B = d[d.platform_id == pb]
+            for direction in ("backward", "forward"):
+                m = pd.merge_asof(A, B, on="t0", by="prikey", direction=direction, tolerance=fc["max_delay_us"],
+                                  suffixes=("_a", "_b"))
+                m = m.dropna(subset=["cpi_b"])
+                ok = ((m.rf_a - m.rf_b).abs() <= fc["rf_tol"]) & ((m.pw_a - m.pw_b).abs() <= fc["pw_tol"])
+                ok &= (m.jitter_a > 0) | ((m.pri_a - m.pri_b).abs() <= fc["pri_tol"])
+                res.append(m.loc[ok, ["cpi_a", "cpi_b"]])
+    if not res:
+        return pd.DataFrame(columns=["cpi_a", "cpi_b"])
+    out = pd.concat(res).astype(np.int64).drop_duplicates()
+    return out
+
+
+class _DSU:
+    def __init__(self, n):
+        self.p = np.arange(n)
+
+    def find(self, x):
+        r = x
+        while self.p[r] != r:
+            r = self.p[r]
+        while self.p[x] != r:
+            self.p[x], x = r, self.p[x]
+        return r
+
+
+def _overlap_count(iv: np.ndarray, eps: float) -> int:
+    if len(iv) < 2:
+        return 0
+    iv = iv[np.argsort(iv[:, 0], kind="stable")]
+    run_max = np.maximum.accumulate(iv[:-1, 1])
+    return int((iv[1:, 0] < run_max - eps).sum())
+
+
+def fuse_fragments(cp: pd.DataFrame, frag: np.ndarray, pairs: pd.DataFrame, cfg: dict) -> np.ndarray:
+    """以同源 CPI 数为权重，在"同节点片段时间不重叠"约束下贪心合并片段 → 对象。"""
+    fc, tc = cfg["fusion"], cfg["track"]
+    cp = cp.assign(frag=frag)
+    f_of_cpi = pd.Series(frag, index=cp.cpi.values)
+    if len(pairs):
+        fp = pd.DataFrame({"fa": f_of_cpi.loc[pairs.cpi_a.values].values, "fb": f_of_cpi.loc[pairs.cpi_b.values].values})
+        fp = fp[fp.fa != fp.fb]
+        w = fp.groupby(["fa", "fb"]).size().rename("w").reset_index()
+        w = w[w.w >= fc["min_pairs"]].sort_values("w", ascending=False)
+    else:
+        w = pd.DataFrame(columns=["fa", "fb", "w"])
+    nf = int(frag.max()) + 1
+    dsu = _DSU(nf)
+    # 组件 -> {platform: intervals}
+    comp_iv = {}
+    for (f, pid), x in cp.groupby(["frag", "platform_id"]):
+        comp_iv.setdefault(int(f), {})[int(pid)] = x[["t0", "t1"]].values
+    eps = tc["overlap_eps_us"]
+    for fa, fb, _ in w.itertuples(index=False):
+        ra, rb = dsu.find(int(fa)), dsu.find(int(fb))
+        if ra == rb:
+            continue
+        A, B = comp_iv[ra], comp_iv[rb]
+        ok = True
+        for pid in set(A) & set(B):
+            iv = np.vstack([A[pid], B[pid]])
+            if _overlap_count(iv, eps) > 0.01 * min(len(A[pid]), len(B[pid])):
+                ok = False
+                break
+        if not ok:
+            continue
+        dsu.p[rb] = ra
+        for pid, iv in B.items():
+            A[pid] = np.vstack([A[pid], iv]) if pid in A else iv
+        del comp_iv[rb]
+    roots = np.array([dsu.find(int(f)) for f in frag])
+    _, obj = np.unique(roots, return_inverse=True)
+    return obj.astype(np.int64)
+
+
+# ---------------------------------------------------------------- 对象级合并
+@njit(cache=True)
+def _conflicts(a0, a1, arf, apri, b0, b1, brf, bpri, maxdur, margin, rf_tol, pri_tol):
+    """统计 B 中与 A 在时间上重叠（> margin）且参数不一致的 CPI 数。
+
+    同一辐射源任一时刻只发射一个 CPI：不同节点上的同一 CPI 参数一致、时间仅差传播时延；
+    若两对象的 CPI 在时间上重叠而参数不同，则二者不可能是同一辐射源。
+    """
+    cnt = 0
+    na = a0.shape[0]
+    for j in range(b0.shape[0]):
+        lo = np.searchsorted(a0, b0[j] - maxdur)
+        hi = np.searchsorted(a0, b1[j])
+        for i in range(lo, min(hi, na)):
+            ov = min(a1[i], b1[j]) - max(a0[i], b0[j])
+            if ov > margin:
+                same = abs(arf[i] - brf[j]) <= rf_tol and (abs(apri[i] - bpri[j]) <= pri_tol or apri[i] < 0 or bpri[j] < 0)
+                if not same:
+                    cnt += 1
+                    break
+    return cnt
+
+
+def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: dict) -> np.ndarray:
+    """同型号、全局发射时序无冲突、且同节点方位衔接连续的对象合并。"""
+    tc, fc = cfg["track"], cfg["fusion"]
+    cp = cp.assign(obj=obj)
+    pri = np.where(cp.jitter.values > 0, -1.0, cp.pri.fillna(-1).values)
+    cp = cp.assign(pri_k=pri)
+    maxdur = float((cp.t1 - cp.t0).max()) + 1.0
+    margin = fc["max_delay_us"]
+    groups = {}
+    for o, x in cp.groupby("obj"):
+        x = x.sort_values("t0")
+        groups[int(o)] = x
+    types = obj_type.to_dict()
+    doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
+
+    def arrays(x, t):
+        # 只用自身判型与对象型号一致的 CPI 计冲突，避免少量误归属 CPI 造成伪冲突
+        if "ptype" in x.columns:
+            y = x[x.ptype == t]
+            if len(y) >= 0.5 * len(x):
+                x = y
+        return (x.t0.values, x.t1.values, x.rf.values, x.pri_k.values)
+
+    def doa_consistent(xa, xb):
+        """共享节点上，时间最近的首尾 CPI 方位差是否在门限内；返回 (有证据, 一致)。"""
+        evid, good = 0, 0
+        for pid in set(xa.platform_id) & set(xb.platform_id):
+            A = xa[xa.platform_id == pid]
+            B = xb[xb.platform_id == pid]
+            # A 在前 B 在后 或 反之：取边界
+            for P, Q in ((A, B), (B, A)):
+                if P.t1.max() <= Q.t0.min() + margin:
+                    p, q = P.iloc[-1], Q.iloc[0]
+                    gap_s = max(q.t0 - p.t1, 0) / 1e6
+                    air = p.sh > 100
+                    gate = 2.0 * doa_err[air] + tc["doa_rate_air"] * gap_s
+                    evid += 1
+                    good += abs(float(angdiff(p.doa, q.doa))) <= gate
+        return evid, good
+
+    changed = True
+    while changed:
+        changed = False
+        keys = sorted(groups, key=lambda k: -len(groups[k]))
+        best = None
+        for i, ka in enumerate(keys):
+            for kb in keys[i + 1:]:
+                if types.get(ka) != types.get(kb):
+                    continue
+                xa, xb = groups[ka], groups[kb]
+                small = min(len(xa), len(xb))
+                t = types.get(ka)
+                c = _conflicts(*arrays(xa, t), *arrays(xb, t), maxdur, margin, fc["rf_tol"], fc["pri_tol"])
+                if c > max(2, 0.01 * small):
+                    continue
+                ev, good = doa_consistent(xa, xb)
+                if ev > 0 and good == 0:
+                    continue
+                score = (good + 1) * np.log1p(small)
+                if best is None or score > best[0]:
+                    best = (score, ka, kb)
+        if best is not None:
+            _, ka, kb = best
+            groups[ka] = pd.concat([groups[ka], groups[kb]]).sort_values("t0")
+            del groups[kb]
+            changed = True
+    new = pd.Series(0, index=cp.index, dtype=np.int64)
+    for k, (o, x) in enumerate(sorted(groups.items())):
+        new.loc[x.index] = k
+    return new.loc[cp.index].values

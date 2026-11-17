@@ -12,6 +12,7 @@ RUN chmod +x /app/program/solution/run.sh
 WORKDIR /app/program/solution
 ENV DATA_ROOT=/input
 ENV OUTPUT_DIR=/output
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache
 
 ENTRYPOINT ["/app/program/solution/run.sh"]
 CMD ["--task", "all"]

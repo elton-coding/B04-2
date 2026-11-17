@@ -1,0 +1,17 @@
+# 由配套资料 D2《平台与型号手册》、D3《传感器与观测说明》抽取的领域知识
+# rule = 【规则】（硬约束）；tendency = 【倾向】（软证据）
+models:
+  R01: {platform_model: 云巡一型, category: 巡查飞行器, domain: air, rcs: [small, medium], speed_mps: [60, 115]}
+  R02: {platform_model: 云巡二型, category: 巡查飞行器, domain: air, rcs: [small, medium], speed_mps: [60, 115]}
+  R03: {platform_model: 云桥一型, category: 中继飞行器, domain: air, rcs: [medium, large], speed_mps: [70, 110]}
+  R04: {platform_model: 云桥二型, category: 中继飞行器, domain: air, rcs: [medium, large], speed_mps: [70, 110]}
+  R05: {platform_model: 海巡一型, category: 工作艇, domain: sea, rcs: [small, medium], speed_mps: [1, 16]}
+  R06: {platform_model: 海巡二型, category: 工作艇, domain: sea, rcs: [small, medium], speed_mps: [1, 16]}
+  R07: {platform_model: 海援一型, category: 勤务船, domain: sea, rcs: [medium, large], speed_mps: [6, 12]}
+  R08: {platform_model: 海援二型, category: 勤务船, domain: sea, rcs: [medium, large], speed_mps: [6, 12]}
+rules:
+  one_emitter_per_platform: true
+  rcs_constant_per_platform: true
+  emitter_sector_half_deg: 60     # 被观测雷达前向扇区半宽
+  receiver_fov_half_deg: 60       # 本方节点接收视场半宽
+states: {0: 搜索, 1: 粗跟踪, 2: 精跟踪}
