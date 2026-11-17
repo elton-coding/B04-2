@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from .anchor import (anchor_assign, build_emissions, build_groups, contiguity_links, propagate_labels,
-                     resolve_conflicts)
+                     resolve_conflicts, veto_by_fragment)
 from .association import associate, scenario_base_time, track_table
 from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
@@ -59,6 +59,8 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
         tracks = track_table(b, scenario_base_time(a))
         lab, info = anchor_assign(cp, proba, groups, tracks, knowledge, cfg)
         lab = resolve_conflicts(cp, lab, groups, info["score"], cfg)
+        if cfg["anchor"].get("frag_veto", True):
+            lab = veto_by_fragment(cp, lab, frag, info["R"], info["gate"], cfg["anchor"].get("veto_min_hit", 0.6))
         lab = _unify_by_emission(lab, groups)
         lab = propagate_labels(cp, lab, frag, proba, info["ttype"], info["tids"], cfg, info["R"], info["gate"])
         lab = _unify_by_emission(lab, groups)
@@ -66,6 +68,8 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
         w = cp.n.values
         tm.lap(f"航迹锚定 (锚定脉冲 {w[lab >= 0].sum() / w.sum():.1%}, 航迹型号 {len(ttype)})")
     cp["anchor"] = lab
+    tids_arr = np.array(info["tids"]) if (lab >= 0).any() else np.array([-1])
+    cp["anchor_track"] = np.where(lab >= 0, tids_arr[np.clip(lab, 0, len(tids_arr) - 1)], -1)
 
     # 未锚定部分：节点内串接 → 同源融合
     obj = np.full(len(cp), -1, np.int64)
@@ -99,7 +103,15 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
     cp["state"] = predict_states(models["state1"], models["state2"], feat)
     tm.lap("状态识别")
     base = scenario_base_time(a)
-    links, scores = associate(cp, cp.groupby("object_id").obj_type.first(), b, base, knowledge, cfg)
+    # 锚定结果作为关联先验：对象过半脉冲锚定于同一航迹时优先该航迹
+    prefer = {}
+    if (cp.anchor_track >= 0).any():
+        w = cp[cp.anchor_track >= 0].groupby(["object_id", "anchor_track"]).n.sum()
+        tot = cp.groupby("object_id").n.sum()
+        for (o, t), v in w.items():
+            if v >= 0.5 * tot.loc[o]:
+                prefer[o] = int(t)
+    links, scores = associate(cp, cp.groupby("object_id").obj_type.first(), b, base, knowledge, cfg, prefer)
     tm.lap(f"A-B 关联 (matched {int((links.link_status == 'matched').sum())})")
 
     c = cp.set_index("cpi")

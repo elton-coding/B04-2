@@ -57,6 +57,12 @@ def normalize_a(df: pd.DataFrame) -> pd.DataFrame:
         df[c] = pd.to_numeric(df[c], errors="coerce").astype("float64")
     df["platform_id"] = df["platform_id"].astype("int64")
     df["pulse_id"] = df["pulse_id"].astype("int64")
+    # toa 单位自检：赛题约定 μs；若同节点相邻脉冲间隔中位数远超正常量级（交错脉冲流通常为数十~数百 μs），按 ns 换算
+    med = df.sort_values(["platform_id", "toa"]).groupby("platform_id").toa.diff().median()
+    if np.isfinite(med) and med > 5000:
+        import logging
+        logging.getLogger("b04").warning("toa 相邻间隔中位数 %.0f 异常，按 ns→μs 换算", med)
+        df["toa"] = df["toa"] / 1000.0
     return df
 
 

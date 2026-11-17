@@ -64,6 +64,20 @@ def track_residuals(cp: pd.DataFrame, tracks: pd.DataFrame) -> tuple[np.ndarray,
     return R, tids
 
 
+def _track_dist_med(tracks: pd.DataFrame, ta, tb) -> float:
+    """两条航迹在共同时段内的距离中位数（米）。"""
+    from .geo import dist_m
+
+    A = tracks[tracks.track_id == ta]
+    B = tracks[tracks.track_id == tb]
+    t = np.arange(max(A.t_us.min(), B.t_us.min()), min(A.t_us.max(), B.t_us.max()), 2e6)
+    if len(t) < 3:
+        return np.inf
+    d = dist_m(np.interp(t, A.t_us, A.target_longitude), np.interp(t, A.t_us, A.target_latitude),
+               np.interp(t, B.t_us, B.target_longitude), np.interp(t, B.t_us, B.target_latitude))
+    return float(np.median(d))
+
+
 def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, tracks: pd.DataFrame,
                   knowledge: dict, cfg: dict) -> tuple[np.ndarray, dict]:
     """返回每个 CPI 的锚定航迹号（-1 表示未锚定）与航迹型号估计。"""
@@ -115,24 +129,48 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
     pfeas = PE @ feas_ct.astype(float)
     geo_ok &= pfeas >= 0.2
 
-    # 1) 航迹型号：用几何上唯一可行的发射投票
-    uniq = geo_ok.sum(axis=1) == 1
-    TT = np.zeros((J, len(classes)))
+    # 1) 航迹型号：航迹的真实归属辐射源正位于航迹上（残差最小），邻近无航迹辐射源有数百米偏移（残差偏大）。
+    #    对每条航迹、每个型号，取几何可行且型号把握度高的单元，按脉冲加权的代价中位数选最小者（需足够支持度）。
+    conf_e = PE.max(axis=1) >= ac.get("vote_min_conf", 0.8)
+    best_t = np.argmax(PE, axis=1)
     ew = np.bincount(emis, weights=cp.n.values, minlength=E)
-    # 按脉冲数加权的硬投票：航迹上占主导的辐射源决定航迹型号（避免邻近小目标的大量短单元左右结果）
-    for e in np.where(uniq)[0]:
-        j = int(np.argmax(geo_ok[e]))
-        TT[j, int(np.argmax(PE[e]))] += ew[e]
-    support = np.bincount(np.argmax(geo_ok[uniq], axis=1), weights=ew[uniq], minlength=J) if uniq.any() else np.zeros(J)
-    ttype = {}
+    ttype, tmed, tmask = {}, {}, {}
     for j in range(J):
-        if support[j] >= ac["min_track_support"]:
-            ttype[j] = int(np.argmax(TT[j]))
+        sel = geo_ok[:, j] & conf_e
+        if not sel.any():
+            continue
+        cand = []
+        for ci in np.unique(best_t[sel]):
+            m = sel & (best_t == ci)
+            sup = ew[m].sum()
+            if sup < ac["min_track_support"]:
+                continue
+            c = cost[m, j]
+            o = np.argsort(c)
+            cw = np.cumsum(ew[m][o])
+            med = c[o][np.searchsorted(cw, cw[-1] / 2)]
+            cand.append((med, -sup, int(ci)))
+        if cand:
+            ttype[j] = min(cand)[2]
+            tmed[j] = min(cand)[0]
+            tmask[j] = sel & (best_t == ttype[j])
+    # 一个辐射源只对应一条航迹：同型号且支撑单元大量重合（同一辐射源同时符合两条近距伴随航迹）时，
+    # 只保留残差更小的航迹，另一条视为静默伴随平台（不判型号）
+    js = sorted(ttype)
+    for x in range(len(js)):
+        for y in range(x + 1, len(js)):
+            ja, jb = js[x], js[y]
+            if ja not in ttype or jb not in ttype or ttype[ja] != ttype[jb]:
+                continue
+            ov = ew[tmask[ja] & tmask[jb]].sum() / max(min(ew[tmask[ja]].sum(), ew[tmask[jb]].sum()), 1e-9)
+            if ov > ac.get("dup_overlap", 0.5) and _track_dist_med(tracks, tids[ja], tids[jb]) < ac.get("dup_dist_m", 600.0):
+                del ttype[jb if tmed[jb] > tmed[ja] else ja]
     # 2) 指派：几何可行 + 与航迹型号一致；多候选取综合代价最小且需有足够间隔
     score = np.full((E, J), np.inf)
     for j, ci in ttype.items():
         pj = PE[:, ci]
-        ok = geo_ok[:, j] & (pj >= ac["min_type_prob"])
+        # 相对判据：航迹型号概率须达到该单元最可能型号的一定比例（避免同频段相近型号被宽松门限放入）
+        ok = geo_ok[:, j] & (pj >= np.maximum(ac["min_type_prob"], ac.get("rel_type_prob", 0.3) * PE.max(axis=1)))
         score[ok, j] = cost[ok, j] - 2.0 * np.log(np.clip(pj[ok], 1e-4, 1))
     best = np.argmin(score, axis=1)
     s_sorted = np.sort(score, axis=1)
@@ -273,3 +311,23 @@ def build_groups(cp: pd.DataFrame, emis: np.ndarray, links: pd.DataFrame) -> np.
         if ra != rb:
             dsu.p[rb] = ra
     return pd.factorize(np.array([dsu.find(i) for i in range(len(cp))]))[0]
+
+
+def veto_by_fragment(cp: pd.DataFrame, lab: np.ndarray, frag: np.ndarray, R: np.ndarray, gate: np.ndarray,
+                     min_hit: float = 0.6, min_valid: int = 5) -> np.ndarray:
+    """片段级几何否决：节点内连续片段在整个时段里多数 CPI 都不符合某航迹方位时，撤销其在该航迹上的锚定。
+
+    针对"无航迹（或航迹缺失）的辐射源在方位偶然重合的时刻被误锚定到他人航迹"。"""
+    lab = lab.copy()
+    for f in np.unique(frag):
+        idx = np.where(frag == f)[0]
+        labs = np.unique(lab[idx][lab[idx] >= 0])
+        for j in labs:
+            r = R[idx, j]
+            v = np.isfinite(r)
+            if v.sum() < min_valid:
+                continue
+            hit = np.mean(np.abs(r[v]) <= gate[idx][v])
+            if hit < min_hit:
+                lab[idx[lab[idx] == j]] = -1
+    return lab

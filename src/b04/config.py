@@ -27,7 +27,9 @@ DEFAULT = {
         "type_loss_max": 0.5,       # 对象合并的型号似然损失上限（nats / CPI 权重）
         "min_obj_pulses": 5000,     # 小于此脉冲数的对象尝试并入大对象
         "absorb_type_loss_max": 3.0,
-        "tiny_obj_pulses": 2000,    # 小于此脉冲数的对象强制并入最相近对象  # 小对象证据少，型号约束放宽，以方位连续为主
+        "tiny_obj_pulses": 2000,
+        "max_merge_objects": 200,   # 复杂度保护：两两合并只在最大的若干对象间进行
+        "max_absorb_objects": 500,    # 小于此脉冲数的对象强制并入最相近对象  # 小对象证据少，型号约束放宽，以方位连续为主
     },
     "recognize": {
         "type_model": "fingerprint",  # fingerprint（生成式、无先验）| gbdt
@@ -47,6 +49,9 @@ DEFAULT = {
         "gate_sea": 2.6,
         "min_track_support": 5000,  # 航迹判型所需唯一匹配脉冲数
         "min_type_prob": 0.05,
+        "rel_type_prob": 0.3,       # 航迹型号概率 ≥ 该单元最可能型号概率 × 此比例
+        "vote_min_conf": 0.8,       # 参与航迹判型投票的单元最低型号把握度
+        "frag_veto": True, "veto_min_hit": 0.6,
         "min_margin": 4.0,          # 最优/次优航迹综合代价差
         "prop_gap_s": 3.0,          # 标签沿片段传播的最大时间间隔
         "prop_doa_deg": 2.0,

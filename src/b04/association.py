@@ -52,7 +52,7 @@ def association_scores(cp: pd.DataFrame, tracks: pd.DataFrame, cfg: dict, seed: 
 
 
 def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.Timestamp,
-              knowledge: dict, cfg: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
+              knowledge: dict, cfg: dict, prefer: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
     lc = cfg["link"]
     objects = sorted(cp.object_id.unique())
     links = pd.DataFrame({"object_id": objects, "track_id": pd.array([pd.NA] * len(objects), dtype="Int64"),
@@ -78,16 +78,23 @@ def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.T
                 ok &= rcs in m.get("rcs", [rcs])
         feas.append(ok)
     sc["feasible"] = feas
-    sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.01 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
+    sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.1 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
+    if prefer:
+        pm = np.array([prefer.get(o) == t for o, t in zip(sc.object_id, sc.track_id)])
+        sc.loc[pm & (sc.cost < 10.0), "cost"] -= lc.get("anchor_bonus", 0.5)
     oi = {o: i for i, o in enumerate(objects)}
     tids = sorted(tracks.track_id.unique())
     ti = {t: i for i, t in enumerate(tids)}
-    C = np.full((len(objects), len(tids)), 10.0)
+    # 代价矩阵 + 每个对象一个"不关联"虚拟列（代价 null_cost），避免匈牙利算法为凑满指派而牺牲正确关联
+    no = len(objects)
+    C = np.full((no, len(tids) + no), 1e6)
+    C[:, :len(tids)] = 10.0
+    C[np.arange(no), len(tids) + np.arange(no)] = lc.get("null_cost", 0.5)
     for r in sc.itertuples(index=False):
         C[oi[r.object_id], ti[r.track_id]] = r.cost
     rr, cc = linear_sum_assignment(C)
     for i, j in zip(rr, cc):
-        if C[i, j] < 10.0:
+        if j < len(tids) and C[i, j] < lc.get("null_cost", 0.5):
             links.loc[i, "track_id"] = tids[j]
             links.loc[i, "link_status"] = "matched"
     return links, sc

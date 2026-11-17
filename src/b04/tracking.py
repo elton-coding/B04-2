@@ -238,7 +238,7 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
     changed = True
     while changed:
         changed = False
-        keys = sorted(groups, key=lambda k: -len(groups[k]))
+        keys = sorted(groups, key=lambda k: -len(groups[k]))[: tc.get("max_merge_objects", 200)]
         best = None
         for i, ka in enumerate(keys):
             for kb in keys[i + 1:]:
@@ -285,6 +285,19 @@ def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: di
     Wt = pd.Series(wv).groupby(obj).sum()
     doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
     tiny_thr = tc.get("tiny_obj_pulses", 2000)
+    order = size.loc[small].sort_values(ascending=False).index
+    cap = tc.get("max_absorb_objects", 500)
+    small, rest = order[:cap], order[cap:]
+    if len(rest):  # 超量小对象：按同节点时间最近的大对象 CPI 快速归并（复杂度保护）
+        bigmask = np.isin(obj, big)
+        for pid in np.unique(cp.platform_id.values):
+            bi = np.where(bigmask & (cp.platform_id.values == pid))[0]
+            si = np.where(np.isin(obj, rest) & (cp.platform_id.values == pid))[0]
+            if len(bi) == 0 or len(si) == 0:
+                continue
+            bi = bi[np.argsort(cp.t0.values[bi])]
+            k = np.clip(np.searchsorted(cp.t0.values[bi], cp.t0.values[si]), 0, len(bi) - 1)
+            obj[si] = obj[bi[k]]
     for s_o in small:
         xs = np.where(obj == s_o)[0]
         cands = []  # (cost, b_o, devmed, loss)
