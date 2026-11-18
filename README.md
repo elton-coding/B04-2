@@ -34,10 +34,11 @@ python src/train.py --data-root <训练数据目录> --save models/b04_models.jo
 # 态势要素 + 本体图谱 + 态势报告（输出到 ./output/report/）
 DATA_ROOT=<测试数据目录> python src/main.py --task report --out-dir ./output
 powershell -File tools/html2pdf.ps1 -Html output/report/<场景>_<版本>_situation_report.html
-# 打包提交
-python tools/pack.py --team 同频队 --version v3
+# 打包提交：代码包 + A 榜结果包（结果包先按提交规则自检，不通过则拒绝打包）
+python tools/pack.py --team 同频队 --version v8
+python tools/pack_results.py --team 同频队 --version v8 --data-root <测试数据目录>
 # Linux/Docker 验证（在 WSL Ubuntu 中执行，流程同评测服务）
-bash tools/validate_docker.sh dist/同频队_code_v3.zip <测试数据目录>
+bash tools/validate_docker.sh dist/同频队_code_v8.zip <测试数据目录>
 ```
 
 ## Docker
