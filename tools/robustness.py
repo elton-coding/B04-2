@@ -73,6 +73,24 @@ def fake_tracks(b, rng, near_m=300.0, far_m=3000.0):
     return pd.concat(out, ignore_index=True)
 
 
+def formation_tracks(b, rng, lo_m=150.0, hi_m=250.0, noise_m=100.0):
+    """编队伴随：每条真实航迹旁加一条静默伴随航迹（平移 lo–hi 米、同散射等级、独立位置噪声），target_id 置空。
+    模拟 A 榜测试集的紧密编队（T3/T8 间距中位 146 m、T11/T16 208 m）。"""
+    out = [b]
+    nid = int(b.track_id.max()) + 100
+    for k, tid in enumerate(sorted(b.track_id.unique())):
+        x = b[b.track_id == tid].copy()
+        off = rng.uniform(lo_m, hi_m)
+        ang = rng.uniform(0, 2 * np.pi)
+        kx = 111320 * np.cos(np.radians(x.target_latitude))
+        x["target_longitude"] += (off * np.sin(ang) + rng.normal(0, noise_m, len(x))) / kx
+        x["target_latitude"] += (off * np.cos(ang) + rng.normal(0, noise_m, len(x))) / 110574
+        x["track_id"] = nid + k
+        x["target_id"] = np.nan
+        out.append(x)
+    return pd.concat(out, ignore_index=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-root", required=True)
@@ -119,6 +137,10 @@ def main():
         keep = srng.choice(sorted(bw.track_id.unique()), size=bw.track_id.nunique() // 2, replace=False)
         variants.append(("去掉一半航迹", aw, bw[bw.track_id.isin(keep)].reset_index(drop=True), cfg))
         variants.append(("增加 4 条伪造航迹（近 300 m / 远 3 km）", aw, fake_tracks(bw, srng), cfg))
+        bf = formation_tracks(bw, np.random.default_rng(2))
+        variants.append(("编队伴随：每条航迹旁加 150–250 m 静默航迹", aw, bf, cfg))
+        c = copy.deepcopy(cfg); c["anchor"]["tdoa_w"] = 0; c["link"]["tdoa_w"] = 0
+        variants.append(("编队伴随（关闭 TDOA）", aw, bf, c))
         for name, av, bv, cv in variants:
             log.info("== 压力测试：%s", name)
             try:

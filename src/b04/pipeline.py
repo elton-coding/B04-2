@@ -8,11 +8,12 @@ import numpy as np
 import pandas as pd
 
 from .anchor import (anchor_assign, build_emissions, build_groups, contiguity_links, propagate_labels,
-                     resolve_conflicts, veto_by_fragment)
+                     resolve_conflicts, track_residuals, veto_by_fragment)
 from .association import associate, scenario_base_time, track_table
 from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
 from .refine import refine_objects
+from .tdoa import prepare_tdoa
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
 from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects
 
@@ -37,7 +38,8 @@ def _unify_by_emission(lab: np.ndarray, emis: np.ndarray) -> np.ndarray:
     return np.where(out >= 0, out, lab)
 
 
-def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, b: pd.DataFrame | None = None):
+def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, b: pd.DataFrame | None = None,
+                     extra: dict | None = None):
     """L2-L4 + L6：CPI 提取、航迹锚定、局部聚类、跨平台融合、型号判定。返回 (cpi_of, cp, proba)。"""
     tm = Timer()
     cpi_of, cp = extract_cpis(a, cfg)
@@ -57,9 +59,18 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     lab = np.full(len(cp), -1, np.int64)
     ttype = {}
     R = rgate = None
+    tdoa = None
     if cfg["anchor"].get("enabled", True) and b is not None and len(b):
         tracks = track_table(b, scenario_base_time(a))
-        lab, info = anchor_assign(cp, proba, groups, tracks, knowledge, cfg)
+        if cfg["anchor"].get("tdoa_w", 0) > 0:
+            ac = cfg["anchor"]
+            sig = np.where(cp.sh.values > 100, ac["sigma_air"], ac["sigma_sea"])
+            R0, _ = track_residuals(cp, tracks, sig, ac.get("pos_sigma_m", 0.0))
+            g0 = np.where(cp.sh.values > 100, ac["gate_air"], ac["gate_sea"])
+            ep, Rt, dl = prepare_tdoa(cp, emis, a.toa.values, cpi_of, tracks, np.abs(np.nan_to_num(R0, nan=99.0)) <= g0[:, None], cfg)
+            tdoa = (ep, Rt)
+            tm.lap(f"TDOA 配对 ({len(ep)})，航迹时间偏移 {dl}")
+        lab, info = anchor_assign(cp, proba, groups, tracks, knowledge, cfg, tdoa)
         lab = resolve_conflicts(cp, lab, groups, info["score"], cfg)
         if cfg["anchor"].get("frag_veto", True):
             lab = veto_by_fragment(cp, lab, frag, info["R"], info["gate"], cfg["anchor"].get("veto_min_hit", 0.6))
@@ -94,7 +105,7 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     if cfg.get("refine", {}).get("enabled", True) and R is not None:  # 无航迹时仅靠方位连续，证据不足，验证显示有害
         t_r = time.time()
         locked = cp["anchor_direct"].values >= 0 if "anchor_direct" in cp.columns else None
-        obj = refine_objects(cp, obj, groups, proba, cfg, R, rgate, locked)
+        obj = refine_objects(cp, obj, groups, proba, cfg, R, rgate, locked, tdoa)
         obj = absorb_small(cp, obj, proba, cfg)
         log.info("对象级精修 %.1f s", time.time() - t_r)
     cp["object_id"] = obj
@@ -103,12 +114,15 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     cp["emission"] = emis
     cp["obj_type"] = cp.object_id.map(vote_object_type(cp, proba))
     cp["local_cluster_id"] = cp.groupby(["object_id", "platform_id"], sort=True).ngroup().values
+    if extra is not None:
+        extra["tdoa"] = tdoa
     return cpi_of, cp, proba
 
 
 def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict, cfg: dict):
     tm = Timer()
-    cpi_of, cp, proba = cluster_and_type(a, models, knowledge, cfg, b)
+    ext = {}
+    cpi_of, cp, proba = cluster_and_type(a, models, knowledge, cfg, b, ext)
     feat = state_features(cp, models["type_codes"])
     cp["state"] = predict_states(models["state1"], models["state2"], feat)
     tm.lap("状态识别")
@@ -121,7 +135,8 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
         for (o, t), v in w.items():
             if v >= 0.5 * tot.loc[o]:
                 prefer[o] = int(t)
-    links, scores = associate(cp, cp.groupby("object_id").obj_type.first(), b, base, knowledge, cfg, prefer)
+    links, scores = associate(cp, cp.groupby("object_id").obj_type.first(), b, base, knowledge, cfg, prefer,
+                              ext.get("tdoa"))
     tm.lap(f"A-B 关联 (matched {int((links.link_status == 'matched').sum())})")
 
     c = cp.set_index("cpi")
@@ -135,5 +150,5 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
     })
     links = links.assign(scenario_id=sid, data_version=ver, object_id=links.object_id.astype(np.int64) + 1)
     links = links[["scenario_id", "data_version", "object_id", "track_id", "link_status"]]
-    extras = {"cp": cp, "proba": proba, "scores": scores, "base_time": base}
+    extras = {"cp": cp, "proba": proba, "scores": scores, "base_time": base, "cpi_of": cpi_of}
     return pred, links, extras

@@ -99,8 +99,11 @@ def _track_dist_med(tracks: pd.DataFrame, ta, tb) -> float:
 
 
 def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, tracks: pd.DataFrame,
-                  knowledge: dict, cfg: dict) -> tuple[np.ndarray, dict]:
-    """返回每个 CPI 的锚定航迹号（-1 表示未锚定）与航迹型号估计。"""
+                  knowledge: dict, cfg: dict, tdoa: tuple | None = None) -> tuple[np.ndarray, dict]:
+    """返回每个 CPI 的锚定航迹号（-1 表示未锚定）与航迹型号估计。
+
+    tdoa = (配对表, 残差矩阵)：给定时，单元内跨节点配对的 TDOA 残差平方与方位残差平方一并计入代价，
+    多数配对超出 TDOA 门限的航迹视为几何不可行。"""
     ac = cfg["anchor"]
     if tracks is None or len(tracks) == 0:
         return np.full(len(cp), -1, np.int64), {}
@@ -143,6 +146,24 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
     np.add.at(Zs, emis, np.where(valid, Z2, 0) * w[:, None])
     np.add.at(Ws, emis, valid * w[:, None])
     np.add.at(Out, emis, (OUT & valid).astype(float))
+    if tdoa is not None and len(tdoa[0]) and ac.get("tdoa_w", 0) > 0:
+        ep, Rt = tdoa
+        st, gt = ac.get("tdoa_sigma_us", 0.12), ac.get("tdoa_gate_us", 0.6)
+        pu = emis[ep.ia.values]
+        wp = np.minimum(w[ep.ia.values], w[ep.ib.values]) * ac["tdoa_w"]
+        vt = ~np.isnan(Rt)
+        zt = np.minimum((np.nan_to_num(Rt) / st) ** 2, ac.get("tdoa_cap", 9.0))
+        Wt = np.zeros((E, J)); Ot = np.zeros((E, J))
+        np.add.at(Wt, pu, vt * wp[:, None])
+        if ac.get("tdoa_cost", True):
+            np.add.at(Zs, pu, np.where(vt, zt, 0) * wp[:, None])
+        np.add.at(Ot, pu, (vt & (np.abs(np.nan_to_num(Rt)) > gt)) * wp[:, None])
+        if ac.get("tdoa_cost", True):
+            Ws = Ws + Wt
+        # 否决：单元内多数配对超出 TDOA 门限。训练集真值：平滑后真航迹 ≥99% 配对在 0.6 μs 内；
+        # 无航迹辐射源对任何航迹的残差中位 ≥0.9 μs（数百米以上），可被可靠排除
+        of = np.where(Wt > 0, Ot / np.maximum(Wt, 1e-9), 0.0)
+        Out = Out + (of > ac.get("tdoa_out_frac", 0.5))
     cost = np.where(Ws > 0, Zs / np.maximum(Ws, 1e-9), np.inf)
     geo_ok = (Ws > 0) & (Out == 0)
     # 型号可行：发射型号分布中可行型号的概率质量
@@ -154,7 +175,12 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
     conf_e = PE.max(axis=1) >= ac.get("vote_min_conf", 0.8)
     best_t = np.argmax(PE, axis=1)
     ew = np.bincount(emis, weights=cp.n.values, minlength=E)
-    ttype, tmed, tmask = {}, {}, {}
+    ttype, tmed, tmask, tfine = {}, {}, {}, {}
+    use_t = tdoa is not None and len(tdoa[0]) and ac.get("tdoa_w", 0) > 0
+    if use_t:
+        ep_, Rt_ = tdoa
+        pu_ = emis[ep_.ia.values]
+        tg_ = ac.get("tdoa_gate_us", 0.6)
     for j in range(J):
         sel = geo_ok[:, j] & conf_e
         if not sel.any():
@@ -169,11 +195,31 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
             o = np.argsort(c)
             cw = np.cumsum(ew[m][o])
             med = c[o][np.searchsorted(cw, cw[-1] / 2)]
-            cand.append((med, -sup, int(ci)))
+            th = thf = np.nan
+            if use_t:
+                r = Rt_[m[pu_], j]
+                r = r[~np.isnan(r)]
+                if len(r) >= ac.get("tdoa_track_min_pairs", 20):
+                    th = float(np.mean(np.abs(r) <= tg_))
+                    thf = float(np.mean(np.abs(r) <= ac.get("tdoa_fine_us", 0.2)))
+            cand.append((med, -sup, int(ci), th, thf))
+        # TDOA：不在航迹上的候选型号剔除；多个候选都被证实在航迹上 → 同一部雷达被指纹分成相近型号
+        # （如 R05/R06），按支撑量取多数（而不是取残差中位数最小：少量误判单元的残差中位反而小）。
+        # 验证过但未采用：单个证实候选即优先于无 TDOA 证据的候选——0.6 μs 门限下邻近雷达也会被"证实"，CV 第 2 折崩坏
+        if use_t:
+            cand = [x for x in cand if not (x[3] < ac.get("tdoa_track_min_hit", 0.3))]
+            onk = [x for x in cand if x[4] >= ac.get("tdoa_on_track_hit", 0.8)]
+            if len(onk) >= 2:
+                cand = [min(onk, key=lambda x: x[1])]
         if cand:
-            ttype[j] = min(cand)[2]
-            tmed[j] = min(cand)[0]
+            best = min(cand)
+            ttype[j] = best[2]
+            tmed[j] = best[0]
+            tfine[j] = best[4]
             tmask[j] = sel & (best_t == ttype[j])
+            if __import__("os").environ.get("B04_DEBUG"):
+                print("航迹判型", tids[j], [(classes[x[2]], round(x[0], 2), -x[1], None if np.isnan(x[3]) else round(x[3], 2),
+                                          None if np.isnan(x[4]) else round(x[4], 2)) for x in cand], "→", classes[best[2]], flush=True)
     # 一个辐射源只对应一条航迹：同型号且支撑单元大量重合（同一辐射源同时符合两条近距伴随航迹）时，
     # 只保留残差更小的航迹，另一条视为静默伴随平台（不判型号）
     js = sorted(ttype)
@@ -184,7 +230,11 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
                 continue
             ov = ew[tmask[ja] & tmask[jb]].sum() / max(min(ew[tmask[ja]].sum(), ew[tmask[jb]].sum()), 1e-9)
             if ov > ac.get("dup_overlap", 0.5) and _track_dist_med(tracks, tids[ja], tids[jb]) < ac.get("dup_dist_m", 600.0):
-                del ttype[jb if tmed[jb] > tmed[ja] else ja]
+                fa, fb = tfine.get(ja, np.nan), tfine.get(jb, np.nan)
+                if not (np.isnan(fa) or np.isnan(fb)) and abs(fa - fb) >= ac.get("tdoa_dup_gap", 0.15):
+                    del ttype[jb if fb < fa else ja]      # TDOA 细门限更吻合者为辐射源所在平台
+                else:
+                    del ttype[jb if tmed[jb] > tmed[ja] else ja]
     # 2) 指派：几何可行 + 与航迹型号一致；多候选取综合代价最小且需有足够间隔
     score = np.full((E, J), np.inf)
     for j, ci in ttype.items():

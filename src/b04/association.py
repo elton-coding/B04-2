@@ -71,7 +71,8 @@ def _dispersion(sres: np.ndarray, plat: np.ndarray, err: np.ndarray, min_n: int 
 
 
 def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.Timestamp,
-              knowledge: dict, cfg: dict, prefer: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
+              knowledge: dict, cfg: dict, prefer: dict | None = None,
+              tdoa: tuple | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
     lc = cfg["link"]
     objects = sorted(cp.object_id.unique())
     links = pd.DataFrame({"object_id": objects, "track_id": pd.array([pd.NA] * len(objects), dtype="Int64"),
@@ -98,6 +99,32 @@ def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.T
         feas.append(ok)
     sc["feasible"] = np.array(feas) & (sc.disp.values <= lc.get("max_disp", 0.35))
     sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.1 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
+    # TDOA：对象内跨节点同源配对的到达时间差与航迹预测之差。编队航迹相距一两百米时方位无法区分，TDOA 可以
+    td = tdoa if lc.get("tdoa_w", 0) > 0 else None
+    sc["t_hit"], sc["t_n"] = np.nan, 0
+    if td is not None and len(td[0]):
+        ep, Rt = td
+        oa, ob = cp.object_id.values[ep.ia.values], cp.object_id.values[ep.ib.values]
+        tids_all = sorted(tracks.track_id.unique())
+        tj = {t: j for j, t in enumerate(tids_all)}
+        gate, nmin = lc.get("tdoa_gate_us", 0.4), lc.get("tdoa_min_pairs", 30)
+        idx_of = pd.Series(np.arange(len(ep)))[oa == ob].groupby(oa[oa == ob]).apply(lambda s: s.values)
+        th, tn = [], []
+        for r in sc.itertuples(index=False):
+            ii = idx_of.get(r.object_id)
+            v = Rt[ii, tj[r.track_id]] if ii is not None else np.array([])
+            v = v[~np.isnan(v)]
+            tn.append(len(v))
+            th.append(float((np.abs(v) <= gate).mean()) if len(v) else np.nan)
+        sc["t_hit"], sc["t_n"] = th, tn
+        # 绝对否决：配对充足而几乎都不吻合 → 辐射源不在该航迹上（训练集：平滑后真航迹 ≥99% 配对在 0.6 μs 内）
+        bad = (sc.t_n.values >= nmin) & (sc.t_hit.values < lc.get("tdoa_min_hit", 0.3))
+        sc.loc[bad, "cost"] = 10.0
+        # 比较式：相对同一对象 TDOA 最吻合的可行航迹扣分
+        use = (sc.t_n.values >= nmin) & (sc.cost.values < 10.0)
+        tb = sc.t_hit.where(use).groupby(sc.object_id).transform("max")
+        pen = (tb - sc.t_hit).where(use, 0.0).fillna(0.0).clip(lower=0.0)
+        sc["cost"] = np.where(sc.cost < 10.0, sc.cost + lc["tdoa_w"] * pen, sc.cost)
     if prefer:
         pm = np.array([prefer.get(o) == t for o, t in zip(sc.object_id, sc.track_id)])
         sc.loc[pm & (sc.cost < 10.0), "cost"] -= lc.get("anchor_bonus", 0.5)

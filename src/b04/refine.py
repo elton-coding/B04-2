@@ -26,7 +26,8 @@ def _object_track(cp: pd.DataFrame, obj: np.ndarray) -> dict:
 
 def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: pd.DataFrame, cfg: dict,
                    R: np.ndarray | None = None, rgate: np.ndarray | None = None,
-                   locked: np.ndarray | None = None) -> np.ndarray:
+                   locked: np.ndarray | None = None, tdoa: tuple | None = None) -> np.ndarray:
+    """tdoa = (配对表, 残差矩阵)：给定时，有航迹对象对单元的几何项另加单元内跨节点配对的 TDOA 残差平方。"""
     rc = cfg.get("refine", {})
     fc, tc = cfg["fusion"], cfg["track"]
     obj = obj.copy()
@@ -44,6 +45,13 @@ def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: p
     margin = fc["max_delay_us"]
     maxdur = float((cp.t1 - cp.t0).max()) + 1.0
     U = int(unit.max()) + 1
+    ac = cfg["anchor"]
+    use_t = tdoa is not None and len(tdoa[0]) and ac.get("tdoa_w", 0) > 0 and rc.get("tdoa", True)
+    if use_t:
+        ep, Rt = tdoa
+        pu = unit[ep.ia.values]
+        wp = np.minimum(w[ep.ia.values], w[ep.ib.values]) * ac["tdoa_w"]
+        zt_all = np.minimum((Rt / ac.get("tdoa_sigma_us", 0.12)) ** 2, rc.get("geo_cap", 9.0))
     for it in range(int(rc.get("iters", 2))):
         objs = np.unique(obj)
         # 对象型号（对象级证据累积）与航迹
@@ -104,6 +112,13 @@ def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: p
                     c_geo[ci] = np.where(np.isfinite(best), best, rc.get("noinfo_pen", 2.0)) * w[ci]
             score_c = c_type - c_geo - rc.get("conflict_pen", 30.0) * conf * w
             sk = np.bincount(unit, weights=score_c, minlength=U)
+            if use_t and o in otrk:
+                zt = zt_all[:, otrk[o]]
+                ok = np.isfinite(zt)
+                sk -= np.bincount(pu[ok], weights=(zt * wp)[ok], minlength=U)
+                sk -= np.bincount(pu[~ok], weights=wp[~ok], minlength=U) * rc.get("noinfo_pen", 2.0)
+            elif use_t:  # 无航迹对象：TDOA 无从比较，给中性惩罚，避免偏向无航迹对象
+                sk -= np.bincount(pu, weights=wp, minlength=U) * rc.get("noinfo_pen", 2.0)
             # 型号硬门限：单元在对象型号下的似然比其最可能型号低太多则不可归入（杜绝跨型号/跨频段错归）
             dLL = LLu[:, otype[o]] - LLu_best
             if rc.get("type_gate_mean") is not None:

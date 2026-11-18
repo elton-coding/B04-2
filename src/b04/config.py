@@ -60,6 +60,20 @@ DEFAULT = {
         "min_margin": 4.0,          # 最优/次优航迹综合代价差
         "prop_gap_s": 3.0,          # 标签沿片段传播的最大时间间隔
         "prop_doa_deg": 2.0,
+        "track_smooth_s": 10.0,     # 海面航迹局部线性平滑窗口（高斯 σ，秒）；0 关闭。用于 TDOA 预测
+        "track_smooth_air_s": 3.0,  # 空中航迹（机动多）平滑窗口
+        "tdoa_time_offset": True,   # 逐空中航迹估计时间戳偏移
+        "tdoa_w": 1.0,              # TDOA 残差在锚定代价中的权重（每个跨节点配对按较小 CPI 权重计）；0 关闭
+        "tdoa_sigma_us": 0.12,      # 平滑航迹下真航迹 TDOA 残差 σ（训练集实测 ≈0.10 μs ≈ 30 m）
+        "tdoa_cap": 9.0,            # 单配对残差平方上限
+        "tdoa_cost": True,          # TDOA 残差计入锚定代价（False 时仅作几何否决）
+        "tdoa_track_min_pairs": 20, # 航迹级否决：支撑单元配对数下限
+        "tdoa_track_min_hit": 0.3,  # 航迹判型：候选型号支撑配对吻合比例低于此值 → 剔除（该型号雷达不在此航迹上）
+        "tdoa_fine_us": 0.6,        # "在航迹上"的确认门限（0.2 μs 细门限验证过：真航迹吻合率仅 0.6–0.99，编队测试变差）
+        "tdoa_on_track_hit": 0.8,   # 吻合比例 ≥ 此值视为证实在航迹上；两个以上候选都被证实时按支撑量取多数
+        "tdoa_dup_gap": 0.15,       # 编队两航迹争同一辐射源：细门限吻合比例相差 ≥ 此值时取高者
+        "tdoa_gate_us": 0.6,
+        "tdoa_out_frac": 0.5,       # 单元内超出门限的配对权重占比超过此值 → 该航迹几何不可行
     },
     "refine": {
         "enabled": True,
@@ -72,6 +86,7 @@ DEFAULT = {
         "type_gate": 15.0,          # 单元在对象型号下的似然比最优型号低于此值（nats）则禁止归入
         "noinfo_pen": 2.0,          # 无几何信息时的中性惩罚
         "cont_max_gap_s": 30.0,     # 方位连续性的最大时间间隔
+        "tdoa": False,              # 精修几何项是否计入 TDOA（验证有害：扰动无锚定融合，关闭）
     },
     "link": {
         "res_margin_deg": 2.0,      # 方位残差容差 = 节点 DOA 误差 + 余量
@@ -79,6 +94,10 @@ DEFAULT = {
         "min_cpis": 5,
         "max_cpis_per_object": 3000,
         "max_disp": 0.35,            # 关联残差离散度门限（MAD/测向误差），排除近旁静默航迹
+        "tdoa_w": 1.0,               # TDOA 命中率在关联代价中的权重；0 关闭
+        "tdoa_gate_us": 0.6,
+        "tdoa_min_pairs": 30,        # 对象内 TDOA 配对数达到此值才使用
+        "tdoa_min_hit": 0.3,         # 吻合比例低于此值 → 不可关联
     },
 }
 
