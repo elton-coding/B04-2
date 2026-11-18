@@ -654,9 +654,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.642,
-    "粗跟踪": 0.01,
-    "精跟踪": 0.348
+    "搜索": 0.641,
+    "粗跟踪": 0.009,
+    "精跟踪": 0.349
    },
    "cpis": 8774,
    "anchored_frac": 1.0,
@@ -723,9 +723,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.881,
-    "粗跟踪": 0.007,
-    "精跟踪": 0.112
+    "搜索": 0.882,
+    "粗跟踪": 0.008,
+    "精跟踪": 0.11
    },
    "cpis": 41608,
    "anchored_frac": 1.0,
@@ -792,9 +792,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.941,
-    "粗跟踪": 0.022,
-    "精跟踪": 0.038
+    "搜索": 0.938,
+    "粗跟踪": 0.024,
+    "精跟踪": 0.039
    },
    "cpis": 10265,
    "anchored_frac": 1.0,
@@ -861,9 +861,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.694,
-    "粗跟踪": 0.012,
-    "精跟踪": 0.294
+    "搜索": 0.695,
+    "粗跟踪": 0.013,
+    "精跟踪": 0.292
    },
    "cpis": 22484,
    "anchored_frac": 0.61,
@@ -931,8 +931,8 @@
    ],
    "state_frac": {
     "搜索": 0.616,
-    "粗跟踪": 0.068,
-    "精跟踪": 0.316
+    "粗跟踪": 0.07,
+    "精跟踪": 0.315
    },
    "cpis": 1225,
    "anchored_frac": 0.11,
@@ -949,7 +949,7 @@
      "track_id": 6,
      "hit": 0.393,
      "med_res_deg": 6.75,
-     "feasible": true
+     "feasible": false
     },
     {
      "track_id": 8,
@@ -999,9 +999,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.835,
-    "粗跟踪": 0.011,
-    "精跟踪": 0.154
+    "搜索": 0.84,
+    "粗跟踪": 0.015,
+    "精跟踪": 0.145
    },
    "cpis": 12085,
    "anchored_frac": 0.96,
@@ -1018,7 +1018,7 @@
      "track_id": 15,
      "hit": 0.973,
      "med_res_deg": 1.59,
-     "feasible": true
+     "feasible": false
     },
     {
      "track_id": 12,
@@ -1068,9 +1068,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.746,
-    "粗跟踪": 0.021,
-    "精跟踪": 0.232
+    "搜索": 0.743,
+    "粗跟踪": 0.018,
+    "精跟踪": 0.239
    },
    "cpis": 9304,
    "anchored_frac": 1.0,
@@ -1087,13 +1087,13 @@
      "track_id": 3,
      "hit": 0.213,
      "med_res_deg": 17.26,
-     "feasible": true
+     "feasible": false
     },
     {
      "track_id": 8,
      "hit": 0.213,
      "med_res_deg": 17.24,
-     "feasible": true
+     "feasible": false
     }
    ]
   },
@@ -1137,9 +1137,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.806,
-    "粗跟踪": 0.008,
-    "精跟踪": 0.185
+    "搜索": 0.805,
+    "粗跟踪": 0.026,
+    "精跟踪": 0.168
    },
    "cpis": 13570,
    "anchored_frac": 0.03,
@@ -1206,9 +1206,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.831,
-    "粗跟踪": 0.008,
-    "精跟踪": 0.161
+    "搜索": 0.823,
+    "粗跟踪": 0.014,
+    "精跟踪": 0.163
    },
    "cpis": 12911,
    "anchored_frac": 0.99,
@@ -1276,8 +1276,8 @@
    ],
    "state_frac": {
     "搜索": 0.349,
-    "粗跟踪": 0.162,
-    "精跟踪": 0.489
+    "粗跟踪": 0.166,
+    "精跟踪": 0.485
    },
    "cpis": 555,
    "anchored_frac": 0.78,
@@ -1300,7 +1300,7 @@
      "track_id": 1,
      "hit": 0.488,
      "med_res_deg": 4.03,
-     "feasible": true
+     "feasible": false
     }
    ]
   },
@@ -1344,9 +1344,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.934,
-    "粗跟踪": 0.002,
-    "精跟踪": 0.064
+    "搜索": 0.914,
+    "粗跟踪": 0.027,
+    "精跟踪": 0.059
    },
    "cpis": 622,
    "anchored_frac": 0.86,
@@ -1406,9 +1406,9 @@
     }
    ],
    "state_frac": {
-    "搜索": 0.402,
+    "搜索": 0.407,
     "粗跟踪": 0.181,
-    "精跟踪": 0.416
+    "精跟踪": 0.412
    },
    "cpis": 209,
    "anchored_frac": 0.99,
@@ -1502,11 +1502,11 @@
   {
    "object_id": 1,
    "node": 103002,
-   "t_first_s": 79.4,
+   "t_first_s": 79.8,
    "t_last_s": 93.4,
-   "dwells": 37,
+   "dwells": 36,
    "coarse": 10,
-   "fine": 27
+   "fine": 26
   },
   {
    "object_id": 1,
@@ -1523,35 +1523,26 @@
    "t_first_s": 14.2,
    "t_last_s": 299.8,
    "dwells": 717,
-   "coarse": 10,
-   "fine": 707
+   "coarse": 11,
+   "fine": 706
   },
   {
    "object_id": 2,
    "node": 103001,
    "t_first_s": 73.0,
    "t_last_s": 189.4,
-   "dwells": 272,
-   "coarse": 10,
-   "fine": 262
+   "dwells": 271,
+   "coarse": 11,
+   "fine": 260
   },
   {
    "object_id": 2,
    "node": 103002,
    "t_first_s": 20.0,
    "t_last_s": 300.0,
-   "dwells": 449,
+   "dwells": 448,
    "coarse": 36,
-   "fine": 413
-  },
-  {
-   "object_id": 2,
-   "node": 104001,
-   "t_first_s": 109.6,
-   "t_last_s": 264.4,
-   "dwells": 3,
-   "coarse": 1,
-   "fine": 2
+   "fine": 412
   },
   {
    "object_id": 2,
@@ -1559,17 +1550,17 @@
    "t_first_s": 12.4,
    "t_last_s": 299.8,
    "dwells": 695,
-   "coarse": 10,
-   "fine": 685
+   "coarse": 17,
+   "fine": 678
   },
   {
    "object_id": 3,
    "node": 104001,
    "t_first_s": 16.8,
    "t_last_s": 246.4,
-   "dwells": 55,
-   "coarse": 23,
-   "fine": 32
+   "dwells": 56,
+   "coarse": 22,
+   "fine": 34
   },
   {
    "object_id": 3,
@@ -1577,8 +1568,8 @@
    "t_first_s": 84.0,
    "t_last_s": 200.2,
    "dwells": 48,
-   "coarse": 4,
-   "fine": 44
+   "coarse": 14,
+   "fine": 34
   },
   {
    "object_id": 4,
@@ -1595,8 +1586,8 @@
    "t_first_s": 14.0,
    "t_last_s": 299.6,
    "dwells": 368,
-   "coarse": 23,
-   "fine": 345
+   "coarse": 22,
+   "fine": 346
   },
   {
    "object_id": 4,
@@ -1604,16 +1595,16 @@
    "t_first_s": 50.3,
    "t_last_s": 300.0,
    "dwells": 503,
-   "coarse": 11,
-   "fine": 492
+   "coarse": 10,
+   "fine": 493
   },
   {
    "object_id": 4,
    "node": 104002,
    "t_first_s": 5.2,
    "t_last_s": 299.8,
-   "dwells": 689,
-   "coarse": 13,
+   "dwells": 688,
+   "coarse": 12,
    "fine": 676
   },
   {
@@ -1621,27 +1612,27 @@
    "node": 103001,
    "t_first_s": 106.8,
    "t_last_s": 245.2,
-   "dwells": 202,
+   "dwells": 203,
    "coarse": 10,
-   "fine": 192
+   "fine": 193
   },
   {
    "object_id": 5,
    "node": 103002,
    "t_first_s": 65.2,
    "t_last_s": 187.6,
-   "dwells": 4,
+   "dwells": 5,
    "coarse": 0,
-   "fine": 4
+   "fine": 5
   },
   {
    "object_id": 5,
    "node": 104001,
    "t_first_s": 7.4,
    "t_last_s": 145.4,
-   "dwells": 18,
+   "dwells": 17,
    "coarse": 11,
-   "fine": 7
+   "fine": 6
   },
   {
    "object_id": 5,
@@ -1649,8 +1640,8 @@
    "t_first_s": 1.0,
    "t_last_s": 300.0,
    "dwells": 31,
-   "coarse": 10,
-   "fine": 21
+   "coarse": 12,
+   "fine": 19
   },
   {
    "object_id": 6,
@@ -1667,26 +1658,26 @@
    "t_first_s": 40.2,
    "t_last_s": 77.4,
    "dwells": 103,
-   "coarse": 7,
-   "fine": 96
+   "coarse": 6,
+   "fine": 97
   },
   {
    "object_id": 6,
    "node": 104002,
-   "t_first_s": 3.0,
+   "t_first_s": 3.4,
    "t_last_s": 300.0,
-   "dwells": 686,
-   "coarse": 32,
-   "fine": 654
+   "dwells": 676,
+   "coarse": 41,
+   "fine": 635
   },
   {
    "object_id": 7,
    "node": 103001,
    "t_first_s": 123.6,
    "t_last_s": 260.4,
-   "dwells": 234,
-   "coarse": 10,
-   "fine": 224
+   "dwells": 236,
+   "coarse": 11,
+   "fine": 225
   },
   {
    "object_id": 7,
@@ -1703,8 +1694,8 @@
    "t_first_s": 7.2,
    "t_last_s": 299.4,
    "dwells": 78,
-   "coarse": 24,
-   "fine": 54
+   "coarse": 23,
+   "fine": 55
   },
   {
    "object_id": 8,
@@ -1721,17 +1712,26 @@
    "t_first_s": 12.6,
    "t_last_s": 299.8,
    "dwells": 309,
-   "coarse": 10,
-   "fine": 299
+   "coarse": 9,
+   "fine": 300
+  },
+  {
+   "object_id": 8,
+   "node": 104001,
+   "t_first_s": 29.3,
+   "t_last_s": 162.6,
+   "dwells": 3,
+   "coarse": 0,
+   "fine": 3
   },
   {
    "object_id": 8,
    "node": 104002,
    "t_first_s": 2.8,
    "t_last_s": 299.8,
-   "dwells": 633,
-   "coarse": 1,
-   "fine": 632
+   "dwells": 627,
+   "coarse": 35,
+   "fine": 592
   },
   {
    "object_id": 9,
@@ -1745,20 +1745,20 @@
   {
    "object_id": 9,
    "node": 104001,
-   "t_first_s": 150.0,
-   "t_last_s": 249.0,
-   "dwells": 4,
-   "coarse": 0,
-   "fine": 4
+   "t_first_s": 16.6,
+   "t_last_s": 249.6,
+   "dwells": 7,
+   "coarse": 1,
+   "fine": 6
   },
   {
    "object_id": 9,
    "node": 104002,
    "t_first_s": 3.0,
    "t_last_s": 299.8,
-   "dwells": 613,
-   "coarse": 32,
-   "fine": 581
+   "dwells": 615,
+   "coarse": 27,
+   "fine": 588
   }
  ],
  "track_relations": [

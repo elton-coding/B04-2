@@ -47,7 +47,7 @@ def vote_object_type(cp: pd.DataFrame, proba: pd.DataFrame, key: str = "object_i
 # - 粗跟位于"对某被跟踪目标"跟踪段的前若干次驻留；被跟踪目标 = 该发射幅度最大的节点。
 BASE_FEATS = ["logn", "pri_eff", "pw", "jitter", "amp", "amp_rel", "amp_rel_roll", "amp_sd",
               "log_gap_prev", "log_gap_next", "burst_n", "burst_pulses", "burst_pos", "drf_prev",
-              "drf_next", "type_code", "sensor_air"]
+              "drf_next", "type_code", "sensor_air", "pw_rel"]
 CTX_FEATS = ["has_pred", "has_succ", "amp_d_pred", "amp_d_succ", "chain_len", "chain_pos", "chain_rpos",
              "enodes", "amp_minus_emax", "amp_rank_e", "ph_near", "rev_cnt", "rev_back"]
 STATE_FEATS = BASE_FEATS + CTX_FEATS
@@ -112,6 +112,10 @@ def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
     d["amp_sd"] = d.amp_sd.fillna(0)
     d["type_code"] = d.obj_type.map(type_codes).fillna(-1)
     d["sensor_air"] = (d.sh > 100).astype(int)
+    # 相对脉宽：雷达跟踪驻留固定使用其脉宽集中最短的一档（训练集 8 型全部成立），与具体型号参数无关
+    big = d.n >= 8
+    pmin = d[big].groupby("object_id").pw.quantile(0.02)
+    d["pw_rel"] = d.pw / d.object_id.map(pmin).fillna(d.groupby("object_id").pw.transform("min"))
     d = d.loc[cp.index]
     # 首尾相接链（同节点，同一雷达连续发射）
     c = cp.reset_index(drop=True)
@@ -183,26 +187,110 @@ def episode_features(feat: pd.DataFrame, trk: np.ndarray, gap_s: float = 1.5) ->
     return pd.DataFrame(out, index=feat.index, columns=EP_FEATS)
 
 
+CH_FEATS = ["ck", "ctin", "clen", "crem", "tdt_prev", "tdt_next", "node_same", "node_k", "ampn", "eamax"]
+
+
+def _revisit_period(em: pd.DataFrame, lo=0.05e6, hi=2.0e6, bin_us=5000.0) -> float:
+    """跟踪重访周期：同 (对象, 被跟踪节点) 相邻跟踪驻留间隔的众数（不同节点交错跟踪时不受影响）。"""
+    dt = em.groupby(["obj", "node"]).t0.diff().dropna().values
+    dt = dt[(dt >= lo) & (dt <= hi)]
+    if len(dt) < 20:
+        return 0.4e6
+    h, e = np.histogram(dt, bins=np.arange(lo, hi + bin_us, bin_us))
+    i = int(np.argmax(h))
+    sel = (dt >= e[i]) & (dt < e[i + 1])
+    return float(np.median(dt[sel]))
+
+
+def chain_features(feat: pd.DataFrame, trk: np.ndarray, tol_frac: float = 0.075) -> pd.DataFrame:
+    """跟踪驻留链：同一对象的跟踪驻留按重访周期首尾衔接（不依赖幅度最大节点，避免节点跳变把一段跟踪切碎）。
+
+    ck/ctin：链内序号/时间；node_same/node_k：链上前驱是否同一被跟踪节点、同节点连续步数；
+    ampn：被跟踪节点幅度相对该节点常态（主瓣照射强弱）；tdt_*：与同对象相邻跟踪驻留的时间间隔。
+    """
+    out = np.full((len(feat), len(CH_FEATS)), -1.0)
+    d = pd.DataFrame({"obj": feat.object_id.values, "em": feat.emission.values, "t0": feat.t0.values,
+                      "amp": feat.amp.values, "plat": feat.platform_id.values})[trk]
+    if not len(d):
+        return pd.DataFrame(out, index=feat.index, columns=CH_FEATS)
+    i_max = d.groupby("em").amp.idxmax()
+    em = d.groupby("em").agg(obj=("obj", "first"), t0=("t0", "min"))
+    em["node"] = d.plat.loc[i_max.loc[em.index].values].values
+    em["amax"] = d.amp.loc[i_max.loc[em.index].values].values
+    em = em.sort_values(["obj", "t0"])
+    P = _revisit_period(em)
+    tol = tol_frac * P
+    ck, ctin, clen, crem, nsame, nk = (np.zeros(len(em)) for _ in range(6))
+    tprev, tnext = np.full(len(em), 99.0), np.full(len(em), 99.0)
+    pos = 0
+    for _, x in em.groupby("obj", sort=False):
+        t, nd = x.t0.values, x.node.values
+        n = len(t)
+        j = np.searchsorted(t, t - P - tol)
+        jj = np.clip(j, 0, n - 1)
+        prev = np.where((j < np.arange(n)) & (np.abs(t[jj] - (t - P)) <= tol), jj, -1)
+        k = np.zeros(n); st = t.copy(); same = np.zeros(n); kn = np.zeros(n); root = np.arange(n)
+        for i in range(n):
+            q = prev[i]
+            if q >= 0:
+                k[i] = k[q] + 1; st[i] = st[q]; root[i] = root[q]
+                same[i] = float(nd[q] == nd[i]); kn[i] = kn[q] + 1 if nd[q] == nd[i] else 0
+        sl = slice(pos, pos + n)
+        ck[sl], ctin[sl], nsame[sl], nk[sl] = k, (t - st) / 1e6, same, kn
+        cl = pd.Series(root).map(pd.Series(root).value_counts()).values
+        clen[sl], crem[sl] = cl, cl - 1 - k
+        dtp = np.diff(t) / 1e6
+        tprev[pos + 1:pos + n] = dtp; tnext[pos:pos + n - 1] = dtp
+        pos += n
+    em["ck"], em["ctin"], em["clen"], em["crem"] = ck, ctin, clen, crem
+    em["tdt_prev"], em["tdt_next"] = np.minimum(tprev, 99), np.minimum(tnext, 99)
+    em["node_same"], em["node_k"] = nsame, nk
+    em["ampn"] = em.amax - em.groupby(["obj", "node"]).amax.transform("median")
+    em["eamax"] = em.amax
+    vals = em[CH_FEATS].reindex(feat.emission.values).values
+    m = trk & ~np.isnan(vals[:, 0])
+    out[m] = vals[m]
+    return pd.DataFrame(out, index=feat.index, columns=CH_FEATS)
+
+
+USE_CHAIN = True
+MASK_STAGE1 = False  # 伪影只影响段内序号类特征（第二级）；第一级屏蔽验证略差
+OPT_PWRULE = False  # 验证无增益（GBDT 已由脉宽+型号学到），保留开关
+PW_TRACK_MAX = 1.3
+def _stage2(feat: pd.DataFrame, trk: np.ndarray):
+    parts = [feat, episode_features(feat, trk)]
+    cols = STATE2_FEATS
+    if USE_CHAIN:
+        parts.append(chain_features(feat, trk))
+        cols = STATE2_FEATS + CH_FEATS
+    return pd.concat(parts, axis=1), cols, feat.emission.values
+
+
 def _hgb():
     return HistGradientBoostingClassifier(max_iter=300, learning_rate=0.08, max_leaf_nodes=31,
                                           l2_regularization=1.0, random_state=0)
 
 
-def fit_state_models(feat: pd.DataFrame, y: pd.Series):
-    w = np.log2(feat.n.values + 1)
+def fit_state_models(feat: pd.DataFrame, y: pd.Series, keep: np.ndarray | None = None):
+    """keep：参与训练的样本（屏蔽数据中段截断处的伪影样本）；特征仍在全量上计算。"""
+    w0 = np.log2(feat.n.values + 1)
+    w = np.where(keep, w0, 0.0) if keep is not None else w0
     yv = y.values
-    m1 = _hgb().fit(feat[STATE_FEATS].values, (yv > 0).astype(int), sample_weight=w)
+    m1 = _hgb().fit(feat[STATE_FEATS].values, (yv > 0).astype(int), sample_weight=w if MASK_STAGE1 else w0)
     p = _emission_mean_prob(m1.predict_proba(feat[STATE_FEATS].values)[:, 1], feat.emission.values)
     trk = p > 0.5
-    f2 = pd.concat([feat, episode_features(feat, trk)], axis=1)
-    sel = trk & (yv > 0)
-    m2 = _hgb().fit(f2[STATE2_FEATS].values[sel], (yv[sel] == 2).astype(int), sample_weight=w[sel])
+    f2, cols, _ = _stage2(feat, trk)
+    sel = trk & (yv > 0) & (w > 0)
+    m2 = _hgb().fit(f2[cols].values[sel], (yv[sel] == 2).astype(int), sample_weight=w[sel])
     return m1, m2
 
 
-def predict_states(m1, m2, feat: pd.DataFrame) -> pd.Series:
+def predict_states(m1, m2, feat: pd.DataFrame, oracle: np.ndarray | None = None) -> pd.Series:
     p = _emission_mean_prob(m1.predict_proba(feat[STATE_FEATS].values)[:, 1], feat.emission.values)
-    trk = p > 0.5
-    f2 = pd.concat([feat, episode_features(feat, trk)], axis=1)
-    p2 = _emission_mean_prob(m2.predict_proba(f2[STATE2_FEATS].values)[:, 1], feat.emission.values)
-    return pd.Series(np.where(trk, np.where(p2 > 0.5, 2, 1), 0), index=feat.index, dtype=np.int64)
+    trk = p > 0.5 if oracle is None else oracle   # oracle：仅供分析（真值第一级）
+    f2, cols, grp = _stage2(feat, trk)
+    p2 = _emission_mean_prob(m2.predict_proba(f2[cols].values)[:, 1], grp)
+    st = np.where(trk, np.where(p2 > 0.5, 2, 1), 0)
+    if OPT_PWRULE:
+        st = np.where(feat.pw_rel.values > PW_TRACK_MAX, 0, st)   # 非最短脉宽 → 必为搜索
+    return pd.Series(st, index=feat.index, dtype=np.int64)

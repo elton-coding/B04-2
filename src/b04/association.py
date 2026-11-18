@@ -40,15 +40,34 @@ def association_scores(cp: pd.DataFrame, tracks: pd.DataFrame, cfg: dict, seed: 
         if len(x) > lc["max_cpis_per_object"]:
             x = x.iloc[rng.choice(len(x), lc["max_cpis_per_object"], replace=False)]
         tm = ((x.t0 + x.t1) / 2).values
-        tol = np.where(x.sh.values > 100, doa_err[True], doa_err[False]) + lc["res_margin_deg"]
+        err = np.where(x.sh.values > 100, doa_err[True], doa_err[False])
+        tol = err + lc["res_margin_deg"]
         for tid, tr in trk.items():
             lon, lat, inside = _interp_track(tr, tm)
             if inside.sum() < lc["min_cpis"]:
                 continue
             brg = bearing_deg(x.slon.values, x.slat.values, lon, lat)
-            res = np.abs(angdiff(x.doa.values, brg))[inside]
-            rows.append((oid, tid, float((res <= tol[inside]).mean()), float(np.median(res)), int(inside.sum())))
-    return pd.DataFrame(rows, columns=["object_id", "track_id", "hit", "med_res", "n_used"])
+            sres = angdiff(x.doa.values, brg)[inside]
+            res = np.abs(sres)
+            rows.append((oid, tid, float((res <= tol[inside]).mean()), float(np.median(res)), int(inside.sum()),
+                         _dispersion(sres, x.platform_id.values[inside], err[inside])))
+    return pd.DataFrame(rows, columns=["object_id", "track_id", "hit", "med_res", "n_used", "disp"])
+
+
+def _dispersion(sres: np.ndarray, plat: np.ndarray, err: np.ndarray, min_n: int = 10) -> float:
+    """残差离散度：各节点带符号残差的 MAD（去掉节点固定偏差）/ 该节点脉冲级测向误差，按 CPI 数加权。
+
+    同一目标：CPI 级方位是多脉冲平均，残差只含少量噪声，MAD 远小于脉冲级误差（实测 ≤0.15）；
+    近旁的另一目标（编队伴随、静默航迹）方位随时间的变化形状不同，MAD 明显增大（实测 ≥0.4）。
+    """
+    d = pd.DataFrame({"p": plat, "r": sres, "e": err})
+    g = d.groupby("p")
+    n = g.size()
+    mad = g.r.agg(lambda v: np.median(np.abs(v - np.median(v)))) / g.e.first()
+    use = n >= min_n
+    if not use.any():
+        use = n > 0
+    return float(np.average(mad[use], weights=n[use]))
 
 
 def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.Timestamp,
@@ -77,7 +96,7 @@ def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.T
             if isinstance(rcs, str) and rcs in ("small", "medium", "large"):
                 ok &= rcs in m.get("rcs", [rcs])
         feas.append(ok)
-    sc["feasible"] = feas
+    sc["feasible"] = np.array(feas) & (sc.disp.values <= lc.get("max_disp", 0.35))
     sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.1 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
     if prefer:
         pm = np.array([prefer.get(o) == t for o, t in zip(sc.object_id, sc.track_id)])

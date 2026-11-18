@@ -72,6 +72,7 @@ DEFAULT = {
         "min_hit": 0.85,
         "min_cpis": 5,
         "max_cpis_per_object": 3000,
+        "max_disp": 0.35,            # 关联残差离散度门限（MAD/测向误差），排除近旁静默航迹
     },
 }
 
