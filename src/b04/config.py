@@ -40,11 +40,16 @@ DEFAULT = {
         "pw_tol": 0.15,
         "pri_tol": 0.05,
         "min_pairs": 3,
+        "emis_frag_support": True,  # 发射构建时按片段对支持度优先配对
+        "seq_check": True,          # 抖动 PRI 跨节点配对的脉冲序列对齐复核
+        "seq_tol_us": 2.0,
+        "seq_min_hit": 0.6,
         "conflict_frac": 0.12,      # 合并时允许的冲突 CPI 比例（同一辐射源因抖动串接伪影约 1–6%，不同辐射源 >30%）
     },
     "anchor": {
         "sigma_air": 0.3,           # 发射-航迹方位残差标准差（空中/海面节点，训练集实测）
         "sigma_sea": 0.55,
+        "pos_sigma_m": 100.0,       # 航迹位置误差（米）：近距时折算的方位误差计入残差尺度
         "gate_air": 1.2,            # 单个 CPI 残差硬门限
         "gate_sea": 2.6,
         "min_track_support": 5000,  # 航迹判型所需唯一匹配脉冲数
@@ -63,6 +68,7 @@ DEFAULT = {
         "type_w": 1.0,              # 型号项权重
         "geo_cap": 9.0,             # 几何项（残差平方/连续性偏差）单 CPI 上限            # 改归所需最小得分增益
         "conflict_pen": 8.0,        # 时序互斥冲突惩罚（每 CPI 权重；软证据，抖动型号串接有自重叠伪影）
+        "type_gate_mean": 4.0,      # 若设定：按单元内 CPI 加权平均的型号似然差门限（nats/权重）
         "type_gate": 15.0,          # 单元在对象型号下的似然比最优型号低于此值（nats）则禁止归入
         "noinfo_pen": 2.0,          # 无几何信息时的中性惩罚
         "cont_max_gap_s": 30.0,     # 方位连续性的最大时间间隔

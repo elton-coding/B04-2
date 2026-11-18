@@ -620,65 +620,65 @@
    "platform_model": "云桥一型",
    "category": "中继飞行器",
    "domain": "空中",
-   "pulses": 1078676,
+   "pulses": 1069826,
    "t_first_s": 0.1,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 1,
-     "pulses": 411978,
+     "pulses": 411474,
      "t_first_s": 0.1,
-     "t_last_s": 260.3
+     "t_last_s": 277.1
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 2,
-     "pulses": 34163,
+     "pulses": 33546,
      "t_first_s": 59.6,
-     "t_last_s": 190.9
+     "t_last_s": 174.3
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 3,
-     "pulses": 269243,
+     "pulses": 265396,
      "t_first_s": 5.9,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 4,
-     "pulses": 363292,
+     "pulses": 359410,
      "t_first_s": 4.5,
      "t_last_s": 300.0
     }
    ],
    "state_frac": {
-    "搜索": 0.6,
-    "粗跟踪": 0.009,
-    "精跟踪": 0.391
+    "搜索": 0.597,
+    "粗跟踪": 0.008,
+    "精跟踪": 0.395
    },
-   "cpis": 8774,
+   "cpis": 8685,
    "anchored_frac": 1.0,
    "link_status": "matched",
    "track_id": 5,
    "link_candidates": [
     {
      "track_id": 5,
-     "hit": 0.991,
+     "hit": 0.999,
      "med_res_deg": 0.18,
      "feasible": true
     },
     {
-     "track_id": 13,
-     "hit": 0.597,
-     "med_res_deg": 2.66,
+     "track_id": 12,
+     "hit": 0.6,
+     "med_res_deg": 2.42,
      "feasible": false
     },
     {
-     "track_id": 12,
-     "hit": 0.593,
-     "med_res_deg": 2.51,
+     "track_id": 13,
+     "hit": 0.598,
+     "med_res_deg": 2.6,
      "feasible": false
     }
    ]
@@ -689,35 +689,35 @@
    "platform_model": "海援二型",
    "category": "勤务船",
    "domain": "海面",
-   "pulses": 1239603,
+   "pulses": 1239713,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 5,
-     "pulses": 217551,
+     "pulses": 217578,
      "t_first_s": 7.0,
      "t_last_s": 277.3
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 6,
-     "pulses": 189950,
+     "pulses": 189979,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 7,
-     "pulses": 416031,
+     "pulses": 416058,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 8,
-     "pulses": 416071,
+     "pulses": 416098,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
@@ -725,9 +725,9 @@
    "state_frac": {
     "搜索": 0.885,
     "粗跟踪": 0.006,
-    "精跟踪": 0.11
+    "精跟踪": 0.109
    },
-   "cpis": 41608,
+   "cpis": 41718,
    "anchored_frac": 1.0,
    "link_status": "matched",
    "track_id": 12,
@@ -758,7 +758,7 @@
    "platform_model": "云桥二型",
    "category": "中继飞行器",
    "domain": "空中",
-   "pulses": 1264853,
+   "pulses": 1268821,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
@@ -772,51 +772,51 @@
     {
      "platform_id": 103002,
      "local_cluster_id": 10,
-     "pulses": 19821,
+     "pulses": 20315,
      "t_first_s": 44.6,
      "t_last_s": 143.7
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 11,
-     "pulses": 620327,
+     "pulses": 622054,
      "t_first_s": 0.2,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 12,
-     "pulses": 620982,
+     "pulses": 622729,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
    ],
    "state_frac": {
-    "搜索": 0.94,
-    "粗跟踪": 0.022,
-    "精跟踪": 0.038
+    "搜索": 0.941,
+    "粗跟踪": 0.023,
+    "精跟踪": 0.036
    },
-   "cpis": 10265,
+   "cpis": 10300,
    "anchored_frac": 1.0,
    "link_status": "matched",
    "track_id": 3,
    "link_candidates": [
     {
      "track_id": 3,
-     "hit": 0.999,
+     "hit": 0.998,
      "med_res_deg": 0.18,
      "feasible": true
     },
     {
      "track_id": 8,
-     "hit": 0.999,
-     "med_res_deg": 0.35,
+     "hit": 0.998,
+     "med_res_deg": 0.34,
      "feasible": true
     },
     {
      "track_id": 11,
-     "hit": 0.346,
-     "med_res_deg": 8.98,
+     "hit": 0.35,
+     "med_res_deg": 8.76,
      "feasible": false
     }
    ]
@@ -827,46 +827,46 @@
    "platform_model": "海援一型",
    "category": "勤务船",
    "domain": "海面",
-   "pulses": 1381375,
+   "pulses": 1381406,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 13,
-     "pulses": 237216,
+     "pulses": 237221,
      "t_first_s": 15.2,
      "t_last_s": 277.2
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 14,
-     "pulses": 213137,
+     "pulses": 213141,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 15,
-     "pulses": 465413,
+     "pulses": 465422,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 16,
-     "pulses": 465609,
+     "pulses": 465622,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
    ],
    "state_frac": {
-    "搜索": 0.696,
+    "搜索": 0.697,
     "粗跟踪": 0.01,
     "精跟踪": 0.293
    },
-   "cpis": 22484,
-   "anchored_frac": 0.61,
+   "cpis": 22514,
+   "anchored_frac": 0.62,
    "link_status": "matched",
    "track_id": 11,
    "link_candidates": [
@@ -896,46 +896,46 @@
    "platform_model": "云巡一型",
    "category": "巡查飞行器",
    "domain": "空中",
-   "pulses": 185735,
-   "t_first_s": 0.2,
-   "t_last_s": 300.0,
+   "pulses": 185599,
+   "t_first_s": 0.3,
+   "t_last_s": 299.5,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 17,
-     "pulses": 152258,
+     "pulses": 152245,
      "t_first_s": 35.5,
-     "t_last_s": 277.1
+     "t_last_s": 260.3
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 18,
-     "pulses": 6742,
+     "pulses": 6720,
      "t_first_s": 0.3,
      "t_last_s": 187.6
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 19,
-     "pulses": 16460,
+     "pulses": 16434,
      "t_first_s": 2.0,
-     "t_last_s": 300.0
+     "t_last_s": 299.5
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 20,
-     "pulses": 10275,
-     "t_first_s": 0.2,
-     "t_last_s": 300.0
+     "pulses": 10200,
+     "t_first_s": 0.5,
+     "t_last_s": 299.5
     }
    ],
    "state_frac": {
     "搜索": 0.615,
-    "粗跟踪": 0.068,
-    "精跟踪": 0.317
+    "粗跟踪": 0.072,
+    "精跟踪": 0.313
    },
-   "cpis": 1225,
-   "anchored_frac": 0.11,
+   "cpis": 1116,
+   "anchored_frac": 0.09,
    "link_status": "no_match",
    "track_id": null,
    "link_candidates": [
@@ -965,35 +965,35 @@
    "platform_model": "海巡一型",
    "category": "工作艇",
    "domain": "海面",
-   "pulses": 670380,
+   "pulses": 670341,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 21,
-     "pulses": 16888,
+     "pulses": 16822,
      "t_first_s": 55.2,
      "t_last_s": 257.7
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 22,
-     "pulses": 19332,
+     "pulses": 19329,
      "t_first_s": 8.3,
      "t_last_s": 299.8
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 23,
-     "pulses": 40021,
+     "pulses": 39990,
      "t_first_s": 3.2,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 24,
-     "pulses": 594139,
+     "pulses": 594200,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
@@ -1003,27 +1003,27 @@
     "粗跟踪": 0.015,
     "精跟踪": 0.145
    },
-   "cpis": 12085,
-   "anchored_frac": 0.96,
+   "cpis": 12153,
+   "anchored_frac": 0.95,
    "link_status": "matched",
    "track_id": 9,
    "link_candidates": [
     {
      "track_id": 9,
      "hit": 1.0,
-     "med_res_deg": 0.23,
+     "med_res_deg": 0.24,
      "feasible": true
     },
     {
      "track_id": 15,
-     "hit": 0.973,
-     "med_res_deg": 1.59,
+     "hit": 0.975,
+     "med_res_deg": 1.55,
      "feasible": false
     },
     {
      "track_id": 12,
-     "hit": 0.945,
-     "med_res_deg": 1.71,
+     "hit": 0.942,
+     "med_res_deg": 1.68,
      "feasible": false
     }
    ]
@@ -1034,45 +1034,45 @@
    "platform_model": "云桥二型",
    "category": "中继飞行器",
    "domain": "空中",
-   "pulses": 1149382,
+   "pulses": 1154250,
    "t_first_s": 0.0,
    "t_last_s": 299.8,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 25,
-     "pulses": 86769,
+     "pulses": 87273,
      "t_first_s": 64.6,
      "t_last_s": 263.8
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 26,
-     "pulses": 47064,
+     "pulses": 47188,
      "t_first_s": 56.5,
      "t_last_s": 247.8
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 27,
-     "pulses": 459134,
+     "pulses": 461254,
      "t_first_s": 0.0,
      "t_last_s": 299.8
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 28,
-     "pulses": 556415,
+     "pulses": 558535,
      "t_first_s": 0.0,
      "t_last_s": 299.8
     }
    ],
    "state_frac": {
     "搜索": 0.743,
-    "粗跟踪": 0.021,
-    "精跟踪": 0.236
+    "粗跟踪": 0.019,
+    "精跟踪": 0.238
    },
-   "cpis": 9304,
+   "cpis": 9346,
    "anchored_frac": 1.0,
    "link_status": "matched",
    "track_id": 4,
@@ -1080,19 +1080,19 @@
     {
      "track_id": 4,
      "hit": 1.0,
-     "med_res_deg": 0.45,
+     "med_res_deg": 0.44,
      "feasible": true
     },
     {
      "track_id": 3,
      "hit": 0.213,
-     "med_res_deg": 17.26,
+     "med_res_deg": 16.4,
      "feasible": false
     },
     {
      "track_id": 8,
-     "hit": 0.213,
-     "med_res_deg": 17.24,
+     "hit": 0.211,
+     "med_res_deg": 16.84,
      "feasible": false
     }
    ]
@@ -1103,65 +1103,65 @@
    "platform_model": "海巡二型",
    "category": "工作艇",
    "domain": "海面",
-   "pulses": 708093,
+   "pulses": 702112,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
      "local_cluster_id": 29,
-     "pulses": 4957,
+     "pulses": 4924,
      "t_first_s": 66.1,
-     "t_last_s": 260.3
+     "t_last_s": 277.1
     },
     {
      "platform_id": 103002,
      "local_cluster_id": 30,
-     "pulses": 41541,
+     "pulses": 41461,
      "t_first_s": 6.6,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104001,
      "local_cluster_id": 31,
-     "pulses": 4383,
+     "pulses": 4423,
      "t_first_s": 3.3,
      "t_last_s": 299.3
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 32,
-     "pulses": 657212,
+     "pulses": 651304,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
    ],
    "state_frac": {
-    "搜索": 0.834,
-    "粗跟踪": 0.018,
-    "精跟踪": 0.148
+    "搜索": 0.836,
+    "粗跟踪": 0.014,
+    "精跟踪": 0.15
    },
-   "cpis": 13570,
+   "cpis": 13290,
    "anchored_frac": 0.03,
    "link_status": "no_match",
    "track_id": null,
    "link_candidates": [
     {
      "track_id": 10,
-     "hit": 0.898,
-     "med_res_deg": 4.22,
+     "hit": 0.897,
+     "med_res_deg": 4.23,
      "feasible": true
     },
     {
      "track_id": 6,
-     "hit": 0.531,
-     "med_res_deg": 4.54,
+     "hit": 0.532,
+     "med_res_deg": 4.52,
      "feasible": false
     },
     {
      "track_id": 5,
-     "hit": 0.519,
-     "med_res_deg": 4.91,
+     "hit": 0.522,
+     "med_res_deg": 4.9,
      "feasible": false
     }
    ]
@@ -1172,45 +1172,114 @@
    "platform_model": "海巡二型",
    "category": "工作艇",
    "domain": "海面",
-   "pulses": 703740,
+   "pulses": 34367,
+   "t_first_s": 16.6,
+   "t_last_s": 299.9,
+   "nodes": [
+    {
+     "platform_id": 103001,
+     "local_cluster_id": 33,
+     "pulses": 192,
+     "t_first_s": 70.1,
+     "t_last_s": 195.5
+    },
+    {
+     "platform_id": 103002,
+     "local_cluster_id": 34,
+     "pulses": 122,
+     "t_first_s": 199.5,
+     "t_last_s": 274.4
+    },
+    {
+     "platform_id": 104001,
+     "local_cluster_id": 35,
+     "pulses": 2932,
+     "t_first_s": 16.6,
+     "t_last_s": 299.9
+    },
+    {
+     "platform_id": 104002,
+     "local_cluster_id": 36,
+     "pulses": 31121,
+     "t_first_s": 26.2,
+     "t_last_s": 293.1
+    }
+   ],
+   "state_frac": {
+    "搜索": 0.919,
+    "粗跟踪": 0.077,
+    "精跟踪": 0.005
+   },
+   "cpis": 634,
+   "anchored_frac": 0.95,
+   "link_status": "matched",
+   "track_id": 15,
+   "link_candidates": [
+    {
+     "track_id": 13,
+     "hit": 1.0,
+     "med_res_deg": 1.15,
+     "feasible": false
+    },
+    {
+     "track_id": 15,
+     "hit": 1.0,
+     "med_res_deg": 0.77,
+     "feasible": true
+    },
+    {
+     "track_id": 12,
+     "hit": 1.0,
+     "med_res_deg": 0.79,
+     "feasible": false
+    }
+   ]
+  },
+  {
+   "object_id": 10,
+   "type": "R06",
+   "platform_model": "海巡二型",
+   "category": "工作艇",
+   "domain": "海面",
+   "pulses": 708717,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
-     "local_cluster_id": 33,
-     "pulses": 664,
+     "local_cluster_id": 37,
+     "pulses": 680,
      "t_first_s": 93.9,
      "t_last_s": 139.9
     },
     {
      "platform_id": 103002,
-     "local_cluster_id": 34,
-     "pulses": 46281,
+     "local_cluster_id": 38,
+     "pulses": 46349,
      "t_first_s": 8.4,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104001,
-     "local_cluster_id": 35,
-     "pulses": 9887,
+     "local_cluster_id": 39,
+     "pulses": 9572,
      "t_first_s": 3.1,
      "t_last_s": 298.8
     },
     {
      "platform_id": 104002,
-     "local_cluster_id": 36,
-     "pulses": 646908,
+     "local_cluster_id": 40,
+     "pulses": 652116,
      "t_first_s": 0.0,
      "t_last_s": 300.0
     }
    ],
    "state_frac": {
-    "搜索": 0.833,
-    "粗跟踪": 0.009,
-    "精跟踪": 0.158
+    "搜索": 0.832,
+    "粗跟踪": 0.007,
+    "精跟踪": 0.161
    },
-   "cpis": 12911,
+   "cpis": 13082,
    "anchored_frac": 0.99,
    "link_status": "matched",
    "track_id": 10,
@@ -1223,64 +1292,64 @@
     },
     {
      "track_id": 3,
-     "hit": 0.235,
-     "med_res_deg": 8.08,
+     "hit": 0.232,
+     "med_res_deg": 8.15,
      "feasible": false
     },
     {
      "track_id": 8,
-     "hit": 0.229,
-     "med_res_deg": 8.63,
+     "hit": 0.225,
+     "med_res_deg": 8.7,
      "feasible": false
     }
    ]
   },
   {
-   "object_id": 10,
+   "object_id": 11,
    "type": "R02",
    "platform_model": "云巡二型",
    "category": "巡查飞行器",
    "domain": "空中",
-   "pulses": 134675,
+   "pulses": 134932,
    "t_first_s": 0.0,
    "t_last_s": 300.0,
    "nodes": [
     {
      "platform_id": 103001,
-     "local_cluster_id": 37,
+     "local_cluster_id": 41,
      "pulses": 47632,
      "t_first_s": 135.8,
      "t_last_s": 208.4
     },
     {
      "platform_id": 103002,
-     "local_cluster_id": 38,
-     "pulses": 18881,
-     "t_first_s": 43.2,
-     "t_last_s": 90.9
+     "local_cluster_id": 42,
+     "pulses": 18887,
+     "t_first_s": 64.2,
+     "t_last_s": 102.0
     },
     {
      "platform_id": 104001,
-     "local_cluster_id": 39,
-     "pulses": 45053,
+     "local_cluster_id": 43,
+     "pulses": 45304,
      "t_first_s": 7.3,
      "t_last_s": 300.0
     },
     {
      "platform_id": 104002,
-     "local_cluster_id": 40,
+     "local_cluster_id": 44,
      "pulses": 23109,
      "t_first_s": 0.0,
-     "t_last_s": 260.5
+     "t_last_s": 287.1
     }
    ],
    "state_frac": {
-    "搜索": 0.356,
-    "粗跟踪": 0.16,
-    "精跟踪": 0.484
+    "搜索": 0.354,
+    "粗跟踪": 0.166,
+    "精跟踪": 0.481
    },
-   "cpis": 555,
-   "anchored_frac": 0.78,
+   "cpis": 562,
+   "anchored_frac": 0.76,
    "link_status": "matched",
    "track_id": 2,
    "link_candidates": [
@@ -1298,77 +1367,8 @@
     },
     {
      "track_id": 1,
-     "hit": 0.488,
-     "med_res_deg": 4.03,
-     "feasible": false
-    }
-   ]
-  },
-  {
-   "object_id": 11,
-   "type": "R06",
-   "platform_model": "海巡二型",
-   "category": "工作艇",
-   "domain": "海面",
-   "pulses": 33328,
-   "t_first_s": 16.6,
-   "t_last_s": 299.9,
-   "nodes": [
-    {
-     "platform_id": 103001,
-     "local_cluster_id": 41,
-     "pulses": 128,
-     "t_first_s": 155.1,
-     "t_last_s": 195.5
-    },
-    {
-     "platform_id": 103002,
-     "local_cluster_id": 42,
-     "pulses": 125,
-     "t_first_s": 61.8,
-     "t_last_s": 274.4
-    },
-    {
-     "platform_id": 104001,
-     "local_cluster_id": 43,
-     "pulses": 2636,
-     "t_first_s": 16.6,
-     "t_last_s": 299.9
-    },
-    {
-     "platform_id": 104002,
-     "local_cluster_id": 44,
-     "pulses": 30439,
-     "t_first_s": 57.7,
-     "t_last_s": 280.5
-    }
-   ],
-   "state_frac": {
-    "搜索": 0.966,
-    "粗跟踪": 0.015,
-    "精跟踪": 0.02
-   },
-   "cpis": 622,
-   "anchored_frac": 0.86,
-   "link_status": "matched",
-   "track_id": 15,
-   "link_candidates": [
-    {
-     "track_id": 13,
-     "hit": 1.0,
-     "med_res_deg": 0.89,
-     "feasible": false
-    },
-    {
-     "track_id": 15,
-     "hit": 1.0,
-     "med_res_deg": 0.49,
-     "feasible": true
-    },
-    {
-     "track_id": 12,
-     "hit": 1.0,
-     "med_res_deg": 0.52,
+     "hit": 0.489,
+     "med_res_deg": 3.99,
      "feasible": false
     }
    ]
@@ -1379,9 +1379,9 @@
    "platform_model": "云巡二型",
    "category": "巡查飞行器",
    "domain": "空中",
-   "pulses": 50752,
+   "pulses": 50508,
    "t_first_s": 3.1,
-   "t_last_s": 297.6,
+   "t_last_s": 247.0,
    "nodes": [
     {
      "platform_id": 103002,
@@ -1393,25 +1393,25 @@
     {
      "platform_id": 104001,
      "local_cluster_id": 46,
-     "pulses": 3242,
+     "pulses": 2991,
      "t_first_s": 3.1,
-     "t_last_s": 297.6
+     "t_last_s": 3.6
     },
     {
      "platform_id": 104002,
      "local_cluster_id": 47,
-     "pulses": 19857,
+     "pulses": 19864,
      "t_first_s": 177.5,
      "t_last_s": 240.2
     }
    ],
    "state_frac": {
-    "搜索": 0.407,
-    "粗跟踪": 0.181,
-    "精跟踪": 0.411
+    "搜索": 0.414,
+    "粗跟踪": 0.162,
+    "精跟踪": 0.423
    },
-   "cpis": 209,
-   "anchored_frac": 0.99,
+   "cpis": 212,
+   "anchored_frac": 1.0,
    "link_status": "matched",
    "track_id": 1,
    "link_candidates": [
@@ -1423,13 +1423,13 @@
     },
     {
      "track_id": 3,
-     "hit": 0.539,
-     "med_res_deg": 3.33,
+     "hit": 0.542,
+     "med_res_deg": 3.32,
      "feasible": false
     },
     {
      "track_id": 8,
-     "hit": 0.515,
+     "hit": 0.517,
      "med_res_deg": 3.37,
      "feasible": false
     }
@@ -1440,17 +1440,17 @@
   "1": {
    "best": "R03",
    "second": "R04",
-   "margin_per_cpi": 7.52
+   "margin_per_cpi": 7.6
   },
   "2": {
    "best": "R08",
    "second": "R07",
-   "margin_per_cpi": 5.41
+   "margin_per_cpi": 5.4
   },
   "3": {
    "best": "R04",
    "second": "R03",
-   "margin_per_cpi": 6.11
+   "margin_per_cpi": 6.08
   },
   "4": {
    "best": "R07",
@@ -1460,42 +1460,42 @@
   "5": {
    "best": "R01",
    "second": "R02",
-   "margin_per_cpi": 4.75
+   "margin_per_cpi": 5.18
   },
   "6": {
    "best": "R05",
    "second": "R06",
-   "margin_per_cpi": 7.37
+   "margin_per_cpi": 7.33
   },
   "7": {
    "best": "R04",
    "second": "R03",
-   "margin_per_cpi": 6.08
+   "margin_per_cpi": 6.06
   },
   "8": {
    "best": "R06",
    "second": "R05",
-   "margin_per_cpi": 6.29
+   "margin_per_cpi": 6.37
   },
   "9": {
    "best": "R06",
    "second": "R05",
-   "margin_per_cpi": 6.62
+   "margin_per_cpi": 0.94
   },
   "10": {
-   "best": "R02",
-   "second": "R01",
-   "margin_per_cpi": 6.22
-  },
-  "11": {
    "best": "R06",
    "second": "R05",
-   "margin_per_cpi": 0.84
+   "margin_per_cpi": 6.58
+  },
+  "11": {
+   "best": "R02",
+   "second": "R01",
+   "margin_per_cpi": 6.15
   },
   "12": {
    "best": "R02",
    "second": "R01",
-   "margin_per_cpi": 7.08
+   "margin_per_cpi": 7.0
   }
  },
  "tracked_nodes": [
@@ -1522,9 +1522,9 @@
    "node": 104002,
    "t_first_s": 14.6,
    "t_last_s": 299.8,
-   "dwells": 717,
+   "dwells": 716,
    "coarse": 10,
-   "fine": 707
+   "fine": 706
   },
   {
    "object_id": 2,
@@ -1540,9 +1540,9 @@
    "node": 103002,
    "t_first_s": 20.0,
    "t_last_s": 300.0,
-   "dwells": 445,
+   "dwells": 444,
    "coarse": 34,
-   "fine": 411
+   "fine": 410
   },
   {
    "object_id": 2,
@@ -1550,35 +1550,35 @@
    "t_first_s": 22.6,
    "t_last_s": 299.8,
    "dwells": 695,
-   "coarse": 8,
-   "fine": 687
+   "coarse": 10,
+   "fine": 685
   },
   {
    "object_id": 3,
    "node": 104001,
    "t_first_s": 126.0,
    "t_last_s": 246.4,
-   "dwells": 51,
+   "dwells": 52,
    "coarse": 22,
-   "fine": 29
+   "fine": 30
   },
   {
    "object_id": 3,
    "node": 104002,
    "t_first_s": 84.0,
    "t_last_s": 200.2,
-   "dwells": 47,
+   "dwells": 48,
    "coarse": 14,
-   "fine": 33
+   "fine": 34
   },
   {
    "object_id": 4,
    "node": 103001,
    "t_first_s": 15.8,
    "t_last_s": 247.4,
-   "dwells": 586,
+   "dwells": 583,
    "coarse": 10,
-   "fine": 576
+   "fine": 573
   },
   {
    "object_id": 4,
@@ -1619,7 +1619,7 @@
   {
    "object_id": 5,
    "node": 103002,
-   "t_first_s": 65.2,
+   "t_first_s": 43.2,
    "t_last_s": 187.6,
    "dwells": 4,
    "coarse": 0,
@@ -1630,54 +1630,54 @@
    "node": 104001,
    "t_first_s": 7.4,
    "t_last_s": 145.4,
-   "dwells": 18,
-   "coarse": 11,
-   "fine": 7
+   "dwells": 16,
+   "coarse": 10,
+   "fine": 6
   },
   {
    "object_id": 5,
    "node": 104002,
    "t_first_s": 1.0,
-   "t_last_s": 300.0,
-   "dwells": 26,
+   "t_last_s": 254.7,
+   "dwells": 20,
    "coarse": 11,
-   "fine": 15
+   "fine": 9
   },
   {
    "object_id": 6,
    "node": 103001,
    "t_first_s": 140.8,
    "t_last_s": 196.0,
-   "dwells": 128,
-   "coarse": 24,
-   "fine": 104
+   "dwells": 130,
+   "coarse": 25,
+   "fine": 105
   },
   {
    "object_id": 6,
    "node": 103002,
-   "t_first_s": 40.2,
+   "t_first_s": 41.0,
    "t_last_s": 77.4,
-   "dwells": 103,
-   "coarse": 6,
+   "dwells": 102,
+   "coarse": 5,
    "fine": 97
   },
   {
    "object_id": 6,
    "node": 104002,
-   "t_first_s": 4.2,
+   "t_first_s": 3.8,
    "t_last_s": 300.0,
-   "dwells": 679,
-   "coarse": 55,
-   "fine": 624
+   "dwells": 681,
+   "coarse": 60,
+   "fine": 621
   },
   {
    "object_id": 7,
    "node": 103001,
    "t_first_s": 123.6,
    "t_last_s": 260.4,
-   "dwells": 235,
+   "dwells": 236,
    "coarse": 10,
-   "fine": 225
+   "fine": 226
   },
   {
    "object_id": 7,
@@ -1700,10 +1700,10 @@
   {
    "object_id": 8,
    "node": 103001,
-   "t_first_s": 126.2,
-   "t_last_s": 179.6,
-   "dwells": 17,
-   "coarse": 11,
+   "t_first_s": 123.6,
+   "t_last_s": 131.4,
+   "dwells": 16,
+   "coarse": 10,
    "fine": 6
   },
   {
@@ -1711,36 +1711,45 @@
    "node": 103002,
    "t_first_s": 13.0,
    "t_last_s": 299.8,
-   "dwells": 308,
+   "dwells": 307,
    "coarse": 10,
-   "fine": 298
+   "fine": 297
+  },
+  {
+   "object_id": 8,
+   "node": 104001,
+   "t_first_s": 73.6,
+   "t_last_s": 234.7,
+   "dwells": 4,
+   "coarse": 1,
+   "fine": 3
   },
   {
    "object_id": 8,
    "node": 104002,
    "t_first_s": 2.8,
    "t_last_s": 299.8,
-   "dwells": 624,
-   "coarse": 61,
-   "fine": 563
+   "dwells": 589,
+   "coarse": 48,
+   "fine": 541
   },
   {
-   "object_id": 9,
+   "object_id": 10,
    "node": 103002,
    "t_first_s": 13.2,
    "t_last_s": 300.0,
-   "dwells": 332,
+   "dwells": 334,
    "coarse": 10,
-   "fine": 322
+   "fine": 324
   },
   {
-   "object_id": 9,
+   "object_id": 10,
    "node": 104002,
    "t_first_s": 3.0,
    "t_last_s": 299.8,
-   "dwells": 614,
-   "coarse": 44,
-   "fine": 570
+   "dwells": 651,
+   "coarse": 30,
+   "fine": 621
   }
  ],
  "track_relations": [

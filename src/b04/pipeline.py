@@ -49,8 +49,8 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     cp["ptype"] = proba.idxmax(axis=1)
     domain_air = {k: v.get("domain") == "air" for k, v in knowledge.get("models", {}).items()}
     frag = build_fragments(cp, proba, domain_air, cfg)
-    pairs = match_cross_platform(cp, cfg)
-    emis = build_emissions(cp, pairs)
+    pairs = match_cross_platform(cp, cfg, a.toa.values, cpi_of)
+    emis = build_emissions(cp, pairs, frag if cfg["fusion"].get("emis_frag_support", True) else None)
     groups = build_groups(cp, emis, contiguity_links(cp))
     tm.lap(f"片段 {frag.max() + 1} / 发射 {emis.max() + 1} / 驻留组 {groups.max() + 1}")
 

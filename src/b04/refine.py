@@ -44,7 +44,7 @@ def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: p
     margin = fc["max_delay_us"]
     maxdur = float((cp.t1 - cp.t0).max()) + 1.0
     U = int(unit.max()) + 1
-    for it in range(rc.get("iters", 2)):
+    for it in range(int(rc.get("iters", 2))):
         objs = np.unique(obj)
         # 对象型号（对象级证据累积）与航迹
         lw = pd.DataFrame(ll * w[:, None]).groupby(obj).sum()
@@ -55,6 +55,7 @@ def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: p
         LLu = np.zeros((U, ll.shape[1]))
         np.add.at(LLu, unit, ll * w[:, None])
         LLu_best = LLu.max(axis=1)
+        Wu = np.bincount(unit, weights=w, minlength=U)
         for k, o in enumerate(objs):
             # 1) 型号项
             c_type = rc.get("type_w", 1.0) * ll[:, otype[o]] * w
@@ -104,7 +105,13 @@ def refine_objects(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: p
             score_c = c_type - c_geo - rc.get("conflict_pen", 30.0) * conf * w
             sk = np.bincount(unit, weights=score_c, minlength=U)
             # 型号硬门限：单元在对象型号下的似然比其最可能型号低太多则不可归入（杜绝跨型号/跨频段错归）
-            sk[LLu[:, otype[o]] - LLu_best < -rc.get("type_gate", 15.0)] = -np.inf
+            dLL = LLu[:, otype[o]] - LLu_best
+            if rc.get("type_gate_mean") is not None:
+                # 按单元内 CPI 平均：跨频段/不相容型号每 CPI 似然差极大仍被拦截；同频段参数集重叠的相近型号
+                # （单 CPI 只略偏另一型号）不因单元大而被累加成硬否决，交由几何/互斥判定
+                sk[dLL < -rc["type_gate_mean"] * Wu] = -np.inf
+            else:
+                sk[dLL < -rc.get("type_gate", 15.0)] = -np.inf
             S[:, k] = sk
         cur = pd.Series(obj).groupby(unit).agg(lambda s: s.value_counts().index[0]).reindex(range(U)).values
         cur_k = np.searchsorted(objs, cur)

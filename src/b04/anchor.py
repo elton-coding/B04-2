@@ -28,8 +28,11 @@ class DSU:
         return r
 
 
-def build_emissions(cp: pd.DataFrame, pairs: pd.DataFrame) -> np.ndarray:
-    """同源 CPI 连通分量 → 发射号；约束每个发射在每个节点至多一个 CPI。"""
+def build_emissions(cp: pd.DataFrame, pairs: pd.DataFrame, frag: np.ndarray | None = None) -> np.ndarray:
+    """同源 CPI 连通分量 → 发射号；约束每个发射在每个节点至多一个 CPI。
+
+    配对按时间差从小到大并入；给定节点内片段 frag 时，先按两片段间配对数（片段对支持度，对数分档）从大到小：
+    同步起始的两部同型雷达会在个别时刻产生"时间更近"的交叉配对，而真实同源片段间有大量一致配对。"""
     pos = pd.Series(np.arange(len(cp)), index=cp.cpi.values)
     plat = cp.platform_id.values
     dsu = DSU(len(cp))
@@ -38,7 +41,14 @@ def build_emissions(cp: pd.DataFrame, pairs: pd.DataFrame) -> np.ndarray:
         ia = pos.loc[pairs.cpi_a.values].values
         ib = pos.loc[pairs.cpi_b.values].values
         dt = np.abs(cp.t0.values[ia] - cp.t0.values[ib])
-        for k in np.argsort(dt, kind="stable"):
+        if frag is not None:
+            fa, fb = np.minimum(frag[ia], frag[ib]), np.maximum(frag[ia], frag[ib])
+            key = fa.astype(np.int64) * (int(frag.max()) + 1) + fb
+            sup = pd.Series(key).map(pd.Series(key).value_counts()).values
+            order = np.lexsort((dt, -np.floor(np.log2(sup))))
+        else:
+            order = np.argsort(dt, kind="stable")
+        for k in order:
             ra, rb = dsu.find(ia[k]), dsu.find(ib[k])
             if ra == rb or members[ra] & members[rb]:
                 continue
@@ -48,8 +58,15 @@ def build_emissions(cp: pd.DataFrame, pairs: pd.DataFrame) -> np.ndarray:
     return pd.factorize(roots)[0]
 
 
-def track_residuals(cp: pd.DataFrame, tracks: pd.DataFrame) -> tuple[np.ndarray, list]:
-    """每个 CPI 对每条航迹的方位残差（度），航迹时间范围外为 NaN。"""
+def track_residuals(cp: pd.DataFrame, tracks: pd.DataFrame, sig: np.ndarray | None = None,
+                    pos_sigma_m: float = 0.0) -> tuple[np.ndarray, list]:
+    """每个 CPI 对每条航迹的方位残差（度），航迹时间范围外为 NaN。
+
+    航迹位置本身有误差（训练集折算约 50–150 m）：近距时它换算成的方位误差可达 1°以上，远超测向误差。
+    给定 sig（各 CPI 的测向误差）与 pos_sigma_m 时，残差按 σ_eff = sqrt(sig² + (σ_pos/距离)²) 归一回 sig 尺度，
+    下游门限/代价保持原物理含义而自动随距离放宽。"""
+    from .geo import dist_m
+
     tm = ((cp.t0 + cp.t1) / 2).values
     tids = sorted(tracks.track_id.unique())
     R = np.full((len(cp), len(tids)), np.nan)
@@ -59,6 +76,9 @@ def track_residuals(cp: pd.DataFrame, tracks: pd.DataFrame) -> tuple[np.ndarray,
         lon = np.interp(tm, tt, x.target_longitude.values)
         lat = np.interp(tm, tt, x.target_latitude.values)
         r = angdiff(cp.doa.values, bearing_deg(cp.slon.values, cp.slat.values, lon, lat))
+        if sig is not None and pos_sigma_m > 0:
+            rng = np.maximum(dist_m(cp.slon.values, cp.slat.values, lon, lat), 100.0)
+            r = r * sig / np.hypot(sig, np.degrees(pos_sigma_m / rng))
         inside = (tm >= tt[0] - 1e6) & (tm <= tt[-1] + 1e6)
         R[inside, j] = r[inside]
     return R, tids
@@ -84,10 +104,10 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
     ac = cfg["anchor"]
     if tracks is None or len(tracks) == 0:
         return np.full(len(cp), -1, np.int64), {}
-    R, tids = track_residuals(cp, tracks)
-    J = len(tids)
     air_node = cp.sh.values > 100
     sig = np.where(air_node, ac["sigma_air"], ac["sigma_sea"])
+    R, tids = track_residuals(cp, tracks, sig, ac.get("pos_sigma_m", 0.0))
+    J = len(tids)
     gate = np.where(air_node, ac["gate_air"], ac["gate_sea"])
     Z2 = (R / sig[:, None]) ** 2
     OUT = np.abs(R) > gate[:, None]
@@ -331,3 +351,4 @@ def veto_by_fragment(cp: pd.DataFrame, lab: np.ndarray, frag: np.ndarray, R: np.
             if hit < min_hit:
                 lab[idx[lab[idx] == j]] = -1
     return lab
+

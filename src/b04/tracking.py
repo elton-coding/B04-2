@@ -64,8 +64,50 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
 
 
 # ---------------------------------------------------------------- 跨节点同源 CPI
-def match_cross_platform(cp: pd.DataFrame, cfg: dict) -> pd.DataFrame:
-    """同一发射在不同节点上形成的 CPI：时间近同（传播时延差）、RF/PW/PRI 一致。"""
+def _seq_aligned(ta: np.ndarray, tb: np.ndarray, tol: float, k: int = 3) -> float:
+    """两节点脉冲到达时刻序列能否整体平移对齐：同一次发射在两节点上只差一个固定传播时延。
+
+    候选平移量取两端前 k 个脉冲的两两差（容忍首尾漏脉冲），返回最佳平移下的命中比例。"""
+    if len(ta) == 0 or len(tb) == 0:
+        return 0.0
+    k = min(k, len(ta), len(tb))
+    offs = np.concatenate([(tb[:k, None] - ta[None, :k]).ravel(), (tb[-k:, None] - ta[None, -k:]).ravel()])
+    best = 0
+    for o in np.unique(np.round(offs, 1)):
+        q = ta + o
+        j = np.clip(np.searchsorted(tb, q), 1, len(tb) - 1) if len(tb) > 1 else np.zeros(len(q), int)
+        d = np.minimum(np.abs(tb[j] - q), np.abs(tb[j - 1] - q)) if len(tb) > 1 else np.abs(tb[0] - q)
+        best = max(best, int((d <= tol).sum()))
+    return best / min(len(ta), len(tb))
+
+
+def verify_jitter_pairs(cp: pd.DataFrame, pairs: pd.DataFrame, toa: np.ndarray, cpi_of: np.ndarray,
+                        tol: float = 2.0, min_hit: float = 0.6) -> pd.DataFrame:
+    """抖动 PRI 的跨节点配对只凭时间/RF/PW 门限，两部同型号雷达同时发射时会被误配；
+    同一发射的抖动序列在两节点上完全一致（仅差传播时延），用脉冲级序列对齐复核。"""
+    if not len(pairs):
+        return pairs
+    jit = pd.Series(cp.jitter.values > 0, index=cp.cpi.values)
+    m = jit.loc[pairs.cpi_a.values].values
+    if not m.any():
+        return pairs
+    order = np.lexsort((toa, cpi_of))
+    cs, ts = cpi_of[order], toa[order].astype(float)
+    keep = np.ones(len(pairs), bool)
+    for q in np.where(m)[0]:
+        a_, b_ = pairs.cpi_a.values[q], pairs.cpi_b.values[q]
+        ta = ts[np.searchsorted(cs, a_):np.searchsorted(cs, a_, side="right")]
+        tb = ts[np.searchsorted(cs, b_):np.searchsorted(cs, b_, side="right")]
+        keep[q] = _seq_aligned(ta, tb, tol) >= min_hit
+    # 保护：训练集抖动配对 85–98% 为真；若大半被否决，说明到达时刻噪声超出 tol（未知场景），放弃复核
+    if (~keep[m]).mean() > 0.5:
+        return pairs
+    return pairs[keep]
+
+
+def match_cross_platform(cp: pd.DataFrame, cfg: dict, toa: np.ndarray | None = None,
+                         cpi_of: np.ndarray | None = None) -> pd.DataFrame:
+    """同一发射在不同节点上形成的 CPI：时间近同（传播时延差）、RF/PW/PRI 一致；抖动 PRI 另做脉冲序列对齐复核。"""
     fc = cfg["fusion"]
     d = cp[["cpi", "platform_id", "t0", "t1", "rf", "pw", "pri", "jitter", "n"]].copy()
     d["prikey"] = np.where(d.jitter > 0, -1, np.round(d.pri.fillna(-1))).astype(np.int64)
@@ -86,6 +128,8 @@ def match_cross_platform(cp: pd.DataFrame, cfg: dict) -> pd.DataFrame:
     if not res:
         return pd.DataFrame(columns=["cpi_a", "cpi_b"])
     out = pd.concat(res).astype(np.int64).drop_duplicates()
+    if toa is not None and cpi_of is not None and fc.get("seq_check", True):
+        out = verify_jitter_pairs(cp, out, toa, cpi_of, fc.get("seq_tol_us", 2.0), fc.get("seq_min_hit", 0.6))
     return out
 
 
