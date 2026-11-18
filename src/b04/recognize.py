@@ -49,37 +49,74 @@ BASE_FEATS = ["logn", "pri_eff", "pw", "jitter", "amp", "amp_rel", "amp_rel_roll
               "log_gap_prev", "log_gap_next", "burst_n", "burst_pulses", "burst_pos", "drf_prev",
               "drf_next", "type_code", "sensor_air", "pw_rel"]
 CTX_FEATS = ["has_pred", "has_succ", "amp_d_pred", "amp_d_succ", "chain_len", "chain_pos", "chain_rpos",
-             "enodes", "amp_minus_emax", "amp_rank_e", "ph_near", "rev_cnt", "rev_back"]
-STATE_FEATS = BASE_FEATS + CTX_FEATS
+             "enodes", "amp_minus_emax", "amp_rank_e"]
+P_FEATS = ["pf_run", "pb_run", "p_tot", "p_tot_l", "p_node", "p_half"]
+STATE_FEATS = BASE_FEATS + CTX_FEATS + P_FEATS
 EP_FEATS = ["ek", "etin", "elen", "erem", "egap"]
 STATE2_FEATS = STATE_FEATS + EP_FEATS
 
 
-def _revisit(cp: pd.DataFrame, period=200000.0, tol=300.0, mmax=5) -> pd.DataFrame:
-    """固定重访周期证据：同局部簇在 ±m·200 ms（±300 μs）处是否有 CPI。"""
-    out = pd.DataFrame(index=cp.index)
-    ph = cp.t0.values % period
-    out["ph_near"] = np.minimum(ph, period - ph)
-    rc = np.zeros(len(cp))
-    rb = np.zeros(len(cp))
-    for _, idx in cp.groupby("local_cluster_id").indices.items():
-        t = cp.t0.values[idx]
-        o = np.argsort(t)
-        ts = t[o]
-        cnt = np.zeros(len(idx))
-        back = np.zeros(len(idx))
-        for m in range(1, mmax + 1):
-            for sgn in (1, -1):
-                tg = ts + sgn * m * period
-                h = (np.searchsorted(ts, tg + tol) > np.searchsorted(ts, tg - tol)).astype(float)
-                cnt += h
-                if sgn < 0:
-                    back += h
-        rc[idx[o]] = cnt
-        rb[idx[o]] = back
-    out["rev_cnt"] = rc
-    out["rev_back"] = rb
-    return out
+def _revisit_period(em: pd.DataFrame, lo=0.05e6, hi=2.0e6, bin_us=5000.0) -> float:
+    """跟踪重访周期：同 (对象, 节点) 相邻短脉宽驻留间隔的众数。
+
+    取全场景全局估计：单对象估计会被密集的短脉宽搜索驻留带偏（训练集上实测会估出 54/82 ms）。
+    """
+    em = em.sort_values("t0")
+    d = pd.DataFrame({"obj": em.obj.values, "dt": em.groupby(["obj", "node"]).t0.diff().values}).dropna()
+    d = d[(d.dt >= lo) & (d.dt <= hi)]
+    if len(d) < 20:
+        return 0.4e6
+    edges = np.arange(lo, hi + bin_us, bin_us)
+    # 每对象直方图做 ±1 格平滑（真值周期恰在格边界时不被劈成两半），按对象内占比求和（每对象等权）：
+    # 跟踪重访周期为多部雷达共有且各自集中，某部雷达自身的短脉宽搜索节拍（如 53.76 ms）只在个别对象上占优。
+    # 训练集三折得分 400 ms ≈2.8–3.8，次高 ≈1.3；改为全局计数时去掉一个节点会误选 53.76 ms。
+    score = np.zeros(len(edges) - 1)
+    for _, x in d.groupby("obj"):
+        h = np.histogram(x.dt.values, bins=edges)[0].astype(float)
+        score += (h + np.r_[0, h[:-1]] + np.r_[h[1:], 0]) / len(x)
+    i = int(np.argmax(score))
+    c = 0.5 * (edges[i] + edges[i + 1])
+    sel = np.abs(d.dt.values - c) <= 1.5 * bin_us
+    return float(np.median(d.dt.values[sel]))
+
+
+PW_TRACK_MAX = 1.3   # 跟踪驻留固定用最短一档脉宽：相对脉宽高于此的 CPI 不作为周期命中的候选
+
+
+def period_hit_features(d: pd.DataFrame, M: int = 5, tight_us: float = 1000.0, loose_frac: float = 0.1) -> pd.DataFrame:
+    """跟踪驻留严格按重访周期 P 重复（P 由数据估计）：统计同对象短脉宽驻留在 t±mP（m=1..M）处的精确命中。
+
+    搜索驻留即便用到最短脉宽，也只会偶然落在 ±1 ms 内；跟踪驻留则几乎逐周期命中。
+    pf_run/pb_run：向后/向前连续命中数；p_tot：精确命中总数；p_tot_l：±0.1P 宽松命中（容忍调度相位跳变）；
+    p_node：同节点精确命中；p_half：±P/2 处命中（交错的另一条跟踪）。
+    """
+    n = len(d)
+    out = np.zeros((n, len(P_FEATS)))
+    cand = d.pw_rel.values < PW_TRACK_MAX
+    if cand.sum() < 2:
+        return pd.DataFrame(out, index=d.index, columns=P_FEATS)
+    t = d.t0.values.astype(float)
+    of = pd.factorize(d.object_id.values)[0]
+    on = pd.factorize(pd.Series(of).astype(str).values + "_" + pd.Series(d.platform_id.values).astype(str).values)[0]
+    P = _revisit_period(pd.DataFrame({"obj": of[cand], "node": d.platform_id.values[cand], "t0": t[cand]}))
+    key, keyn = of * 1e13 + t, on * 1e13 + t            # 按对象（对象×节点）分块后整体有序
+    kc, kcn = np.sort(key[cand]), np.sort(keyn[cand])
+
+    def hit(base, arr, off, tol):
+        q = base + off
+        return (np.searchsorted(arr, q + tol, side="right") > np.searchsorted(arr, q - tol)).astype(float)
+
+    fr, br = np.ones(n), np.ones(n)
+    for m in range(1, M + 1):
+        hf, hb = hit(key, kc, m * P, tight_us), hit(key, kc, -m * P, tight_us)
+        fr, br = fr * hf, br * hb
+        out[:, 0] += fr
+        out[:, 1] += br
+        out[:, 2] += hf + hb
+        out[:, 3] += hit(key, kc, m * P, loose_frac * P) + hit(key, kc, -m * P, loose_frac * P)
+        out[:, 4] += hit(keyn, kcn, m * P, tight_us) + hit(keyn, kcn, -m * P, tight_us)
+    out[:, 5] = hit(key, kc, P / 2, tight_us) + hit(key, kc, -P / 2, tight_us)
+    return pd.DataFrame(out, index=d.index, columns=P_FEATS)
 
 
 def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
@@ -147,11 +184,11 @@ def state_features(cp: pd.DataFrame, type_codes: dict) -> pd.DataFrame:
     d["enodes"] = ge.platform_id.transform("nunique").values
     d["amp_minus_emax"] = (cp.amp - ge.amp.transform("max")).values
     d["amp_rank_e"] = ge.amp.rank(ascending=False).values
-    rv = _revisit(cp)
-    for col in rv.columns:
-        d[col] = rv[col].values
     d["emission"] = cp.emission.values
     d["object_id"] = cp.object_id.values
+    ph = period_hit_features(d)
+    for col in P_FEATS:
+        d[col] = ph[col].values
     return d
 
 
@@ -188,18 +225,6 @@ def episode_features(feat: pd.DataFrame, trk: np.ndarray, gap_s: float = 1.5) ->
 
 
 CH_FEATS = ["ck", "ctin", "clen", "crem", "tdt_prev", "tdt_next", "node_same", "node_k", "ampn", "eamax"]
-
-
-def _revisit_period(em: pd.DataFrame, lo=0.05e6, hi=2.0e6, bin_us=5000.0) -> float:
-    """跟踪重访周期：同 (对象, 被跟踪节点) 相邻跟踪驻留间隔的众数（不同节点交错跟踪时不受影响）。"""
-    dt = em.groupby(["obj", "node"]).t0.diff().dropna().values
-    dt = dt[(dt >= lo) & (dt <= hi)]
-    if len(dt) < 20:
-        return 0.4e6
-    h, e = np.histogram(dt, bins=np.arange(lo, hi + bin_us, bin_us))
-    i = int(np.argmax(h))
-    sel = (dt >= e[i]) & (dt < e[i + 1])
-    return float(np.median(dt[sel]))
 
 
 def chain_features(feat: pd.DataFrame, trk: np.ndarray, tol_frac: float = 0.075) -> pd.DataFrame:
@@ -253,16 +278,76 @@ def chain_features(feat: pd.DataFrame, trk: np.ndarray, tol_frac: float = 0.075)
     return pd.DataFrame(out, index=feat.index, columns=CH_FEATS)
 
 
+G_FEATS = ["gk", "gtin", "grem", "gpred", "gsucc", "glen"]
+
+
+def link_dwells(dw: pd.DataFrame, P: float, tol: float = 0.2, mmax: int = 3, node_pen: float = 0.2,
+                miss_pen: float = 0.3) -> pd.DataFrame:
+    """驻留全局配对：同对象候选 (前驱, 后继) 间隔 ≈ mP（m≤mmax 容忍漏收，±tol·P 容忍调度相位跳变），
+    代价 = 相位偏差 + 漏收数惩罚 + 被跟踪节点变化惩罚；按代价升序贪心，每个驻留至多一个前驱/后继。
+
+    比"就近首个匹配"更稳：交错跟踪、新跟踪插入导致相位跳变时，不会把两条跟踪串成一条。
+    dw 需含 obj、t、node；返回 k（链内周期序号）、tin（链内时间 s）、rem（距链尾周期数）、haspred、hassucc。
+    """
+    t, nd, ob = dw.t.values.astype(float), dw.node.values, dw.obj.values
+    order = np.lexsort((t, ob))
+    t, nd, ob = t[order], nd[order], ob[order]
+    N = len(t)
+    key = pd.factorize(ob)[0] * 1e13 + t
+    I, J, C, Mm = [], [], [], []
+    for m in range(1, mmax + 1):
+        lo = np.searchsorted(key, key - m * P - tol * P)
+        hi = np.searchsorted(key, key - m * P + tol * P, side="right")
+        for i in np.where(hi > lo)[0]:
+            for j in range(lo[i], min(hi[i], i)):
+                I.append(i); J.append(j); Mm.append(m)
+                C.append(abs(t[i] - t[j] - m * P) / P + (m - 1) * miss_pen + (node_pen if nd[i] != nd[j] else 0.0))
+    pred, pm, hs = np.full(N, -1), np.zeros(N), np.zeros(N, bool)
+    for q in np.argsort(np.asarray(C), kind="stable"):
+        i, j = I[q], J[q]
+        if pred[i] < 0 and not hs[j]:
+            pred[i], pm[i], hs[j] = j, Mm[q], True
+    k, st, root = np.zeros(N), t.copy(), np.arange(N)
+    for i in range(N):              # 对象内时间序，前驱必在前
+        j = pred[i]
+        if j >= 0:
+            k[i], st[i], root[i] = k[j] + pm[i], st[j], root[j]
+    kmax = pd.Series(k).groupby(root).transform("max").values
+    out = pd.DataFrame({"k": k, "tin": (t - st) / 1e6, "rem": kmax - k, "haspred": (pred >= 0).astype(float),
+                        "hassucc": hs.astype(float)}, index=dw.index.values[order])
+    return out.reindex(dw.index)
+
+
+def global_chain_features(feat: pd.DataFrame, trk: np.ndarray, merge_us: float = 1500.0) -> pd.DataFrame:
+    """跟踪 CPI 合并为驻留（同对象起始相差 ≤1.5 ms，即不同节点接收同一次驻留），再做全局配对成链。"""
+    out = np.full((len(feat), len(G_FEATS)), -1.0)
+    d = pd.DataFrame({"obj": feat.object_id.values, "t0": feat.t0.values, "amp": feat.amp.values,
+                      "plat": feat.platform_id.values, "row": np.arange(len(feat))})[trk]
+    if len(d) < 2:
+        return pd.DataFrame(out, index=feat.index, columns=G_FEATS)
+    d = d.sort_values(["obj", "t0"])
+    d["dw"] = ((d.obj != d.obj.shift()) | (d.t0.diff() > merge_us)).cumsum().values
+    g = d.groupby("dw")
+    dw = g.agg(obj=("obj", "first"), t=("t0", "min"))
+    dw["node"] = d.plat.loc[g.amp.idxmax().values].values
+    P = _revisit_period(dw.rename(columns={"t": "t0"}))
+    c = link_dwells(dw, P)
+    v = np.c_[c.k, c.tin, c.rem, c.haspred, c.hassucc, c.k + c.rem + 1]
+    out[d.row.values] = v[np.searchsorted(dw.index.values, d.dw.values)]
+    return pd.DataFrame(out, index=feat.index, columns=G_FEATS)
+
+
 USE_CHAIN = True
 MASK_STAGE1 = False  # 伪影只影响段内序号类特征（第二级）；第一级屏蔽验证略差
 OPT_PWRULE = False  # 验证无增益（GBDT 已由脉宽+型号学到），保留开关
-PW_TRACK_MAX = 1.3
+
+
 def _stage2(feat: pd.DataFrame, trk: np.ndarray):
     parts = [feat, episode_features(feat, trk)]
     cols = STATE2_FEATS
     if USE_CHAIN:
-        parts.append(chain_features(feat, trk))
-        cols = STATE2_FEATS + CH_FEATS
+        parts += [chain_features(feat, trk), global_chain_features(feat, trk)]
+        cols = STATE2_FEATS + CH_FEATS + G_FEATS
     return pd.concat(parts, axis=1), cols, feat.emission.values
 
 
