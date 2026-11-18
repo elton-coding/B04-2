@@ -2,7 +2,7 @@
 
 面向多源异构电磁数据（A 类脉冲 / B 类航迹 / 文本资料）的脉冲分选、型号与状态识别、跨平台融合、A-B 跨源关联、本体化表征与态势报告生成。
 
-- 技术方案：[docs/技术方案.md](docs/技术方案.md)
+- 技术方案：[docs/技术方案.md](docs/技术方案.md)（内部路线）；提交用技术方案报告正文 [docs/技术方案报告/正文.md](docs/技术方案报告/正文.md)，`python docs/技术方案报告/make_figures.py` 生成插图，`python tools/build_tech_report.py --team 同频队 [--leader 姓名 --unit 单位 --date 2026年12月]` 套官方模板输出正式版/盲审版 docx+PDF 到 dist/技术方案/（需本机 Word）
 - 实验记录：[docs/实验记录.md](docs/实验记录.md)
 
 ## 流水线（src/b04）
