@@ -14,6 +14,7 @@ from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
 from .refine import refine_objects
 from .tdoa import prepare_tdoa
+from .exclusion import dissolved_remnants, exclusion_repair
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
 from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects
 
@@ -108,9 +109,18 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
         obj = refine_objects(cp, obj, groups, proba, cfg, R, rgate, locked, tdoa)
         obj = absorb_small(cp, obj, proba, cfg)
         log.info("对象级精修 %.1f s", time.time() - t_r)
+    if cfg.get("exclusion", {}).get("enabled", True):
+        t_r = time.time()
+        obj0 = obj
+        obj, moved = exclusion_repair(cp, obj, groups, proba, cfg, R, rgate)
+        if moved:
+            gone = dissolved_remnants(obj0, obj, cp.n.values, cfg["exclusion"].get("dissolve_frac", 0.7))
+            obj = absorb_small(cp, obj, proba, cfg, gone)
+        log.info("时间互斥重分配：改归 %d 脉冲，%.1f s", moved, time.time() - t_r)
     cp["object_id"] = obj
     tm.lap(f"对象形成 ({obj.max() + 1})")
     cp["frag"] = frag
+    cp["unit"] = groups
     cp["emission"] = emis
     cp["obj_type"] = cp.object_id.map(vote_object_type(cp, proba))
     cp["local_cluster_id"] = cp.groupby(["object_id", "platform_id"], sort=True).ngroup().values

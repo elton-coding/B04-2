@@ -315,13 +315,18 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
     return new.loc[cp.index].values
 
 
-def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict) -> np.ndarray:
-    """小对象（脉冲数低于阈值）并入同节点上方位最连续、型号相容的大对象；找不到则保留。"""
+def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict,
+                 force: set | None = None) -> np.ndarray:
+    """小对象（脉冲数低于阈值）并入同节点上方位最连续、型号相容的大对象；找不到则保留。
+    force：无论大小都按小对象处理的对象（如被时间互斥重分配瓦解后的残余）。"""
     tc = cfg["track"]
     obj = obj.copy()
     size = pd.Series(cp.n.values).groupby(obj).sum()
-    small = size[size < tc["min_obj_pulses"]].index
-    big = size[size >= tc["min_obj_pulses"]].index
+    is_small = size < tc["min_obj_pulses"]
+    if force:
+        is_small |= size.index.isin(list(force))
+    small = size[is_small].index
+    big = size[~is_small].index
     if len(small) == 0 or len(big) == 0:
         return obj
     wv = np.log2(cp.n.values + 1)

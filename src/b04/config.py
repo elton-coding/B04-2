@@ -88,6 +88,17 @@ DEFAULT = {
         "cont_max_gap_s": 30.0,     # 方位连续性的最大时间间隔
         "tdoa": False,              # 精修几何项是否计入 TDOA（验证有害：扰动无锚定融合，关闭）
     },
+    "exclusion": {                  # 节点内时间互斥重分配（同一辐射源同一时刻只发一串脉冲）
+        "enabled": True,
+        "margin_us": 1000.0,        # 重叠超过此时长（且频率不同）才算冲突
+        "busy_win_s": 1.0,          # 局部占空比窗口半宽
+        "busy_max": 0.95,
+        "busy_min": 0.5,            # 局部占空比低于此值时"不重叠"不计为证据
+        "overlap_pen": 3.0,         # 每个冲突 CPI 的惩罚（nats × CPI 权重）
+        "min_gain": 2.0,
+        "iters": 8,
+        "dissolve_frac": 0.7,       # 对象被改归走超过此比例 → 残余按小对象并入他处
+    },
     "link": {
         "res_margin_deg": 2.0,      # 方位残差容差 = 节点 DOA 误差 + 余量
         "min_hit": 0.85,
