@@ -189,6 +189,100 @@ def exclusion_repair(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba:
     return pd.factorize(obj)[0], total_moved
 
 
+def _object_tracks(obj: np.ndarray, anchor: np.ndarray, n: np.ndarray) -> dict:
+    """对象 → 过半脉冲锚定的航迹下标（无则不在字典中）。"""
+    d = pd.DataFrame({"o": obj, "j": anchor, "n": n})
+    tot = d.groupby("o").n.sum()
+    wj = d[d.j >= 0].groupby(["o", "j"]).n.sum()
+    return {int(o): int(j) for (o, j), v in wj.items() if v >= 0.5 * tot.loc[o]}
+
+
+def _busy(t0: np.ndarray, t1: np.ndarray, lo: float, hi: float) -> float:
+    return float(np.clip(np.minimum(t1, hi) - np.maximum(t0, lo), 0.0, None).sum() / (hi - lo))
+
+
+def episode_repair(cp: pd.DataFrame, obj: np.ndarray, unit: np.ndarray, proba: pd.DataFrame, cfg: dict,
+                   R: np.ndarray | None = None, rgate: np.ndarray | None = None) -> tuple[np.ndarray, int]:
+    """整段补洞（见配置 exclusion.episode）。返回 (obj, 改归脉冲数)。
+
+    片段内逐驻留组判定：组的工作模式（脉宽、重频）更接近 Y 两侧的 CPI 才改归，X 自身穿插其中的波束留在 X。
+    """
+    ec = cfg.get("exclusion", {})
+    obj = obj.copy()
+    if len(cp) == 0:
+        return obj, 0
+    G = ec.get("ep_gap_s", 0.1) * 1e6
+    span_min = ec.get("ep_min_span_s", 0.6) * 1e6
+    bmin_ep = ec.get("ep_min_busy", 0.5)
+    F = ec.get("ep_flank_s", 2.0) * 1e6
+    fmin = ec.get("ep_flank_min", 0.4)
+    hmax = ec.get("ep_hole_max", 0.2)
+    t0, t1 = cp.t0.values.astype(float), cp.t1.values.astype(float)
+    n = cp.n.values
+    pid = cp.platform_id.values
+    pw = cp.pw.values.astype(float)
+    lpri = np.log(np.maximum(cp.pri.values.astype(float), 1e-3))
+    w = np.minimum(np.log2(n + 1), 8.0)
+    ll = np.log(np.clip(proba.values, 1e-6, 1.0))
+    otype = pd.DataFrame(ll * w[:, None]).groupby(obj).sum().idxmax(axis=1).to_dict()
+    anchor = cp["anchor"].values if "anchor" in cp.columns else np.full(len(cp), -1)
+    direct = cp["anchor_direct"].values if "anchor_direct" in cp.columns else np.full(len(cp), -1)
+    otrk = _object_tracks(obj, anchor, n)
+    obj0 = obj.copy()
+    moved = 0
+
+    def mode_dist(i_u, i_ref):
+        if len(i_ref) == 0:
+            return np.inf
+        d = np.abs(pw[i_ref] - np.median(pw[i_u])) / 0.1 + np.abs(lpri[i_ref] - np.median(lpri[i_u])) / 0.1
+        return float(np.min(d))
+
+    for p in np.unique(pid):
+        on = np.where(pid == p)[0]
+        objs_p = np.unique(obj0[on])
+        idx_of = {o: on[obj0[on] == o] for o in objs_p}
+        for X in objs_p:
+            ix = idx_of[X]
+            if len(ix) < 5:
+                continue
+            ix = ix[np.argsort(t0[ix], kind="stable")]
+            ends = np.maximum.accumulate(t1[ix])
+            eid = np.cumsum(np.r_[True, t0[ix][1:] - ends[:-1] > G]) - 1
+            for e in np.unique(eid):
+                m = ix[eid == e]
+                lo, hi = t0[m].min(), t1[m].max()
+                if hi - lo < span_min or _busy(t0[m], t1[m], lo, hi) < bmin_ep:
+                    continue
+                xo = ix[eid != e]
+                if (_busy(t0[xo], t1[xo], lo - F, lo) + _busy(t0[xo], t1[xo], hi, hi + F)) / 2 >= fmin:
+                    continue
+                for Y in objs_p:
+                    if Y == X or otype.get(Y) != otype.get(X):
+                        continue
+                    iy = idx_of[Y]
+                    if min(_busy(t0[iy], t1[iy], lo - F, lo), _busy(t0[iy], t1[iy], hi, hi + F)) < fmin \
+                            or _busy(t0[iy], t1[iy], lo, hi) > hmax:
+                        continue
+                    yf = iy[((t1[iy] > lo - F) & (t0[iy] < lo)) | ((t0[iy] < hi + F) & (t1[iy] > hi))]
+                    xf = xo[((t1[xo] > lo - F) & (t0[xo] < lo)) | ((t0[xo] < hi + F) & (t1[xo] > hi))]
+                    jy = otrk.get(int(Y), -1)
+                    jx = otrk.get(int(X), -1)
+                    for u in np.unique(unit[m]):
+                        iu = m[unit[m] == u]
+                        if jx >= 0 and (direct[iu] == jx).sum() * 2 > len(iu):  # 直接锚定于 X 的航迹：锁定
+                            continue
+                        if jy >= 0 and R is not None and rgate is not None:
+                            r = np.abs(R[iu, jy])
+                            fin = np.isfinite(r)
+                            if fin.any() and (r[fin] <= rgate[iu][fin]).mean() < 0.5:
+                                continue
+                        if mode_dist(iu, yf) < mode_dist(iu, xf):
+                            obj[iu] = Y
+                            moved += int(n[iu].sum())
+                    break
+    return (pd.factorize(obj)[0] if moved else obj), moved
+
+
 def dissolved_remnants(before: np.ndarray, after: np.ndarray, n: np.ndarray, frac: float) -> set:
     """重分配后的对象中，主体来自某原对象、但只剩该原对象不足 (1-frac) 脉冲的残余对象编号。"""
     d = pd.DataFrame({"b": before, "a": after, "n": n})

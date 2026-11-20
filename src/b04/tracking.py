@@ -377,3 +377,107 @@ def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: di
         elif size.loc[s_o] < tiny_thr:  # 极小对象：独立成对象证据不足，并入综合代价最小者
             obj[xs] = min(cands)[1]
     return pd.factorize(obj)[0]
+
+
+def _doa_agreement(ta, da, tb, db, win, bin_us):
+    """B 的每个 CPI 与 A 在同一节点上的方位（用 A 前后 win 内最近的 CPI 线性插值，消除目标运动的影响）之差，
+    按时间格取中位数。返回各格的 |方位差| 中位数。"""
+    if len(ta) < 2 or len(tb) == 0:
+        return np.array([])
+    ua = np.rad2deg(np.unwrap(np.deg2rad(da)))
+    k = np.searchsorted(ta, tb)
+    ok = (k > 0) & (k < len(ta))
+    k = np.clip(k, 1, len(ta) - 1)
+    tl, tr = ta[k - 1], ta[k]
+    ok &= (tb - tl <= win) & (tr - tb <= win)
+    if not ok.any():
+        return np.array([])
+    f = np.where(tr > tl, (tb - tl) / np.maximum(tr - tl, 1e-9), 0.5)
+    pred = ua[k - 1] + f * (ua[k] - ua[k - 1])
+    d = np.abs(angdiff(db[ok], pred[ok]))
+    return pd.Series(d).groupby((tb[ok] // bin_us).astype(np.int64)).median().values
+
+
+def merge_split_objects(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, int]:
+    """拆分对象重合并：同一辐射源被拆成两个对象时（常见于无航迹锚定的目标），两半在每个共享节点上
+    同一时刻的方位相同、全局发射时序无冲突。以同时段方位一致为正证据（比 merge_objects 的首尾衔接更严格）；
+    锚定于不同航迹的对象不合并。返回 (obj, 合并次数)。"""
+    tc, fc = cfg["track"], cfg["fusion"]
+    mc = cfg.get("merge_split", {})
+    bin_us = mc.get("bin_s", 5.0) * 1e6
+    win = mc.get("interp_win_s", 5.0) * 1e6
+    min_bins = mc.get("min_bins", 10)
+    frac = mc.get("min_frac", 0.6)
+    gscale = mc.get("gate_scale", 0.5)
+    obj = pd.factorize(obj)[0]
+    n = cp.n.values
+    pid = cp.platform_id.values
+    t0, t1 = cp.t0.values.astype(float), cp.t1.values.astype(float)
+    tm = 0.5 * (t0 + t1)
+    rf = cp.rf.values.astype(float)
+    pri = np.where(cp.jitter.values > 0, -1.0, cp.pri.fillna(-1).values).astype(float)
+    doa = cp.doa.values.astype(float)
+    node_air = pd.Series(cp.sh.values).groupby(pid).median() > 100
+    gate = {p: (cfg["cpi"]["doa_err_air"] if node_air.loc[p] else cfg["cpi"]["doa_err_sea"]) * gscale for p in node_air.index}
+    anchor = cp["anchor"].values if "anchor" in cp.columns else np.full(len(cp), -1)
+    maxdur = float((t1 - t0).max()) + 1.0
+    wv = np.log2(n + 1)
+    LL = np.log(np.clip(proba.values, 1e-4, 1)) * wv[:, None]
+    loss_max = tc.get("type_loss_max", 0.5)
+    merges = 0
+    for _ in range(mc.get("max_merges", 10)):
+        size = pd.Series(n).groupby(obj).sum()
+        S = pd.DataFrame(LL).groupby(obj).sum()
+        W = pd.Series(wv).groupby(obj).sum()
+        d = pd.DataFrame({"o": obj, "j": anchor, "n": n})
+        wj = d[d.j >= 0].groupby(["o", "j"]).n.sum()
+        otrk = {int(o): int(j) for (o, j), v in wj.items() if v >= 0.5 * size.loc[o]}
+        big = [o for o in size.sort_values(ascending=False).index[: tc.get("max_merge_objects", 200)] if size.loc[o] >= tc["min_obj_pulses"]]
+        per = {}
+        for o in big:
+            io_ = np.where(obj == o)[0]
+            for p in np.unique(pid[io_]):
+                ii = io_[pid[io_] == p]
+                ii = ii[np.argsort(tm[ii], kind="stable")]
+                per[(o, p)] = (tm[ii], doa[ii])
+        best = None
+        for i, a in enumerate(big):
+            for b in big[i + 1:]:
+                ja, jb = otrk.get(int(a), -1), otrk.get(int(b), -1)
+                if ja >= 0 and jb >= 0 and ja != jb:
+                    continue
+                sa, sb = S.loc[a].values, S.loc[b].values
+                if (sa.max() + sb.max() - (sa + sb).max()) / max(min(W.loc[a], W.loc[b]), 1e-9) > loss_max:
+                    continue
+                med, g = [], []
+                for p in node_air.index:
+                    if (a, p) not in per or (b, p) not in per:
+                        continue
+                    (ta, da), (tb, db) = per[(a, p)], per[(b, p)]
+                    # 以 CPI 少的一方为查询点
+                    x = _doa_agreement(ta, da, tb, db, win, bin_us) if len(tb) <= len(ta) else _doa_agreement(tb, db, ta, da, win, bin_us)
+                    med.append(x)
+                    g.append(np.full(len(x), gate[p]))
+                if not med:
+                    continue
+                med, g = np.concatenate(med), np.concatenate(g)
+                if len(med) < min_bins:
+                    continue
+                good = med <= g
+                if good.mean() < frac:
+                    continue
+                ia = np.where(obj == a)[0]
+                ib = np.where(obj == b)[0]
+                ia, ib = ia[np.argsort(t0[ia])], ib[np.argsort(t0[ib])]
+                c = _conflicts(t0[ia], t1[ia], rf[ia], pri[ia], t0[ib], t1[ib], rf[ib], pri[ib], maxdur,
+                               fc["max_delay_us"], fc["rf_tol"], fc["pri_tol"])
+                if c > max(2, mc.get("conflict_frac", 0.06) * min(len(ia), len(ib))):
+                    continue
+                sc = good.sum()
+                if best is None or sc > best[0]:
+                    best = (sc, a, b)
+        if best is None:
+            break
+        obj = np.where(obj == best[2], best[1], obj)
+        merges += 1
+    return pd.factorize(obj)[0], merges

@@ -14,9 +14,9 @@ from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
 from .refine import refine_objects
 from .tdoa import prepare_tdoa
-from .exclusion import dissolved_remnants, exclusion_repair
+from .exclusion import dissolved_remnants, episode_repair, exclusion_repair
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
-from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects
+from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects, merge_split_objects
 
 log = logging.getLogger("b04")
 
@@ -117,6 +117,13 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
             gone = dissolved_remnants(obj0, obj, cp.n.values, cfg["exclusion"].get("dissolve_frac", 0.7))
             obj = absorb_small(cp, obj, proba, cfg, gone)
         log.info("时间互斥重分配：改归 %d 脉冲，%.1f s", moved, time.time() - t_r)
+        if cfg["exclusion"].get("episode", True):
+            t_r = time.time()
+            obj, moved = episode_repair(cp, obj, groups, proba, cfg, R, rgate)
+            log.info("整段补洞：改归 %d 脉冲，%.1f s", moved, time.time() - t_r)
+    if cfg.get("merge_split", {}).get("enabled", True):
+        obj, nm = merge_split_objects(cp, obj, proba, cfg)
+        log.info("拆分对象重合并：%d 次", nm)
     cp["object_id"] = obj
     tm.lap(f"对象形成 ({obj.max() + 1})")
     cp["frag"] = frag

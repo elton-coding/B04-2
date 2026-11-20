@@ -97,7 +97,9 @@ def associate(cp: pd.DataFrame, obj_type: pd.Series, b: pd.DataFrame, base: pd.T
             if isinstance(rcs, str) and rcs in ("small", "medium", "large"):
                 ok &= rcs in m.get("rcs", [rcs])
         feas.append(ok)
-    sc["feasible"] = np.array(feas) & (sc.disp.values <= lc.get("max_disp", 0.35))
+    # 离散度与残差中位数门限：同一目标的 CPI 级方位残差只含少量噪声与节点固定偏差（测试集正确关联 disp ≤0.10、
+    # 残差中位数 ≤0.46°）；近旁静默航迹或无关航迹恰好落在命中容差内时，两者明显偏大
+    sc["feasible"] = np.array(feas) & (sc.disp.values <= lc.get("max_disp", 0.25)) & (sc.med_res.values <= lc.get("max_med_res", 2.0))
     sc["cost"] = np.where(sc.feasible & (sc.hit >= lc["min_hit"]), 1.0 - sc.hit + 0.1 * sc.med_res + 0.5 / np.sqrt(sc.n_used), 10.0)
     # TDOA：对象内跨节点同源配对的到达时间差与航迹预测之差。编队航迹相距一两百米时方位无法区分，TDOA 可以
     td = tdoa if lc.get("tdoa_w", 0) > 0 else None
