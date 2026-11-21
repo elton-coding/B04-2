@@ -39,6 +39,21 @@ def _unify_by_emission(lab: np.ndarray, emis: np.ndarray) -> np.ndarray:
     return np.where(out >= 0, out, lab)
 
 
+def _bearing_confirmed(cp, tracks, dl: dict, sig, gate, ac: dict) -> dict:
+    """TDOA 估出的航迹时间偏移中，方位残差也支持的那些（平移后半门限内的 CPI 加权数 ≥ 平移前 × (1+min_gain)）。"""
+    out = {}
+    w = cp.n.values.astype(float)
+    for tid, d in dl.items():
+        x = tracks[tracks.track_id == tid]
+        r0, _ = track_residuals(cp, x, sig, ac.get("pos_sigma_m", 0.0))
+        r1, _ = track_residuals(cp, x.assign(t_us=x.t_us + d * 1e6), sig, ac.get("pos_sigma_m", 0.0))
+        m0 = float((w * (np.abs(np.nan_to_num(r0[:, 0], nan=99.0)) <= 0.5 * gate)).sum())
+        m1 = float((w * (np.abs(np.nan_to_num(r1[:, 0], nan=99.0)) <= 0.5 * gate)).sum())
+        if m1 >= m0 * (1.0 + ac.get("offset_bearing_gain", 0.05)):
+            out[tid] = d
+    return out
+
+
 def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, b: pd.DataFrame | None = None,
                      extra: dict | None = None):
     """L2-L4 + L6：CPI 提取、航迹锚定、局部聚类、跨平台融合、型号判定。返回 (cpi_of, cp, proba)。"""
@@ -61,6 +76,7 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     ttype = {}
     R = rgate = None
     tdoa = None
+    track_dl = {}
     if cfg["anchor"].get("enabled", True) and b is not None and len(b):
         tracks = track_table(b, scenario_base_time(a))
         if cfg["anchor"].get("tdoa_w", 0) > 0:
@@ -70,7 +86,14 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
             g0 = np.where(cp.sh.values > 100, ac["gate_air"], ac["gate_sea"])
             ep, Rt, dl = prepare_tdoa(cp, emis, a.toa.values, cpi_of, tracks, np.abs(np.nan_to_num(R0, nan=99.0)) <= g0[:, None], cfg)
             tdoa = (ep, Rt)
-            tm.lap(f"TDOA 配对 ({len(ep)})，航迹时间偏移 {dl}")
+            if dl and cfg["anchor"].get("offset_to_bearing", True):
+                # 航迹时间戳偏移同样作用于方位几何（锚定、精修、关联），否则空中航迹的方位残差随偏移系统性增大。
+                # 只采用方位也能印证的偏移：平移后残差落在半门限内的 CPI（按脉冲数加权）须明显增多
+                dlb = _bearing_confirmed(cp, tracks, dl, sig, g0, ac)
+                if dlb:
+                    tracks = tracks.assign(t_us=tracks.t_us + tracks.track_id.map(dlb).fillna(0.0).values * 1e6)
+                    track_dl.update(dlb)
+            tm.lap(f"TDOA 配对 ({len(ep)})，航迹时间偏移 {dl}，方位采用 {track_dl}")
         lab, info = anchor_assign(cp, proba, groups, tracks, knowledge, cfg, tdoa)
         lab = resolve_conflicts(cp, lab, groups, info["score"], cfg)
         if cfg["anchor"].get("frag_veto", True):
@@ -133,6 +156,7 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     cp["local_cluster_id"] = cp.groupby(["object_id", "platform_id"], sort=True).ngroup().values
     if extra is not None:
         extra["tdoa"] = tdoa
+        extra["track_dl"] = track_dl
     return cpi_of, cp, proba
 
 
@@ -152,6 +176,9 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
         for (o, t), v in w.items():
             if v >= 0.5 * tot.loc[o]:
                 prefer[o] = int(t)
+    dl = ext.get("track_dl") or {}
+    if dl:
+        b = b.assign(datetime=b.datetime + pd.to_timedelta(b.track_id.map(dl).fillna(0.0).values, unit="s"))
     links, scores = associate(cp, cp.groupby("object_id").obj_type.first(), b, base, knowledge, cfg, prefer,
                               ext.get("tdoa"))
     tm.lap(f"A-B 关联 (matched {int((links.link_status == 'matched').sum())})")

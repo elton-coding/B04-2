@@ -28,7 +28,7 @@ DEFAULT = {
         "min_obj_pulses": 5000,     # 小于此脉冲数的对象尝试并入大对象
         "absorb_type_loss_max": 3.0,
         "tiny_obj_pulses": 2000,
-        "max_merge_objects": 200,   # 复杂度保护：两两合并只在最大的若干对象间进行
+        "max_merge_objects": 80,    # 复杂度保护：两两合并只在最大的若干对象间进行（真实场景进入合并的对象 ≤50；杂散脉冲会产生数百个碎对象）
         "max_absorb_objects": 500,    # 小于此脉冲数的对象强制并入最相近对象  # 小对象证据少，型号约束放宽，以方位连续为主
     },
     "recognize": {
@@ -63,6 +63,9 @@ DEFAULT = {
         "track_smooth_s": 10.0,     # 海面航迹局部线性平滑窗口（高斯 σ，秒）；0 关闭。用于 TDOA 预测
         "track_smooth_air_s": 3.0,  # 空中航迹（机动多）平滑窗口
         "tdoa_time_offset": True,   # 逐空中航迹估计时间戳偏移
+        "tdoa_offset_max_s": 10.0,  # 偏移搜索范围 ±（A/B 时间基准整体偏移的稳健性）
+        "offset_to_bearing": True,  # 估出的航迹时间偏移同时用于方位锚定与关联
+        "offset_bearing_gain": 0.05,  # 方位印证：平移后半门限内 CPI 加权数至少增加此比例
         "tdoa_w": 1.0,              # TDOA 残差在锚定代价中的权重（每个跨节点配对按较小 CPI 权重计）；0 关闭
         "tdoa_sigma_us": 0.12,      # 平滑航迹下真航迹 TDOA 残差 σ（训练集实测 ≈0.10 μs ≈ 30 m）
         "tdoa_cap": 9.0,            # 单配对残差平方上限

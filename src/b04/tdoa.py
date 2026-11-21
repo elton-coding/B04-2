@@ -6,7 +6,8 @@
 
 航迹侧两项误差需处理（训练集真值标定）：
 - 位置噪声约 100 m：局部线性平滑，空中目标机动多用短窗（3 s），海面目标用长窗（10 s）；
-- 个别空中航迹时间戳整体偏移（T4 约 −1 s，按 100 m/s 折合 0.3–0.7 μs）：逐航迹在 δ 网格上估计，
+- 个别空中航迹时间戳整体偏移（T4 约 −1 s，按 100 m/s 折合 0.3–0.7 μs）：逐航迹在 δ 网格（±10 s，A/B 时间基准
+  整体偏移时也能找回）上估计，
   仅当命中率显著提高时采用（避免把编队伙伴航迹"平移"过来）。
 """
 from __future__ import annotations
@@ -150,7 +151,8 @@ def tdoa_residuals(cp: pd.DataFrame, ep: pd.DataFrame, tracks: pd.DataFrame, tid
 
 def estimate_time_offsets(cp: pd.DataFrame, ep: pd.DataFrame, tracks: pd.DataFrame, tids: list, ok_doa: np.ndarray,
                           grid=np.arange(-2.5, 2.51, 0.25), hit_us: float = 0.15, min_pairs: int = 50,
-                          min_gain: float = 0.15, min_hit: float = 0.5) -> dict:
+                          min_gain: float = 0.15, min_hit: float = 0.5, prom_s: float = 2.0, min_prom: float = 0.15,
+                          edge_s: float = 0.5) -> dict:
     """逐空中航迹估计时间戳偏移 δ（秒）：候选配对 = 两端 CPI 对该航迹方位残差均在门限内（ok_doa: CPI × 航迹）；
     取使 |TDOA 残差| < hit_us 比例最大的 δ，需比 δ=0 高 min_gain 且自身 ≥ min_hit，否则为 0。"""
     out = {}
@@ -169,7 +171,12 @@ def estimate_time_offsets(cp: pd.DataFrame, ep: pd.DataFrame, tracks: pd.DataFra
         fr = np.array([np.nanmean(np.abs(tdoa_residuals(cp, e, x.assign(t_us=x.t_us + d * 1e6), [tid])[:, 0]) < hit_us)
                        for d in grid])
         k = int(np.nanargmax(fr))
-        if fr[k] >= min_hit and fr[k] - fr[i0] >= min_gain:
+        # 真偏移是网格内部的尖峰；落在网格边界或在 ±prom_s 处仍不回落的平缓高地多为假峰（航迹恰好扫过别处的同源配对）
+        w = int(round(prom_s / max(grid[1] - grid[0], 1e-9)))
+        side = [fr[q] for q in (k - w, k + w) if 0 <= q < len(fr)]
+        interior = 0 < k < len(fr) - 1 and abs(grid[k]) <= grid.max() - edge_s
+        prom = fr[k] - (max(side) if side else 0.0)
+        if fr[k] >= min_hit and fr[k] - fr[i0] >= min_gain and (k == i0 or (interior and prom >= min_prom)):
             out[tid] = float(grid[k])
     return out
 
@@ -181,7 +188,9 @@ def prepare_tdoa(cp: pd.DataFrame, emis: np.ndarray, toa: np.ndarray, cpi_of: np
     tids = sorted(tracks.track_id.unique())
     ep = emission_pairs(cp, emis, toa, cpi_of)
     tsm = smooth_tracks(tracks, ac.get("track_smooth_s", 10.0), ac.get("track_smooth_air_s", 3.0))
-    dl = estimate_time_offsets(cp, ep, tsm, tids, ok_doa) if ac.get("tdoa_time_offset", True) else {}
+    m = ac.get("tdoa_offset_max_s", 10.0)
+    grid = np.arange(-m, m + 1e-9, 0.25)
+    dl = estimate_time_offsets(cp, ep, tsm, tids, ok_doa, grid=grid) if ac.get("tdoa_time_offset", True) else {}
     if dl:
         tsm = tsm.copy()
         tsm["t_us"] = tsm.t_us + tsm.track_id.map(dl).fillna(0.0).values * 1e6

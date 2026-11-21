@@ -18,48 +18,62 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
     P = proba.values
     frag = np.full(len(cp), -1, np.int64)
     nxt = 0
+    K = P.shape[1]
+    max_gap, eps, min_compat = tc["max_gap_s"], tc["overlap_eps_us"], tc["min_type_compat"]
+    r_air, r_sea = tc["doa_rate_air"], tc["doa_rate_sea"]
     for pid, idx in cp.groupby("platform_id", sort=True).indices.items():
         idx = idx[np.argsort(cp.t0.values[idx], kind="stable")]
         node_air = float(np.nanmedian(cp.sh.values[idx])) > 100
         e = doa_err[node_air]
-        tracks = []  # dict: id, t1, doa, sd, p(sum), n
+        # 存活轨迹以数组保存（顺序与逐条遍历一致：过期剔除保持次序、新轨迹追加在末尾），每个 CPI 对全部轨迹向量化门限判断。
+        # 杂散脉冲会形成大量单脉冲 CPI 并各自开轨迹，逐条 Python 遍历在 1–2% 杂散时会慢到数小时。
+        cap = 64
+        T_id = np.empty(cap, np.int64); T_t1 = np.empty(cap); T_doa = np.empty(cap); T_sd = np.empty(cap)
+        T_p = np.empty((cap, K))
+        m = 0
         for i in idx:
             t0, t1, doa, n = cp.t0.values[i], cp.t1.values[i], cp.doa.values[i], cp.n.values[i]
             p = P[i]
             sd_c = e / np.sqrt(3.0) / np.sqrt(max(n, 1))
-            best, best_cost = None, 1e18
-            alive = []
-            for tr in tracks:
-                gap_s = (t0 - tr["t1"]) / 1e6
-                if gap_s > tc["max_gap_s"]:
-                    continue
-                alive.append(tr)
-                if t0 < tr["t1"] - tc["overlap_eps_us"]:
-                    continue
-                pt = tr["p"] / tr["p"].sum()
-                compat = float(np.dot(p, pt))
-                if compat < tc["min_type_compat"]:
-                    continue
-                is_air = float(np.dot(pt, air_mask)) > 0.5
-                rate = tc["doa_rate_air"] if is_air else tc["doa_rate_sea"]
-                gate = 3.0 * np.hypot(sd_c, tr["sd"]) + 0.5 + rate * max(gap_s, 0.0)
-                dd = abs(float(angdiff(doa, tr["doa"])))
-                if dd > gate:
-                    continue
-                cost = dd / gate + 0.5 * (1.0 - compat) + 0.2 * max(gap_s, 0.0) / tc["max_gap_s"]
-                if cost < best_cost:
-                    best, best_cost = tr, cost
-            tracks = alive
-            if best is None:
-                best = {"id": nxt, "t1": t1, "doa": doa, "sd": sd_c, "p": p * np.log2(n + 1)}
+            best = -1
+            if m:
+                gap = (t0 - T_t1[:m]) / 1e6
+                alive = gap <= max_gap
+                if not alive.all():
+                    keep = np.where(alive)[0]
+                    m2 = len(keep)
+                    T_id[:m2], T_t1[:m2], T_doa[:m2], T_sd[:m2] = T_id[keep], T_t1[keep], T_doa[keep], T_sd[keep]
+                    T_p[:m2] = T_p[keep]
+                    gap = gap[keep]
+                    m = m2
+            if m:
+                cand = ~(t0 < T_t1[:m] - eps)
+                pt = T_p[:m] / T_p[:m].sum(axis=1, keepdims=True)
+                compat = pt @ p
+                cand &= ~(compat < min_compat)
+                rate = np.where(pt @ air_mask > 0.5, r_air, r_sea)
+                g = np.maximum(gap, 0.0)
+                gate = 3.0 * np.hypot(sd_c, T_sd[:m]) + 0.5 + rate * g
+                dd = np.abs(angdiff(doa, T_doa[:m]))
+                cand &= ~(dd > gate)
+                if cand.any():
+                    cost = np.where(cand, dd / gate + 0.5 * (1.0 - compat) + 0.2 * g / max_gap, np.inf)
+                    best = int(np.argmin(cost))
+            if best < 0:
+                if m == cap:
+                    cap *= 2
+                    T_id = np.resize(T_id, cap); T_t1 = np.resize(T_t1, cap); T_doa = np.resize(T_doa, cap)
+                    T_sd = np.resize(T_sd, cap); T_p = np.resize(T_p, (cap, K))
+                T_id[m], T_t1[m], T_doa[m], T_sd[m], T_p[m] = nxt, t1, doa, sd_c, p * np.log2(n + 1)
+                frag[i] = nxt
                 nxt += 1
-                tracks.append(best)
+                m += 1
             else:
-                best["t1"] = max(best["t1"], t1)
-                best["doa"] = doa
-                best["sd"] = sd_c
-                best["p"] = best["p"] + p * np.log2(n + 1)
-            frag[i] = best["id"]
+                T_t1[best] = max(T_t1[best], t1)
+                T_doa[best] = doa
+                T_sd[best] = sd_c
+                T_p[best] = T_p[best] + p * np.log2(n + 1)
+                frag[i] = T_id[best]
     return frag
 
 
@@ -279,6 +293,22 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
                     good += abs(float(angdiff(p.doa, q.doa))) <= gate
         return evid, good
 
+    def pair_score(ka, kb):
+        ok, t = type_ok(ka, kb)
+        if not ok:
+            return None
+        xa, xb = groups[ka], groups[kb]
+        small = min(len(xa), len(xb))
+        c = _conflicts(*arrays(xa, t), *arrays(xb, t), maxdur, margin, fc["rf_tol"], fc["pri_tol"])
+        if c > max(2, fc.get("conflict_frac", 0.01) * small):
+            return None
+        ev, good = doa_consistent(xa, xb)
+        if ev > 0 and good == 0:
+            return None
+        return (good + 1) * np.log1p(small)
+
+    # 成对判定只依赖两个对象自身，缓存后每轮只需重算与上轮合并对象相关的对（杂散脉冲造成数百个碎对象时避免平方级重算）
+    cache = {}
     changed = True
     while changed:
         changed = False
@@ -286,22 +316,17 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
         best = None
         for i, ka in enumerate(keys):
             for kb in keys[i + 1:]:
-                ok, t = type_ok(ka, kb)
-                if not ok:
+                if (ka, kb) not in cache:
+                    cache[(ka, kb)] = pair_score(ka, kb)
+                score = cache[(ka, kb)]
+                if score is None:
                     continue
-                xa, xb = groups[ka], groups[kb]
-                small = min(len(xa), len(xb))
-                c = _conflicts(*arrays(xa, t), *arrays(xb, t), maxdur, margin, fc["rf_tol"], fc["pri_tol"])
-                if c > max(2, fc.get("conflict_frac", 0.01) * small):
-                    continue
-                ev, good = doa_consistent(xa, xb)
-                if ev > 0 and good == 0:
-                    continue
-                score = (good + 1) * np.log1p(small)
                 if best is None or score > best[0]:
                     best = (score, ka, kb)
         if best is not None:
             _, ka, kb = best
+            for key in [k_ for k_ in cache if ka in k_ or kb in k_]:
+                del cache[key]
             groups[ka] = pd.concat([groups[ka], groups[kb]]).sort_values("t0")
             del groups[kb]
             if proba is not None:
@@ -347,35 +372,60 @@ def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: di
             bi = bi[np.argsort(cp.t0.values[bi])]
             k = np.clip(np.searchsorted(cp.t0.values[bi], cp.t0.values[si]), 0, len(bi) - 1)
             obj[si] = obj[bi[k]]
+    # 大对象逐节点的有序 (t0, doa) 缓存；大对象吸收小对象后作废其缓存（结果与逐 CPI 循环逐位一致，复杂度从 O(小×大×N) 降到按需构建）
+    t0v, doav, pidv = cp.t0.values, cp.doa.values, cp.platform_id.values
+    tolbase = np.where(cp.sh.values > 100, 2 * doa_err[True], 2 * doa_err[False])
+    LLv = LL.values
+    li = {o: i for i, o in enumerate(LL.index)}
+    cache = {}
+
+    def big_node(b_o, pid):
+        key = (b_o, pid)
+        if key not in cache:
+            xb = np.where((obj == b_o) & (pidv == pid))[0]
+            xb = xb[np.argsort(t0v[xb])]
+            cache[key] = (t0v[xb], doav[xb])
+        return cache[key]
+
     for s_o in small:
         xs = np.where(obj == s_o)[0]
         cands = []  # (cost, b_o, devmed, loss)
+        ls = LLv[li[s_o]]
+        nodes = np.unique(pidv[xs])
         for b_o in big:
-            loss = (LL.loc[s_o].max() + LL.loc[b_o].max() - (LL.loc[s_o] + LL.loc[b_o]).max()) / Wt.loc[s_o]
+            lb = LLv[li[b_o]]
+            loss = (ls.max() + lb.max() - (ls + lb).max()) / Wt.loc[s_o]
             devs = []
-            for pid in np.unique(cp.platform_id.values[xs]):
-                xb = np.where((obj == b_o) & (cp.platform_id.values == pid))[0]
-                if len(xb) == 0:
+            for pid in nodes:
+                tb, db = big_node(b_o, pid)
+                if len(tb) == 0:
                     continue
-                xb = xb[np.argsort(cp.t0.values[xb])]
-                for i in xs[cp.platform_id.values[xs] == pid]:
-                    k = np.searchsorted(cp.t0.values[xb], cp.t0.values[i])
-                    near = [q for q in (k - 1, k) if 0 <= q < len(xb)]
-                    q = min(near, key=lambda q: abs(cp.t0.values[xb[q]] - cp.t0.values[i]))
-                    gap_s = abs(cp.t0.values[xb[q]] - cp.t0.values[i]) / 1e6
-                    tol = 2 * doa_err[cp.sh.values[i] > 100] + tc["doa_rate_air"] * gap_s
-                    devs.append(abs(float(angdiff(cp.doa.values[i], cp.doa.values[xb[q]]))) / tol)
+                ii = xs[pidv[xs] == pid]
+                ti = t0v[ii]
+                k = np.searchsorted(tb, ti)
+                km1 = np.clip(k - 1, 0, len(tb) - 1)
+                kk = np.clip(k, 0, len(tb) - 1)
+                use_prev = (k == len(tb)) | ((k > 0) & (np.abs(tb[km1] - ti) <= np.abs(tb[kk] - ti)))
+                q = np.where(use_prev, km1, kk)
+                gap_s = np.abs(tb[q] - ti) / 1e6
+                tol = tolbase[ii] + tc["doa_rate_air"] * gap_s
+                devs.append(np.abs(angdiff(doav[ii], db[q])) / tol)
             if not devs:
                 continue
-            dm = float(np.median(devs))
+            dm = float(np.median(np.concatenate(devs)))
             cands.append((dm + loss, b_o, dm, loss))
         if not cands:
             continue
         ok = [c for c in cands if c[2] <= 1.0 and c[3] <= tc.get("absorb_type_loss_max", 3.0)]
+        tgt = None
         if ok:
-            obj[xs] = min(ok)[1]
+            tgt = min(ok)[1]
         elif size.loc[s_o] < tiny_thr:  # 极小对象：独立成对象证据不足，并入综合代价最小者
-            obj[xs] = min(cands)[1]
+            tgt = min(cands)[1]
+        if tgt is not None:
+            obj[xs] = tgt
+            for key in [k_ for k_ in cache if k_[0] == tgt]:
+                del cache[key]
     return pd.factorize(obj)[0]
 
 
