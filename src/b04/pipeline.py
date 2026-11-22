@@ -14,7 +14,7 @@ from .cpi import extract_cpis
 from .fingerprint import loglik, proba_from_ll
 from .refine import refine_objects
 from .tdoa import prepare_tdoa
-from .exclusion import dissolved_remnants, episode_repair, exclusion_repair
+from .exclusion import dissolved_remnants, episode_repair, exclusion_repair, geometry_veto_repair
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
 from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects, merge_split_objects
 
@@ -147,6 +147,9 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     if cfg.get("merge_split", {}).get("enabled", True):
         obj, nm = merge_split_objects(cp, obj, proba, cfg)
         log.info("拆分对象重合并：%d 次", nm)
+    if R is not None:
+        obj, mv = geometry_veto_repair(cp, obj, proba, tracks, cfg)
+        log.info("几何否决改归：%d 脉冲", mv)
     cp["object_id"] = obj
     tm.lap(f"对象形成 ({obj.max() + 1})")
     cp["frag"] = frag

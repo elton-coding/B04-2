@@ -294,3 +294,118 @@ def dissolved_remnants(before: np.ndarray, after: np.ndarray, n: np.ndarray, fra
         if g.sum() < (1.0 - frac) * size_b.loc[b_]:
             out.add(int(a_))
     return out
+
+
+def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks: pd.DataFrame,
+                         cfg: dict) -> tuple[np.ndarray, int]:
+    """几何否决改归：对象锚定于某航迹时，方位残差超过 k 倍单 CPI 门限的 CPI 不可能来自该对象
+    （测向误差有界：海面 ±3°、空中 ±1.5°，CPI 级平均后更小）。常见来源是同参数的两部同型号雷达被跨节点
+    配成同一发射、或传播标签越过了无航迹目标。改归到型号相容（对象型号或 CPI 自身判型）且几何一致的对象：
+    有航迹者残差在门限内，无航迹者与其同节点前后 win 内的 CPI 方位连续；取代价最小者，无候选则不动。"""
+    from .anchor import track_residuals
+    from .geo import angdiff
+    from .recognize import vote_object_type
+
+    gc = cfg.get("geo_veto", {})
+    if not gc.get("enabled", True) or tracks is None or not len(tracks) or len(cp) == 0:
+        return obj, 0
+    ac = cfg["anchor"]
+    obj = obj.copy()
+    n = cp.n.values
+    pid = cp.platform_id.values
+    t0 = cp.t0.values.astype(float)
+    doa = cp.doa.values.astype(float)
+    air = cp.sh.values > 100
+    gate = np.where(air, ac["gate_air"], ac["gate_sea"])
+    derr = np.where(air, cfg["cpi"]["doa_err_air"], cfg["cpi"]["doa_err_sea"])
+    R, tids = track_residuals(cp, tracks)
+    anchor = cp["anchor"].values if "anchor" in cp.columns else np.full(len(cp), -1)
+    otrk = _object_tracks(obj, anchor, n)
+    r_own = np.full(len(cp), np.nan)
+    for o_, j in otrk.items():
+        m = obj == o_
+        r_own[m] = np.abs(R[m, j])
+    flag = np.nan_to_num(r_own, nan=0.0) > gc.get("k", 2.0) * gate
+    if not flag.any():
+        return obj, 0
+    otype = vote_object_type(cp.assign(object_id=obj), proba)
+    ptype = cp.ptype.values if "ptype" in cp.columns else proba.idxmax(axis=1).values
+    win = gc.get("win_s", 5.0) * 1e6
+    # 无航迹候选对象逐节点的有序 (t0, doa)，不含被否决的 CPI
+    keep = ~flag
+    nodes = {}
+    for o_ in np.unique(obj):
+        if o_ in otrk:
+            continue
+        for p in np.unique(pid[(obj == o_) & keep]):
+            ii = np.where((obj == o_) & keep & (pid == p))[0]
+            ii = ii[np.argsort(t0[ii], kind="stable")]
+            nodes[(o_, p)] = (t0[ii], doa[ii])
+    moved = 0
+    new = obj.copy()
+    for i in np.where(flag)[0]:
+        types = {otype.get(obj[i]), ptype[i]}
+        best, bc = None, np.inf
+        for y in otype.index:
+            if y == obj[i] or otype[y] not in types:
+                continue
+            if y in otrk:
+                r = abs(R[i, otrk[y]])
+                if not np.isfinite(r) or r > gate[i]:
+                    continue
+                c = r / gate[i]
+            else:
+                key = (y, pid[i])
+                if key not in nodes:
+                    continue
+                tt, dd = nodes[key]
+                lo, hi = np.searchsorted(tt, t0[i] - win), np.searchsorted(tt, t0[i] + win)
+                if hi <= lo:
+                    continue
+                dm = float(np.median(np.abs(angdiff(dd[lo:hi], doa[i]))))
+                if dm > 2.0 * derr[i]:
+                    continue
+                c = dm / (2.0 * derr[i])
+            if c < bc:
+                best, bc = y, c
+        if best is not None:
+            new[i] = best
+            moved += int(n[i])
+    # 第二步（反向）：CPI 紧贴某个型号相容的有航迹对象 X 的航迹（残差 ≤ k2 × 门限），而与当前对象不一致
+    # （当前对象有航迹时残差超门限；无航迹时同节点前后 win 内没有方位连续的 CPI）→ 改归 X
+    k2 = gc.get("k_fit", 0.5)
+    obj2 = new
+    otrk2 = _object_tracks(obj2, anchor, n)
+    otype2 = vote_object_type(cp.assign(object_id=obj2), proba)
+    tr_objs = [(x, j) for x, j in otrk2.items()]
+    if tr_objs:
+        Rt = np.abs(np.stack([R[:, j] for _, j in tr_objs], axis=1))
+        fit = np.nan_to_num(Rt, nan=99.0) <= k2 * gate[:, None]
+        cand_rows = np.where(fit.any(axis=1))[0]
+        idx_on = {}
+        for i in cand_rows:
+            y = obj2[i]
+            xs = [q for q, (x, _) in enumerate(tr_objs) if x != y and fit[i, q]
+                  and otype2.get(x) in (otype2.get(y), ptype[i])]
+            if not xs:
+                continue
+            if y in otrk2:
+                ry = abs(R[i, otrk2[y]])
+                if not (np.isfinite(ry) and ry > gate[i]):
+                    continue
+            else:
+                key = (y, pid[i])
+                if key not in idx_on:
+                    jj = np.where((obj2 == y) & (pid == pid[i]))[0]
+                    jj = jj[np.argsort(t0[jj], kind="stable")]
+                    idx_on[key] = jj
+                jj = idx_on[key]
+                lo, hi = np.searchsorted(t0[jj], t0[i] - win), np.searchsorted(t0[jj], t0[i] + win)
+                nb = jj[lo:hi]
+                nb = nb[nb != i]
+                if len(nb) and float(np.median(np.abs(angdiff(doa[nb], doa[i])))) <= 2.0 * derr[i]:
+                    continue
+            q = min(xs, key=lambda q: Rt[i, q])
+            new[i] = tr_objs[q][0]
+            moved += int(n[i])
+    return (pd.factorize(new)[0] if moved else new), moved
