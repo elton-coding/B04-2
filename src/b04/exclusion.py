@@ -330,6 +330,14 @@ def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame,
         return obj, 0
     otype = vote_object_type(cp.assign(object_id=obj), proba)
     ptype = cp.ptype.values if "ptype" in cp.columns else proba.idxmax(axis=1).values
+    P = proba.values
+    col = {c: q for q, c in enumerate(proba.columns)}
+    p_min = gc.get("type_p_min", 0.4)
+
+    def compat(i, ty, ty_own):
+        """型号相容：对象型号、CPI 判型，或 CPI 在该型号上的概率不低于 p_min（指纹相近型号的少脉冲 CPI 常判错）。"""
+        return ty in (ty_own, ptype[i]) or (ty in col and P[i, col[ty]] >= p_min)
+
     win = gc.get("win_s", 5.0) * 1e6
     # 无航迹候选对象逐节点的有序 (t0, doa)，不含被否决的 CPI
     keep = ~flag
@@ -344,10 +352,9 @@ def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame,
     moved = 0
     new = obj.copy()
     for i in np.where(flag)[0]:
-        types = {otype.get(obj[i]), ptype[i]}
         best, bc = None, np.inf
         for y in otype.index:
-            if y == obj[i] or otype[y] not in types:
+            if y == obj[i] or not compat(i, otype[y], otype.get(obj[i])):
                 continue
             if y in otrk:
                 r = abs(R[i, otrk[y]])
@@ -383,12 +390,33 @@ def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame,
         fit = np.nan_to_num(Rt, nan=99.0) <= k2 * gate[:, None]
         cand_rows = np.where(fit.any(axis=1))[0]
         idx_on = {}
+        frac_cache = {}
+        assigned = np.array(sorted({j for _, j in tr_objs}), np.int64)
+        orphan_cache = {}
+
+        def favors(i, q, y):
+            """CPI 判型明显偏向 X（X 型号概率比当前对象型号高出 type_margin）。"""
+            tx, ty_ = otype2.get(tr_objs[q][0]), otype2.get(y)
+            return tx in col and ty_ in col and P[i, col[tx]] >= P[i, col[ty_]] + gc.get("type_margin", 0.2)
         for i in cand_rows:
             y = obj2[i]
             xs = [q for q, (x, _) in enumerate(tr_objs) if x != y and fit[i, q]
-                  and otype2.get(x) in (otype2.get(y), ptype[i])]
+                  and compat(i, otype2.get(x), otype2.get(y))]
             if not xs:
                 continue
+            if y not in otrk2 and gc.get("max_fit_frac", 0.4) < 1.0:
+                # 当前对象（无航迹）在该节点上本就大量贴合 X 的航迹 → 此节点上几何分不开两者；除非 CPI 判型更偏向 X，否则不动
+                xs2 = []
+                for q in xs:
+                    kf = (y, pid[i], q)
+                    if kf not in frac_cache:
+                        jy = np.where((obj2 == y) & (pid == pid[i]))[0]
+                        frac_cache[kf] = float(n[jy][fit[jy, q]].sum() / max(n[jy].sum(), 1))
+                    if frac_cache[kf] <= gc.get("max_fit_frac", 0.4) or favors(i, q, y):
+                        xs2.append(q)
+                xs = xs2
+                if not xs:
+                    continue
             if y in otrk2:
                 ry = abs(R[i, otrk2[y]])
                 if not (np.isfinite(ry) and ry > gate[i]):
@@ -402,10 +430,104 @@ def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame,
                 jj = idx_on[key]
                 lo, hi = np.searchsorted(t0[jj], t0[i] - win), np.searchsorted(t0[jj], t0[i] + win)
                 nb = jj[lo:hi]
-                nb = nb[nb != i]
+                # 同样紧贴 X 航迹的 CPI 不算"当前对象的方位连续邻居"（整串驻留一起被错归时互为邻居）
+                # 脉冲数远少于本 CPI 的零散 CPI 也不算（常是别处错挂来的 1–2 脉冲碎片）
+                if gc.get("nb_excl_fit", True):
+                    nb = nb[(nb != i) & ~fit[nb][:, xs].any(axis=1) & (n[nb] >= gc.get("nb_min_frac", 0.25) * n[i])]
+                else:
+                    nb = nb[nb != i]
                 if len(nb) and float(np.median(np.abs(angdiff(doa[nb], doa[i])))) <= 2.0 * derr[i]:
                     continue
+            if y not in otrk2 and gc.get("local_s", 30.0) > 0 and not any(favors(i, q, y) for q in xs):
+                # 当前对象在该 CPI 前后 [1 s, local_s] 内（去掉紧邻的同串驻留）过半也贴合 X 的航迹 → 它本身此时就在这条航迹的
+                # 方位上，几何分不开；除非 CPI 判型明显偏向 X
+                jj = idx_on.get((y, pid[i]))
+                if jj is None:
+                    jj = np.where((obj2 == y) & (pid == pid[i]))[0]
+                    jj = jj[np.argsort(t0[jj], kind="stable")]
+                    idx_on[(y, pid[i])] = jj
+                dt = np.abs(t0[jj] - t0[i])
+                lw = jj[(dt >= gc.get("local_excl_s", 1.0) * 1e6) & (dt <= gc["local_s"] * 1e6)]
+                if len(lw):
+                    fr = n[lw][fit[lw][:, xs].any(axis=1)].sum() / n[lw].sum()
+                    if fr > gc.get("local_frac", 0.5):
+                        continue
             q = min(xs, key=lambda q: Rt[i, q])
+            ug = gc.get("uniq_gate", 1.0)
+            if ug > 0:
+                # 还有一条未分给任何对象的航迹也在 ug × 门限内，且当前对象整体大量贴合它 → 它可能正是当前对象自己
+                # （未锚定上）的航迹，几何有歧义，不动
+                ra = np.abs(np.nan_to_num(R[i], nan=99.0))
+                ra[assigned] = 99.0
+                amb = False
+                for j in np.where(ra <= ug * gate[i])[0]:
+                    # 只有当前对象整体也大量贴合这条孤立航迹时，它才可能是当前对象自己的航迹
+                    kj = (y, j)
+                    if kj not in orphan_cache:
+                        jy = np.where(obj2 == y)[0]
+                        ok = np.abs(np.nan_to_num(R[jy, j], nan=99.0)) <= gate[jy]
+                        orphan_cache[kj] = float(n[jy][ok].sum() / max(n[jy].sum(), 1))
+                    if orphan_cache[kj] >= gc.get("orphan_min_hit", 0.5):
+                        amb = True
+                        break
+                if amb:
+                    continue
             new[i] = tr_objs[q][0]
             moved += int(n[i])
+    return (pd.factorize(new)[0] if moved else new), moved
+
+
+def absorb_tiny_local(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, int]:
+    """节点上极小的局部簇（对象在该节点上的脉冲数 < min_pulses）通常是零散 CPI 被错挂到别处成形的对象上
+    （训练集真值中单节点局部簇最小约 250 脉冲，而这类碎簇只有几到几十个脉冲、纯度很低）。逐 CPI 改归到
+    同节点上型号相容、前后 win 内方位连续的对象（取方位偏差最小者）；无候选则不动。"""
+    from .geo import angdiff
+    from .recognize import vote_object_type
+
+    tc = cfg.get("tiny_local", {})
+    if not tc.get("enabled", True) or len(cp) == 0:
+        return obj, 0
+    n = cp.n.values
+    pid = cp.platform_id.values
+    t0 = cp.t0.values.astype(float)
+    doa = cp.doa.values.astype(float)
+    derr = np.where(cp.sh.values > 100, cfg["cpi"]["doa_err_air"], cfg["cpi"]["doa_err_sea"])
+    size = pd.Series(n).groupby([obj, pid]).sum()
+    tiny = size[size < tc.get("min_pulses", 150)]
+    if not len(tiny):
+        return obj, 0
+    otype = vote_object_type(cp.assign(object_id=obj), proba)
+    ptype = cp.ptype.values if "ptype" in cp.columns else proba.idxmax(axis=1).values
+    P = proba.values
+    col = {c: q for q, c in enumerate(proba.columns)}
+    p_min = tc.get("type_p_min", 0.2)
+    win = tc.get("win_s", 5.0) * 1e6
+    tiny_keys = set(tiny.index)
+    new = obj.copy()
+    moved = 0
+    for p in np.unique([k[1] for k in tiny_keys]):
+        on = np.where(pid == p)[0]
+        hosts = {}
+        for o_ in np.unique(obj[on]):
+            if (o_, p) in tiny_keys:
+                continue
+            ii = on[obj[on] == o_]
+            ii = ii[np.argsort(t0[ii], kind="stable")]
+            hosts[o_] = (t0[ii], doa[ii])
+        for i in on[np.array([(o_, p) in tiny_keys for o_ in obj[on]], bool)]:
+            best, bc = None, np.inf
+            for y, (tt, dd) in hosts.items():
+                ty = otype.get(y)
+                # 几个脉冲的 CPI 指纹判型不可靠，只看方位
+                if n[i] >= tc.get("free_type_n", 8) and not (ty == ptype[i] or (ty in col and P[i, col[ty]] >= p_min)):
+                    continue
+                lo, hi = np.searchsorted(tt, t0[i] - win), np.searchsorted(tt, t0[i] + win)
+                if hi <= lo:
+                    continue
+                dm = float(np.median(np.abs(angdiff(dd[lo:hi], doa[i]))))
+                if dm <= 2.0 * derr[i] and dm < bc:
+                    best, bc = y, dm
+            if best is not None:
+                new[i] = best
+                moved += int(n[i])
     return (pd.factorize(new)[0] if moved else new), moved

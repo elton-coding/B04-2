@@ -24,6 +24,15 @@ def _majority_acc(truth: np.ndarray, pred: np.ndarray) -> float:
     return ct.max(axis=1).sum() / ct.values.sum()
 
 
+def _macro(truth: np.ndarray, pred: np.ndarray) -> tuple[float, float]:
+    """按簇宏平均（小簇与大簇同权）：(每个真值簇的最佳 F1 均值, 每个预测簇的纯度均值)。"""
+    d = pd.DataFrame({"t": truth, "p": pred}).groupby(["t", "p"]).size()
+    nt = d.groupby(level=0).sum()
+    npd = d.groupby(level=1).sum()
+    f1 = 2 * d / (nt.reindex(d.index.get_level_values(0)).values + npd.reindex(d.index.get_level_values(1)).values)
+    return float(f1.groupby(level=0).max().mean()), float((d.groupby(level=1).max() / npd).mean())
+
+
 def score(a: pd.DataFrame, b: pd.DataFrame, pred: pd.DataFrame, links: pd.DataFrame) -> dict:
     """a 需含 target_id/target_class/target_state 真值；b 需含 target_id。"""
     m = a[["pulse_id", "platform_id", "target_id", "target_class", "target_state"]].merge(
@@ -36,6 +45,10 @@ def score(a: pd.DataFrame, b: pd.DataFrame, pred: pd.DataFrame, links: pd.DataFr
     out["cluster_ARI"] = float(np.mean(ari))
     out["cluster_pairF1"] = float(np.mean(pf1))
     out["cluster_purity"] = float(_majority_acc(m.target_id.values, m.local_cluster_id.values))
+    lt = m.platform_id.astype(str) + "/" + m.target_id.astype(str)
+    lp = m.platform_id.astype(str) + "/" + m.local_cluster_id.astype(str)
+    out["cluster_macroF1"], out["cluster_macroPur"] = _macro(lt.values, lp.values)
+    out["fusion_macroF1"], out["fusion_macroPur"] = _macro(m.target_id.values, m.object_id.values)
     out["type_acc"] = float((m.target_class == m.target_class_p).mean())
     out["state_acc"] = float((m.target_state == m.target_state_p).mean())
     out["state_macroF1"] = float(f1_score(m.target_state, m.target_state_p, average="macro"))
