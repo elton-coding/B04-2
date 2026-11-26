@@ -195,3 +195,32 @@ def prepare_tdoa(cp: pd.DataFrame, emis: np.ndarray, toa: np.ndarray, cpi_of: np
         tsm = tsm.copy()
         tsm["t_us"] = tsm.t_us + tsm.track_id.map(dl).fillna(0.0).values * 1e6
     return ep, tdoa_residuals(cp, ep, tsm, tids), dl
+
+
+def toa_phase_residuals(cp: pd.DataFrame, tracks: pd.DataFrame, tids: list, lattice_us: float = 64.0) -> np.ndarray:
+    """单节点到达时刻相位残差 |((t0 − r/c) mod L)|（μs，折叠到 [0, L/2]）：CPI × 航迹，航迹时段外为 NaN。
+
+    训练集实测：各辐射源驻留的发射起点落在 L = 64 μs 的公共时间格上（与到达时间同一基准），故一个从驻留起点开始的
+    CPI，其首脉冲到达时刻对 L 取模恰等于 节点—辐射源 距离 / c 对 L 取模（真航迹残差中位 0.03–0.5 μs，相当于
+    10–150 m）；而对任意其他航迹，残差在 [0, L/2] 上近似均匀，落入 0.6 μs 的概率只有约 2%。与 TDOA 不同，
+    它不要求两节点同时收到同一串脉冲，能区分分时照射各节点的同型号雷达（如两部 R01 的整串驻留错挂）。"""
+    E = np.full((len(cp), len(tids)), np.nan)
+    if not len(cp) or tracks is None or not len(tracks):
+        return E
+    lon0, lat0 = float(cp.slon.mean()), float(cp.slat.mean())
+    xs, ys = enu(cp.slon.values, cp.slat.values, lon0, lat0)
+    zs = cp.sh.values.astype(float)
+    tq = cp.t0.values.astype(float)
+    L = float(lattice_us)
+    for j, tid in enumerate(tids):
+        x = tracks[tracks.track_id == tid]
+        if not len(x):
+            continue
+        tt = x.t_us.values
+        px, py = enu(np.interp(tq, tt, x.target_longitude.values), np.interp(tq, tt, x.target_latitude.values), lon0, lat0)
+        pz = np.interp(tq, tt, x.target_height.values)
+        r = np.sqrt((px - xs) ** 2 + (py - ys) ** 2 + (pz - zs) ** 2) / C_M_PER_US
+        e = np.abs((tq - r + L / 2) % L - L / 2)
+        inside = (tq >= tt[0] - 1e6) & (tq <= tt[-1] + 1e6)
+        E[inside, j] = e[inside]
+    return E

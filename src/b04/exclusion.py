@@ -531,3 +531,113 @@ def absorb_tiny_local(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cf
                 new[i] = best
                 moved += int(n[i])
     return (pd.factorize(new)[0] if moved else new), moved
+
+
+def phase_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks: pd.DataFrame,
+                 cfg: dict) -> tuple[np.ndarray, int]:
+    """到达时刻相位改归（单节点测距证据，见 tdoa.toa_phase_residuals）：CPI 对当前对象航迹的相位残差 > bad_us，
+    而对另一个有航迹对象 X 的航迹相位残差 ≤ fit_us、方位残差在单 CPI 门限内、型号相容 → 改归 X（X 唯一时）。
+
+    方位分不开的同型号雷达对（两部 R01 / 两部 R05 方位相近时整串驻留错挂）主要靠它纠正。当前对象有航迹时
+    要求对象型号相同（训练集验证：放宽到 CPI 判型会把编队中判型互错的 R07/R08 CPI 改坏）；当前对象无航迹时
+    无从比较自身相位，按几何否决同样的型号相容规则，并要求该对象在此节点上整体不贴合 X 的相位与方位（否则
+    两者此处不可分）。自检：直接锚定 CPI 对其航迹的相位命中率须明显高于随机（数据不具备公共时间格时自动关闭）。"""
+    from .anchor import track_residuals
+    from .recognize import vote_object_type
+    from .tdoa import smooth_tracks, toa_phase_residuals
+
+    pc = cfg.get("phase", {})
+    if not pc.get("enabled", True) or tracks is None or not len(tracks) or len(cp) == 0:
+        return obj, 0
+    ac = cfg["anchor"]
+    n = cp.n.values
+    pid = cp.platform_id.values
+    air = cp.sh.values > 100
+    gate = np.where(air, ac["gate_air"], ac["gate_sea"])
+    R, tids = track_residuals(cp, tracks)
+    tsm = smooth_tracks(tracks, ac.get("track_smooth_s", 10.0), ac.get("track_smooth_air_s", 3.0))
+    E = toa_phase_residuals(cp, tsm, tids, pc.get("lattice_us", 64.0))
+    fit_us, bad_us = pc.get("fit_us", 0.6), pc.get("bad_us", 2.0)
+    anchor = cp["anchor"].values if "anchor" in cp.columns else np.full(len(cp), -1)
+    direct = cp["anchor_direct"].values if "anchor_direct" in cp.columns else anchor
+    ok = direct >= 0
+    if ok.sum() < pc.get("check_min_cpi", 50):
+        return obj, 0
+    e_dir = E[np.where(ok)[0], direct[ok]]
+    e_dir = e_dir[np.isfinite(e_dir)]
+    if not len(e_dir) or float(np.mean(e_dir <= fit_us)) < pc.get("check_min_hit", 0.5):
+        return obj, 0
+    # 逐航迹自检：航迹时间戳与 A 数据有偏移时（空中目标每秒偏移折合数百米），其相位预测失效，此航迹不参与
+    ii, dj = np.where(ok)[0], direct[ok]
+    rel = set()
+    for j in np.unique(dj):
+        e = E[ii[dj == j], j]
+        e = e[np.isfinite(e)]
+        if len(e) >= pc.get("track_min_cpi", 20) and float(np.mean(e <= fit_us)) >= pc.get("track_min_hit", 0.5):
+            rel.add(int(j))
+    otrk_all = _object_tracks(obj, anchor, n)
+    otrk = {o: j for o, j in otrk_all.items() if j in rel}
+    if not otrk:
+        return obj, 0
+    otype = vote_object_type(cp.assign(object_id=obj), proba)
+    ptype = cp.ptype.values if "ptype" in cp.columns else proba.idxmax(axis=1).values
+    P = proba.values
+    col = {c: q for q, c in enumerate(proba.columns)}
+    p_min = cfg.get("geo_veto", {}).get("type_p_min", 0.4)
+    tr_objs = list(otrk.items())
+    js = np.array([j for _, j in tr_objs])
+    Ex = np.nan_to_num(E[:, js], nan=99.0)
+    Rx = np.abs(np.nan_to_num(R[:, js], nan=99.0))
+    fit = (Ex <= fit_us) & (Rx <= gate[:, None])
+    frac_cache = {}
+    xr, xf, xb, xk = pc.get("cross_geo", False), pc.get("cross_fit_us", 0.2), pc.get("cross_bad_us", 1.0), pc.get("cross_ratio", 5.0)
+
+    def cross_ok(i, q, tx, y):
+        """跨型号改归（当前对象有航迹）：① 当前航迹方位也超门限（几何上已不可能属于当前对象），X 相位与方位都贴合；
+        ② 或 CPI 在 X 型号上概率 ≥ p_min，且相位明显更贴合 X（≤ cross_fit_us，当前航迹 ≥ cross_bad_us 且 ≥ cross_ratio 倍）
+        ——编队两航迹距离差仅 0.3–3 μs、指纹又互判错时靠它区分。"""
+        jy = otrk[y]
+        if xr and np.isfinite(R[i, jy]) and abs(R[i, jy]) > gate[i]:
+            return True
+        ey = E[i, jy]
+        return (tx in col and P[i, col[tx]] >= p_min and np.isfinite(ey) and Ex[i, q] <= xf and ey >= xb
+                and ey >= xk * max(Ex[i, q], 1e-3))
+
+    new = obj.copy()
+    moved = 0
+    for i in np.where(fit.any(axis=1))[0]:
+        y = obj[i]
+        ty = otype.get(y)
+        if y in otrk_all and y not in otrk:
+            continue
+        if y in otrk:
+            ey = E[i, otrk[y]]
+            if not (np.isfinite(ey) and ey > min(bad_us, xb)):
+                continue
+        xs = []
+        for q, (x, _) in enumerate(tr_objs):
+            if x == y or not fit[i, q]:
+                continue
+            tx = otype.get(x)
+            if y in otrk:
+                if tx != ty:
+                    if not cross_ok(i, q, tx, y):
+                        continue
+                elif not E[i, otrk[y]] > bad_us:
+                    continue
+            elif not (tx in (ty, ptype[i]) or (tx in col and P[i, col[tx]] >= p_min)):
+                continue
+            xs.append(q)
+        if len(xs) != 1:
+            continue
+        q = xs[0]
+        if y not in otrk:
+            kf = (y, pid[i], q)
+            if kf not in frac_cache:
+                jy = np.where((obj == y) & (pid == pid[i]))[0]
+                frac_cache[kf] = float(n[jy][fit[jy, q]].sum() / max(n[jy].sum(), 1))
+            if frac_cache[kf] > pc.get("max_fit_frac", 0.4):
+                continue
+        new[i] = tr_objs[q][0]
+        moved += int(n[i])
+    return (pd.factorize(new)[0] if moved else new), moved
