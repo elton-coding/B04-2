@@ -18,6 +18,12 @@ DEFAULT = {
         # 同一 CPI 内参数极差上限（噪声全宽 + 0.1 量化余量），训练/测试实测一致
         "rf_w": 6.0, "pw_w": 0.25, "amp_w": 1.3, "doa_w_extra": 0.5,
     },
+    "doa_calib": {                  # 测向误差自校准：实测（同 PRI 链相邻脉冲方位差）明显大于给定值时按比例放大方位门限
+        "enabled": True,
+        "ratio_min": 1.1,
+        "ratio_max": 3.0,
+        "min_pairs": 2000,
+    },
     "track": {
         "max_gap_s": 20.0,          # 节点内 CPI 串接最大时间间隔
         "doa_rate_air": 1.5,        # 允许的方位变化率 deg/s（被观测为空中目标）
@@ -29,6 +35,33 @@ DEFAULT = {
         "absorb_type_loss_max": 3.0,
         "tiny_obj_pulses": 2000,
         "max_merge_objects": 80,    # 复杂度保护：两两合并只在最大的若干对象间进行（真实场景进入合并的对象 ≤50；杂散脉冲会产生数百个碎对象）
+        "frag_phase": True,         # 片段串接时优先相位延续的候选（驻留起点 mod 64 μs 只随距离缓慢漂移）
+        "frag_phase_fit_us": 0.6,   # 相位延续门限
+        "frag_phase_rate": 1.0,     # 允许的相位漂移率 μs/s（训练集同源相邻 CPI 中位 0.04–0.6）
+        "frag_phase_rate_unc": 0.05,  # 已估出漂移率（累计 ≥ rw_min 秒）后的漂移率不确定度 μs/s
+        "frag_phase_acc": 0.01,     # 漂移率变化（径向加速度）μs/s²
+        "frag_phase_rw_min": 3.0,
+        "frag_phase_rw_cap": 30.0,
+        "frag_phase_max_us": 8.0,   # 门限放宽到超过此值（间隔过长）不再用相位
+        "frag_phase_min_n": 3,      # 少于此脉冲数的 CPI 不用相位
+        "frag_phase_veto_k": 3,     # 候选片段相位连续延续 ≥ 此次数、本 CPI 不延续 → 不并入（0 关闭）
+        "frag_phase_veto_us": 4.0,  #   仅在相位门限 ≤ 此值时否决
+        "frag_phase_veto_n": 8,     #   本 CPI 脉冲数下限
+        "frag_phase_check_hit": 0.5,  # 自检：首轮片段内相邻 CPI 相位延续比例下限（随机约 2–5%）
+        "frag_phase_full": False,   # 首轮（全部 CPI）片段也用相位（验证：扰动锚定与 R05/R06 共用模式的改归，关闭）
+        "frag_phase_rest": True,    # 未锚定部分的片段用相位
+        "frag_phase_max_anchor": 0.6,  #   仅当锚定脉冲占比低于此值（航迹缺失多）时；测试集 0.89、完整航迹 CV 0.83、半数航迹约 0.4
+        "phase_merge": False,       # 同节点时间交错、相位轨迹一致的对象合并（验证：对象已混入另一部同型号雷达的 CPI 时会把两部雷达并成一个，关闭）
+        "phase_merge_win_s": 1.5,
+        "phase_merge_nb": 3,        # 与 A 前后各此数个 CPI 比相位，过半吻合才算吻合
+        "phase_merge_min_cmp": 8,
+        "phase_merge_min_frac": 0.6,
+        "phase_merge_node_cmp": 5,
+        "phase_merge_node_frac": 0.5,
+        "phase_merge_type_loss": 1.0,
+        "phase_merge_max": 20,
+        "phase_merge_conflict_frac": 0.1,  # 同节点时间重叠且 RF 不同的 CPI 占比上限（被并对象常混有少量另一部同型号雷达的 CPI）
+        "phase_merge_final": False,  # 末轮（各改归步骤之后）再做一次
         "max_absorb_objects": 500,    # 小于此脉冲数的对象强制并入最相近对象  # 小对象证据少，型号约束放宽，以方位连续为主
     },
     "recognize": {

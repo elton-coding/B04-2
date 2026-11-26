@@ -477,10 +477,12 @@ def geometry_veto_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame,
     return (pd.factorize(new)[0] if moved else new), moved
 
 
-def absorb_tiny_local(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, int]:
+def absorb_tiny_local(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict,
+                      force: set | None = None) -> tuple[np.ndarray, int]:
     """节点上极小的局部簇（对象在该节点上的脉冲数 < min_pulses）通常是零散 CPI 被错挂到别处成形的对象上
     （训练集真值中单节点局部簇最小约 250 脉冲，而这类碎簇只有几到几十个脉冲、纯度很低）。逐 CPI 改归到
-    同节点上型号相容、前后 win 内方位连续的对象（取方位偏差最小者）；无候选则不动。"""
+    同节点上型号相容、前后 win 内方位连续的对象（取方位偏差最小者）；无候选则不动。
+    force：这些对象在所有节点上都按极小局部簇处理（如改归后瓦解的残余对象，内含多个辐射源的零散 CPI）。"""
     from .geo import angdiff
     from .recognize import vote_object_type
 
@@ -493,7 +495,7 @@ def absorb_tiny_local(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cf
     doa = cp.doa.values.astype(float)
     derr = np.where(cp.sh.values > 100, cfg["cpi"]["doa_err_air"], cfg["cpi"]["doa_err_sea"])
     size = pd.Series(n).groupby([obj, pid]).sum()
-    tiny = size[size < tc.get("min_pulses", 150)]
+    tiny = size[(size < tc.get("min_pulses", 150)) | size.index.get_level_values(0).isin(list(force or ()))]
     if not len(tiny):
         return obj, 0
     otype = vote_object_type(cp.assign(object_id=obj), proba)

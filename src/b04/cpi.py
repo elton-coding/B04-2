@@ -194,3 +194,62 @@ def extract_cpis(a: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, pd.DataFrame]:
     cp["drop_frac"] = (1.0 - (cp.n - 1) / ((cp.t1 - cp.t0) / cp.pri)).clip(0, 1).fillna(0)
     cp = cp.drop(columns=["doa_ref", "ddoa", "pri_dev"]).reset_index()
     return cpi_of, cp
+
+
+def estimate_doa_halfwidth(a: pd.DataFrame, min_pairs: int = 2000) -> dict:
+    """逐节点估计脉冲测向误差半宽（均匀分布）：取同一 PRI 链上相邻脉冲（连续三个脉冲间隔相等、RF/PW 一致，
+    基本可确定是同一雷达）的方位差，两独立 U(-h, h) 之差为三角分布：|差| 的 99.9% 分位 = 2h(1 - √0.001) 给出噪声支撑半宽
+    （决定 CPI 内方位极差上限），90% 分位 = 2h(1 - √0.1) 给出与标准差相当的等效半宽（决定 CPI 级方位误差）。
+    训练/测试集两种估计都是空中 1.5°、海面 3.0°，与赛题给定一致。返回 {platform_id: (支撑半宽, 等效半宽)}。"""
+    out = {}
+    for pid, g in a.groupby("platform_id", sort=True):
+        g = g.sort_values("toa", kind="stable")
+        dt = np.diff(g.toa.values.astype(float))
+        if len(dt) < 3:
+            continue
+        drf = np.abs(np.diff(g.param1.values))
+        dpw = np.abs(np.diff(g.param2.values))
+        dd = np.abs(angdiff(g.doa.values[1:], g.doa.values[:-1]))
+        same = (np.abs(dt[1:] - dt[:-1]) <= 0.05) & (dt[1:] <= 2000.0) & (drf[1:] <= 3.0) & (drf[:-1] <= 3.0) & (dpw[1:] <= 0.15)
+        x = dd[1:][same]
+        if len(x) < min_pairs:
+            continue
+        q90, q999 = np.quantile(x, [0.9, 0.999])
+        out[pid] = (float(q999 / (2.0 * (1.0 - np.sqrt(0.001)))), float(q90 / (2.0 * (1.0 - np.sqrt(0.1)))))
+    return out
+
+
+def calibrate_doa(a: pd.DataFrame, cfg: dict) -> tuple[dict, dict]:
+    """实测测向误差明显大于给定值（> ratio_min 倍）时按比例放大方位门限：测向半宽（CPI 串接窗等）按支撑半宽之比，
+    锚定 σ 与单 CPI 门限按等效半宽之比。给定值是赛题物理误差模型，实测不大于它时保持不变。
+    返回 (cfg, {"air": (支撑倍数, 等效倍数), ...})。"""
+    import copy
+
+    if cfg.get("_doa_calibrated"):
+        return cfg, {}
+    cfg = dict(cfg, _doa_calibrated=True)   # 只校准一次（run_scenario 与 cluster_and_type 都会调用）
+    dc = cfg.get("doa_calib", {})
+    if not dc.get("enabled", True):
+        return cfg, {}
+    h = estimate_doa_halfwidth(a, dc.get("min_pairs", 2000))
+    if not h:
+        return cfg, {}
+    air = a.groupby("platform_id").sensor_height.median() > 100.0
+    c = cfg["cpi"]
+    k = {}
+    for kind, nom in (("air", c["doa_err_air"]), ("sea", c["doa_err_sea"])):
+        v = [x for p, x in h.items() if bool(air.get(p, False)) == (kind == "air")]
+        if v:
+            rs = max(x[0] for x in v) / nom
+            rq = max(x[1] for x in v) / nom
+            if max(rs, rq) > dc.get("ratio_min", 1.1):
+                cap = dc.get("ratio_max", 3.0)
+                k[kind] = (min(max(rs, 1.0), cap), min(max(rq, 1.0), cap))
+    if not k:
+        return cfg, {}
+    cfg = copy.deepcopy(cfg)
+    for kind, (rs, rq) in k.items():
+        cfg["cpi"][f"doa_err_{kind}"] *= rs
+        cfg["anchor"][f"sigma_{kind}"] *= rq
+        cfg["anchor"][f"gate_{kind}"] *= rq
+    return cfg, k

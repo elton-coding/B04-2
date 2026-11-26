@@ -10,14 +10,15 @@ import pandas as pd
 from .anchor import (anchor_assign, build_emissions, build_groups, contiguity_links, propagate_labels,
                      resolve_conflicts, track_residuals, veto_by_fragment)
 from .association import associate, scenario_base_time, track_table
-from .cpi import extract_cpis
+from .cpi import calibrate_doa, extract_cpis
 from .fingerprint import loglik, proba_from_ll
 from .refine import refine_objects
 from .tdoa import prepare_tdoa
 from .exclusion import (absorb_tiny_local, dissolved_remnants, episode_repair, exclusion_repair, geometry_veto_repair,
                         phase_repair)
 from .recognize import predict_states, predict_type_proba, state_features, vote_object_type
-from .tracking import absorb_small, build_fragments, fuse_fragments, match_cross_platform, merge_objects, merge_split_objects
+from .tracking import (absorb_small, build_fragments, fragment_phase, fragment_phase_hit, fuse_fragments,
+                       match_cross_platform, merge_objects, merge_phase_objects, merge_split_objects)
 
 log = logging.getLogger("b04")
 
@@ -59,6 +60,9 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
                      extra: dict | None = None):
     """L2-L4 + L6：CPI 提取、航迹锚定、局部聚类、跨平台融合、型号判定。返回 (cpi_of, cp, proba)。"""
     tm = Timer()
+    cfg, dk = calibrate_doa(a, cfg)
+    if dk:
+        log.info("实测测向误差大于给定值，方位门限放大 %s", {k_: tuple(round(x, 2) for x in v) for k_, v in dk.items()})
     cpi_of, cp = extract_cpis(a, cfg)
     tm.lap(f"CPI 提取 ({len(cp)})")
     if cfg["recognize"]["type_model"] == "fingerprint" and "fp" in models:
@@ -68,6 +72,17 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     cp["ptype"] = proba.idxmax(axis=1)
     domain_air = {k: v.get("domain") == "air" for k, v in knowledge.get("models", {}).items()}
     frag = build_fragments(cp, proba, domain_air, cfg)
+    fph = None
+    tc = cfg["track"]
+    if tc.get("frag_phase", False):
+        ph1, ph2 = fragment_phase(cp, cfg)
+        L = float(cfg["phase"].get("lattice_us", 64.0))
+        hit, npair = fragment_phase_hit(cp, frag, ph1, tc["frag_phase_fit_us"], tc["frag_phase_rate"], L)
+        log.info("片段相位自检：相邻 CPI 相位延续 %.3f（%d 对）", hit, npair)
+        if npair >= 50 and hit >= tc.get("frag_phase_check_hit", 0.5):
+            fph = (ph1, ph2, tc["frag_phase_fit_us"], tc["frag_phase_rate"], tc["frag_phase_max_us"], L)
+            if tc.get("frag_phase_full", True):
+                frag = build_fragments(cp, proba, domain_air, cfg, fph)
     pairs = match_cross_platform(cp, cfg, a.toa.values, cpi_of)
     emis = build_emissions(cp, pairs, frag if cfg["fusion"].get("emis_frag_support", True) else None)
     groups = build_groups(cp, emis, contiguity_links(cp))
@@ -118,7 +133,13 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     if len(rest):
         cr = cp.iloc[rest].reset_index(drop=True)
         pr = proba.iloc[rest].reset_index(drop=True)
-        fr = build_fragments(cr, pr, domain_air, cfg)
+        # 未锚定部分占比大（航迹缺失）时才用相位串接：航迹齐全时剩下的多是零散边缘 CPI，片段变纯反而另成孤立对象
+        wn = cp.n.values
+        anc_frac = float(wn[lab >= 0].sum() / max(wn.sum(), 1))
+        use_ph = fph is not None and tc.get("frag_phase_rest", True) and anc_frac < tc.get("frag_phase_max_anchor", 0.6)
+        if fph is not None:
+            log.info("未锚定片段相位串接：%s（锚定占比 %.2f）", "启用" if use_ph else "不用", anc_frac)
+        fr = build_fragments(cr, pr, domain_air, cfg, (fph[0][rest], fph[1][rest]) + fph[2:] if use_ph else None)
         prs = pairs[pairs.cpi_a.isin(cr.cpi) & pairs.cpi_b.isin(cr.cpi)]
         ob = fuse_fragments(cr, fr, prs, cfg)
         obj[rest] = ob + (lab.max() + 1 if (lab >= 0).any() else 0)
@@ -127,6 +148,9 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     ot = vote_object_type(cp, proba)
     obj = merge_objects(cp, obj, ot, cfg, proba)
     obj = absorb_small(cp, obj, proba, cfg)
+    if fph is not None and tc.get("phase_merge", True):
+        obj, nm = merge_phase_objects(cp, obj, proba, cfg, fph[0], fph[1])
+        log.info("相位一致对象合并：%d 次", nm)
     if cfg.get("refine", {}).get("enabled", True) and R is not None:  # 无航迹时仅靠方位连续，证据不足，验证显示有害
         t_r = time.time()
         locked = cp["anchor_direct"].values >= 0 if "anchor_direct" in cp.columns else None
@@ -151,8 +175,19 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
     if R is not None:
         obj, mv = geometry_veto_repair(cp, obj, proba, tracks, cfg)
         log.info("几何否决改归：%d 脉冲", mv)
+        obj0 = obj
         obj, mv = phase_repair(cp, obj, proba, tracks, cfg)
         log.info("到达相位改归：%d 脉冲", mv)
+        if mv and cfg["phase"].get("absorb_remnants", True):
+            gone = dissolved_remnants(obj0, obj, cp.n.values, cfg["exclusion"].get("dissolve_frac", 0.7))
+            if gone:
+                obj1, _ = absorb_tiny_local(cp, obj, proba, cfg, gone)   # 残余逐 CPI 归位，剩下的整体并入
+                r = np.isin(obj, list(gone))
+                left = {int(o) for o in np.unique(obj1[r]) if r[obj1 == o].all()}
+                obj = absorb_small(cp, obj1, proba, cfg, left) if left else obj1
+    if fph is not None and tc.get("phase_merge_final", True):
+        obj, nm = merge_phase_objects(cp, obj, proba, cfg, fph[0], fph[1])
+        log.info("相位一致对象合并（末轮）：%d 次", nm)
     obj, mv = absorb_tiny_local(cp, obj, proba, cfg)
     log.info("节点碎簇改归：%d 脉冲", mv)
     cp["object_id"] = obj
@@ -171,6 +206,9 @@ def cluster_and_type(a: pd.DataFrame, models: dict, knowledge: dict, cfg: dict, 
 def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict, cfg: dict):
     tm = Timer()
     ext = {}
+    cfg, dk = calibrate_doa(a, cfg)
+    if dk:
+        log.info("实测测向误差大于给定值，方位门限放大 %s", {k_: tuple(round(x, 2) for x in v) for k_, v in dk.items()})
     cpi_of, cp, proba = cluster_and_type(a, models, knowledge, cfg, b, ext)
     feat = state_features(cp, models["type_codes"])
     cp["state"] = predict_states(models["state1"], models["state2"], feat)

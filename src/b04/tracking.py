@@ -9,8 +9,14 @@ from .geo import angdiff
 
 
 # ---------------------------------------------------------------- 节点内片段
-def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg: dict) -> np.ndarray:
-    """逐节点按时间顺序做 CPI→辐射源的门限关联，返回每个 CPI 的片段号。"""
+def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg: dict,
+                    phase: tuple | None = None) -> np.ndarray:
+    """逐节点按时间顺序做 CPI→辐射源的门限关联，返回每个 CPI 的片段号。
+
+    phase=(主相位, 备选相位, 门限 μs, 漂移率 μs/s, 最大有效门限 μs, 格长 μs)：驻留起点 mod 64 μs 的相位（与 CPI 行对齐，NaN 不用）。
+    同一辐射源在同一节点上相位只随距离缓慢漂移，不同辐射源相位随机；方位/型号门限内有多个候选时，
+    只在相位延续的候选中选（无一延续则照旧）。
+    """
     tc = cfg["track"]
     doa_err = {True: cfg["cpi"]["doa_err_air"], False: cfg["cpi"]["doa_err_sea"]}
     classes = list(proba.columns)
@@ -21,6 +27,16 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
     K = P.shape[1]
     max_gap, eps, min_compat = tc["max_gap_s"], tc["overlap_eps_us"], tc["min_type_compat"]
     r_air, r_sea = tc["doa_rate_air"], tc["doa_rate_sea"]
+    if phase is not None:
+        ph1, ph2, p_fit, p_rate, p_max, L = phase
+        p_veto_k = int(tc.get("frag_phase_veto_k", 0))
+        p_veto_us = float(tc.get("frag_phase_veto_us", 2.0))
+        p_veto_n = int(tc.get("frag_phase_veto_n", 8))
+        p_rate_unc = float(tc.get("frag_phase_rate_unc", 0.05))
+        p_acc = float(tc.get("frag_phase_acc", 0.01))
+        p_rw_min = float(tc.get("frag_phase_rw_min", 3.0))
+        p_rw_cap = float(tc.get("frag_phase_rw_cap", 30.0))
+        ph1, ph2 = np.asarray(ph1, float), np.asarray(ph2, float)
     for pid, idx in cp.groupby("platform_id", sort=True).indices.items():
         idx = idx[np.argsort(cp.t0.values[idx], kind="stable")]
         node_air = float(np.nanmedian(cp.sh.values[idx])) > 100
@@ -30,6 +46,8 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
         cap = 64
         T_id = np.empty(cap, np.int64); T_t1 = np.empty(cap); T_doa = np.empty(cap); T_sd = np.empty(cap)
         T_p = np.empty((cap, K))
+        T_ph = np.empty(cap); T_pht = np.empty(cap); T_pm = np.empty(cap, np.int64); T_pk = np.zeros(cap, np.int64)
+        T_pr = np.zeros(cap); T_pw = np.zeros(cap)   # 相位漂移率估计（μs/s）及其累计时长（s）
         m = 0
         for i in idx:
             t0, t1, doa, n = cp.t0.values[i], cp.t1.values[i], cp.doa.values[i], cp.n.values[i]
@@ -44,6 +62,8 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
                     m2 = len(keep)
                     T_id[:m2], T_t1[:m2], T_doa[:m2], T_sd[:m2] = T_id[keep], T_t1[keep], T_doa[keep], T_sd[keep]
                     T_p[:m2] = T_p[keep]
+                    T_ph[:m2], T_pht[:m2], T_pm[:m2], T_pk[:m2] = T_ph[keep], T_pht[keep], T_pm[keep], T_pk[keep]
+                    T_pr[:m2], T_pw[:m2] = T_pr[keep], T_pw[keep]
                     gap = gap[keep]
                     m = m2
             if m:
@@ -56,6 +76,20 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
                 gate = 3.0 * np.hypot(sd_c, T_sd[:m]) + 0.5 + rate * g
                 dd = np.abs(angdiff(doa, T_doa[:m]))
                 cand &= ~(dd > gate)
+                pok = None
+                if phase is not None and cand.sum() > 0 and not np.isnan(ph1[i]):
+                    dts = np.maximum(t0 - T_pht[:m], 0.0) / 1e6
+                    est = T_pw[:m] >= p_rw_min
+                    ptol = p_fit + np.where(est, p_rate_unc, p_rate) * dts + 0.5 * p_acc * dts * dts
+                    php = T_ph[:m] + np.where(est, T_pr[:m], 0.0) * dts
+                    d1 = np.abs((ph1[i] - php + 0.5 * L) % L - 0.5 * L)
+                    d2 = np.abs((ph2[i] - php + 0.5 * L) % L - 0.5 * L) if not np.isnan(ph2[i]) else d1
+                    pok = cand & (ptol <= p_max) & (np.fmin(d1, d2) <= ptol)
+                    if pok.any() and cand.sum() > 1:
+                        cand = pok
+                    elif p_veto_k > 0 and n >= p_veto_n:
+                        # 候选相位已连续多次延续（可靠）而本 CPI 明显不延续 → 不是同一辐射源，另起片段
+                        cand &= ~((T_pk[:m] >= p_veto_k) & (ptol <= p_veto_us) & (np.fmin(d1, d2) > ptol))
                 if cand.any():
                     cost = np.where(cand, dd / gate + 0.5 * (1.0 - compat) + 0.2 * g / max_gap, np.inf)
                     best = int(np.argmin(cost))
@@ -64,7 +98,11 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
                     cap *= 2
                     T_id = np.resize(T_id, cap); T_t1 = np.resize(T_t1, cap); T_doa = np.resize(T_doa, cap)
                     T_sd = np.resize(T_sd, cap); T_p = np.resize(T_p, (cap, K))
+                    T_ph = np.resize(T_ph, cap); T_pht = np.resize(T_pht, cap); T_pm = np.resize(T_pm, cap); T_pk = np.resize(T_pk, cap)
+                    T_pr = np.resize(T_pr, cap); T_pw = np.resize(T_pw, cap)
                 T_id[m], T_t1[m], T_doa[m], T_sd[m], T_p[m] = nxt, t1, doa, sd_c, p * np.log2(n + 1)
+                T_ph[m], T_pht[m], T_pm[m], T_pk[m] = (ph1[i] if phase is not None else np.nan), t0, 0, 0
+                T_pr[m], T_pw[m] = 0.0, 0.0
                 frag[i] = nxt
                 nxt += 1
                 m += 1
@@ -73,8 +111,53 @@ def build_fragments(cp: pd.DataFrame, proba: pd.DataFrame, domain_air: dict, cfg
                 T_doa[best] = doa
                 T_sd[best] = sd_c
                 T_p[best] = T_p[best] + p * np.log2(n + 1)
+                if phase is not None and not np.isnan(ph1[i]):
+                    if pok is not None and pok[best]:
+                        dtb = (t0 - T_pht[best]) / 1e6
+                        phm = ph1[i] if d1[best] <= d2[best] else ph2[i]
+                        if dtb >= 0.3:
+                            res = (phm - (T_ph[best] + T_pr[best] * dtb) + 0.5 * L) % L - 0.5 * L
+                            T_pr[best] += res / (T_pw[best] + dtb)
+                            T_pw[best] = min(T_pw[best] + dtb, p_rw_cap)
+                        T_ph[best], T_pht[best], T_pm[best] = phm, t0, 0
+                        T_pk[best] += 1
+                    else:
+                        T_pk[best] = 0
+                        T_pm[best] += 1   # 不延续：多为起点不在格上的 CPI，保留原相位；连续两次不延续或相位过旧则重置
+                        if T_pm[best] >= 2 or np.isnan(T_ph[best]) or (pok is not None and not (ptol[best] <= p_max)):
+                            T_ph[best], T_pht[best], T_pm[best] = ph1[i], t0, 0
+                            T_pr[best], T_pw[best] = 0.0, 0.0
                 frag[i] = T_id[best]
     return frag
+
+
+def fragment_phase(cp: pd.DataFrame, cfg: dict):
+    """片段串接用的 CPI 相位：主相位 = 驻留起点（抖动重频 CPI 回溯到驻留首段）mod 格长，备选 = 自身起点 mod 格长。"""
+    from .exclusion import dwell_heads
+    pc = cfg["phase"]
+    L = float(pc.get("lattice_us", 64.0))
+    t0 = cp.t0.values.astype(float)
+    ph = t0 % L
+    derr = np.where(cp.sh.values > 100, cfg["cpi"]["doa_err_air"], cfg["cpi"]["doa_err_sea"])
+    h = dwell_heads(cp, pc.get("head_gap_mul", 2.6), pc.get("head_gap_us", 1700.0), pc.get("head_dur_ms", 30.0) * 1e3, derr)
+    ph1 = ph[h]
+    ph2 = np.where(h != np.arange(len(cp)), ph, np.nan)
+    small = cp.n.values < int(cfg["track"].get("frag_phase_min_n", 3))
+    ph1 = np.where(small, np.nan, ph1)
+    return ph1, ph2
+
+
+def fragment_phase_hit(cp: pd.DataFrame, frag: np.ndarray, ph1: np.ndarray, fit: float, rate: float, L: float,
+                       max_gap_s: float = 3.0) -> tuple[float, int]:
+    """自检：片段内相邻 CPI（同节点、间隔 ≤ max_gap_s）相位延续的比例（随机约 2–5%，训练/测试集约 0.9）。"""
+    d = pd.DataFrame({"f": frag, "t": cp.t0.values.astype(float), "ph": ph1}).dropna().sort_values(["f", "t"])
+    same = d.f.values[1:] == d.f.values[:-1]
+    dt = np.diff(d.t.values) / 1e6
+    m = same & (dt <= max_gap_s) & (dt > 0)
+    if not m.any():
+        return 0.0, 0
+    dp = np.abs((np.diff(d.ph.values) + 0.5 * L) % L - 0.5 * L)
+    return float(np.mean(dp[m] <= fit + rate * dt[m])), int(m.sum())
 
 
 # ---------------------------------------------------------------- 跨节点同源 CPI
@@ -338,6 +421,127 @@ def merge_objects(cp: pd.DataFrame, obj: np.ndarray, obj_type: pd.Series, cfg: d
     for k, (o, x) in enumerate(sorted(groups.items())):
         new.loc[x.index] = k
     return new.loc[cp.index].values
+
+
+@njit(cache=True)
+def _rf_conflicts(a0, a1, arf, b0, b1, brf, maxdur, eps, rf_tol):
+    """B 中与 A（按 t0 排序）时间重叠超过 eps 且 RF 不一致的 CPI 数。"""
+    cnt = 0
+    for j in range(b0.shape[0]):
+        lo = np.searchsorted(a0, b0[j] - maxdur)
+        hi = np.searchsorted(a0, b1[j])
+        for i in range(lo, hi):
+            if min(a1[i], b1[j]) - max(a0[i], b0[j]) > eps and abs(arf[i] - brf[j]) > rf_tol:
+                cnt += 1
+                break
+    return cnt
+
+
+def merge_phase_objects(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict,
+                        ph1: np.ndarray, ph2: np.ndarray) -> tuple[np.ndarray, int]:
+    """同节点上时间交错、相位轨迹一致的两个对象是同一辐射源（驻留起点 mod 64 μs 只随距离缓慢漂移，
+    不同辐射源偶然一致约 2%）：常见于同一雷达的部分 CPI 因方位略超航迹门限未被锚定、另成对象。
+
+    B 的每个（有相位的）CPI 与 A 在同节点上时间最近（≤ win_s）的 CPI 比相位；所有比较数足够的共享节点上
+    吻合比例都 ≥ node_frac、总体 ≥ min_frac，且型号相容、同节点无时间重叠、不是锚定于两条不同航迹 → B 并入 A。
+    """
+    pc = cfg["track"]
+    win = float(pc.get("phase_merge_win_s", 1.5)) * 1e6
+    nb = int(pc.get("phase_merge_nb", 3))
+    fit, rate = float(pc["frag_phase_fit_us"]), float(pc["frag_phase_rate"])
+    L = float(cfg["phase"].get("lattice_us", 64.0))
+    min_cmp, min_frac = int(pc.get("phase_merge_min_cmp", 8)), float(pc.get("phase_merge_min_frac", 0.6))
+    node_cmp, node_frac = int(pc.get("phase_merge_node_cmp", 5)), float(pc.get("phase_merge_node_frac", 0.5))
+    loss_max = float(pc.get("phase_merge_type_loss", 1.0))
+    eps = float(pc["overlap_eps_us"])
+    rf = cp.rf.values.astype(float)
+    rf_tol = float(cfg["fusion"]["rf_tol"])
+    conf_frac = float(pc.get("phase_merge_conflict_frac", 0.02))
+    maxdur = float((cp.t1 - cp.t0).max()) + 1.0
+    obj = obj.copy()
+    n = cp.n.values
+    pid = cp.platform_id.values
+    t0, t1 = cp.t0.values.astype(float), cp.t1.values.astype(float)
+    ad = cp["anchor_direct"].values if "anchor_direct" in cp.columns else np.full(len(cp), -1)
+    wv = np.log2(n + 1)
+    LLc = np.log(np.clip(proba.values, 1e-4, 1)) * wv[:, None]
+    has = ~np.isnan(ph1)
+    merged = 0
+    for _ in range(int(pc.get("phase_merge_max", 20))):
+        size = pd.Series(n).groupby(obj).sum().sort_values()
+        anc = {}
+        for o, v in pd.Series(ad[ad >= 0]).groupby(obj[ad >= 0]):
+            anc[o] = int(v.value_counts().index[0])
+        best = None
+        for b_o in size.index:
+            xb = np.where((obj == b_o) & has)[0]
+            if len(xb) < min_cmp:
+                continue
+            for a_o in size.index[::-1]:
+                if a_o == b_o or size[a_o] < size[b_o]:
+                    continue
+                if b_o in anc and a_o in anc and anc[a_o] != anc[b_o]:
+                    continue
+                M = C = 0
+                ok = True
+                for p in np.unique(pid[xb]):
+                    xa = np.where((obj == a_o) & (pid == p) & has)[0]
+                    if not len(xa):
+                        continue
+                    xa = xa[np.argsort(t0[xa])]
+                    ib = xb[pid[xb] == p]
+                    # 与 A 在此节点上前后各 nb 个 CPI 比较，过半吻合才算吻合（A 中混入的少量 B 辐射源 CPI 不能单独促成合并）
+                    k = np.searchsorted(t0[xa], t0[ib])
+                    hit = np.zeros(len(ib)); cnt = np.zeros(len(ib))
+                    for off in range(-nb, nb):
+                        q = k + off
+                        okq = (q >= 0) & (q < len(xa))
+                        j = xa[np.clip(q, 0, len(xa) - 1)]
+                        dt = np.abs(t0[j] - t0[ib])
+                        okq &= dt <= win
+                        dd = np.full(len(ib), np.inf)
+                        for u in (ph1, ph2):
+                            for v in (ph1, ph2):
+                                x = np.abs((u[ib] - v[j] + 0.5 * L) % L - 0.5 * L)
+                                dd = np.fmin(dd, np.where(np.isnan(x), np.inf, x))
+                        cnt += okq
+                        hit += okq & (dd <= fit + rate * dt / 1e6)
+                    sel = cnt > 0
+                    if not sel.any():
+                        continue
+                    ib = ib[sel]
+                    mt = int((hit[sel] >= 0.5 * cnt[sel]).sum())
+                    if len(ib) >= node_cmp and mt < node_frac * len(ib):
+                        ok = False
+                        break
+                    M += mt; C += len(ib)
+                if not ok or C < min_cmp or M < min_frac * C:
+                    continue
+                la, lb = LLc[obj == a_o].sum(0), LLc[obj == b_o].sum(0)
+                loss = (la.max() + lb.max() - (la + lb).max()) / max(wv[obj == b_o].sum(), 1e-9)
+                if loss > loss_max:
+                    continue
+                # 同节点时间重叠且 RF 不同（同一辐射源同一时刻只有一个频点；多重频驻留会被串成时间交叠、同频的几条 CPI）
+                ovl = 0
+                for p in np.unique(pid[obj == b_o]):
+                    xa = np.where((obj == a_o) & (pid == p))[0]
+                    if not len(xa):
+                        continue
+                    xa = xa[np.argsort(t0[xa])]
+                    ib = np.where((obj == b_o) & (pid == p))[0]
+                    ovl += _rf_conflicts(t0[xa], t1[xa], rf[xa], t0[ib], t1[ib], rf[ib], maxdur, eps, rf_tol)
+                if ovl > conf_frac * (obj == b_o).sum():
+                    continue
+                score = M / C
+                if best is None or score > best[0]:
+                    best = (score, a_o, b_o, M, C)
+            if best is not None:
+                break
+        if best is None:
+            break
+        obj[obj == best[2]] = best[1]
+        merged += 1
+    return pd.factorize(obj)[0], merged
 
 
 def absorb_small(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, cfg: dict,
