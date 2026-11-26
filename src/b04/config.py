@@ -137,10 +137,15 @@ DEFAULT = {
         "cross_fit_us": 0.2,        # 跨型号（方位未超门限）：X 相位残差上限
         "cross_bad_us": 1.0,        #   当前航迹相位残差下限
         "cross_ratio": 5.0,         #   且当前 / X 相位残差之比下限
+        "tight_p_min": 0.25,        # 当前对象无航迹、相位 ≤ cross_fit_us 时型号概率下限（R05/R06 共用参数模式下真 R05 CPI 约 0.33）
         "check_min_cpi": 50,        # 自检：直接锚定 CPI 数下限
         "check_min_hit": 0.5,       # 自检：直接锚定 CPI 相位命中率下限（随机约 2%）
         "track_min_cpi": 20,        # 逐航迹自检：该航迹直接锚定 CPI 数下限（不足则不用这条航迹）
         "track_min_hit": 0.5,       # 逐航迹自检：相位命中率下限
+        "head_chain": True,         # 回溯驻留起点（抖动重频驻留前段常被切成单独 CPI）
+        "head_gap_mul": 2.6,        # 首尾间隔 ≤ min(倍数 × PRI, head_gap_us) 视为同一驻留（容许漏一个脉冲）
+        "head_gap_us": 1700.0,
+        "head_dur_ms": 30.0,        # 驻留总长上限
     },
     "tiny_local": {                 # 节点上极小局部簇（零散错挂的 CPI）逐 CPI 改归同节点方位连续的型号相容对象
         "enabled": True,

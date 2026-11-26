@@ -557,6 +557,12 @@ def phase_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks:
     R, tids = track_residuals(cp, tracks)
     tsm = smooth_tracks(tracks, ac.get("track_smooth_s", 10.0), ac.get("track_smooth_air_s", 3.0))
     E = toa_phase_residuals(cp, tsm, tids, pc.get("lattice_us", 64.0))
+    if pc.get("head_chain", True):
+        # 抖动重频（R05/R06）驻留的前 1–2 个脉冲常被切成单独的 CPI，后面的主 CPI 起点不在时间格上：
+        # 沿同节点首尾相接的 CPI 回溯到驻留起点，起点与自身任一贴合即算贴合
+        h = dwell_heads(cp, pc.get("head_gap_mul", 2.6), pc.get("head_gap_us", 1700.0), pc.get("head_dur_ms", 30.0) * 1e3,
+                        np.where(air, cfg["cpi"]["doa_err_air"], cfg["cpi"]["doa_err_sea"]))
+        E = np.fmin(E, E[h])
     fit_us, bad_us = pc.get("fit_us", 0.6), pc.get("bad_us", 2.0)
     anchor = cp["anchor"].values if "anchor" in cp.columns else np.full(len(cp), -1)
     direct = cp["anchor_direct"].values if "anchor_direct" in cp.columns else anchor
@@ -584,6 +590,7 @@ def phase_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks:
     P = proba.values
     col = {c: q for q, c in enumerate(proba.columns)}
     p_min = cfg.get("geo_veto", {}).get("type_p_min", 0.4)
+    p_tight = pc.get("tight_p_min", 0.25)  # 当前对象无航迹且相位紧贴（≤ cross_fit_us）时的型号概率下限（R05/R06 共用模式约 0.33）
     tr_objs = list(otrk.items())
     js = np.array([j for _, j in tr_objs])
     Ex = np.nan_to_num(E[:, js], nan=99.0)
@@ -625,7 +632,8 @@ def phase_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks:
                         continue
                 elif not E[i, otrk[y]] > bad_us:
                     continue
-            elif not (tx in (ty, ptype[i]) or (tx in col and P[i, col[tx]] >= p_min)):
+            elif not (tx in (ty, ptype[i]) or (tx in col and P[i, col[tx]] >= (
+                    p_tight if Ex[i, q] <= xf else p_min))):
                 continue
             xs.append(q)
         if len(xs) != 1:
@@ -641,3 +649,38 @@ def phase_repair(cp: pd.DataFrame, obj: np.ndarray, proba: pd.DataFrame, tracks:
         new[i] = tr_objs[q][0]
         moved += int(n[i])
     return (pd.factorize(new)[0] if moved else new), moved
+
+
+@numba.njit(cache=True)
+def _dwell_heads(order, t0, t1, pid, ty, doa, derr, pri, mul, gap, dur, jit, npl):
+    n = len(order)
+    h = np.arange(len(t0))
+    for q in range(n):
+        i = order[q]
+        if not jit[i]:
+            continue
+        best, bt = -1, -1e300
+        for r in range(q - 1, max(q - 40, -1), -1):
+            j = order[r]
+            if pid[j] != pid[i] or t0[i] - t0[j] > dur:
+                break
+            d = abs((doa[j] - doa[i] + 180.0) % 360.0 - 180.0)
+            if t1[j] < t0[i] and t1[j] > bt and (jit[j] or npl[j] <= 2) and (ty[j] == ty[i] or d <= 2.0 * derr[i]):
+                bt, best = t1[j], j
+        if best >= 0 and t0[i] - bt <= min(mul * pri[i], gap) and t0[i] - t0[h[best]] <= dur:
+            h[i] = h[best]
+    return h
+
+
+def dwell_heads(cp: pd.DataFrame, mul: float, gap: float, dur: float, derr: np.ndarray) -> np.ndarray:
+    """每个抖动重频 CPI 所在驻留的起始 CPI（行号；非抖动 CPI 为自身——编队 R07/R08 相邻驻留首尾相接、方位又相近，
+    回溯会串到另一部雷达）：同节点上前一个（抖动或 ≤ 2 脉冲的）首尾间隔 ≤ min(mul × PRI, gap) 、型号相同或方位连续的
+    CPI 视为同一驻留的前段，递推到起点（驻留总长 ≤ dur）。"""
+    pid = cp.platform_id.values.astype(np.int64)
+    t0 = cp.t0.values.astype(np.float64)
+    order = np.lexsort((t0, pid)).astype(np.int64)
+    ty = pd.factorize(cp.ptype.values)[0].astype(np.int64) if "ptype" in cp.columns else np.zeros(len(cp), np.int64)
+    pri = np.nan_to_num(cp.pri.values.astype(np.float64), nan=gap / max(mul, 1e-9))
+    return _dwell_heads(order, t0, cp.t1.values.astype(np.float64), pid, ty, cp.doa.values.astype(np.float64),
+                        np.asarray(derr, np.float64), pri, float(mul), float(gap), float(dur),
+                        cp.jitter.values > 0, cp.n.values.astype(np.int64))
