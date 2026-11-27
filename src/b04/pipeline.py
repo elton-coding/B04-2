@@ -240,5 +240,5 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
     })
     links = links.assign(scenario_id=sid, data_version=ver, object_id=links.object_id.astype(np.int64) + 1)
     links = links[["scenario_id", "data_version", "object_id", "track_id", "link_status"]]
-    extras = {"cp": cp, "proba": proba, "scores": scores, "base_time": base, "cpi_of": cpi_of}
+    extras = {"cp": cp, "proba": proba, "scores": scores, "base_time": base, "cpi_of": cpi_of, "cfg": cfg}
     return pred, links, extras

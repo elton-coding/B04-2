@@ -16,11 +16,13 @@ CLASSES = {
     "FusedObject": "融合对象（跨平台统一辐射源）", "RadarModel": "探测器型号", "PlatformModel": "平台型号",
     "PlatformCategory": "平台类别", "Domain": "领域", "Track": "B 类航迹", "TrackingRelation": "跟踪照射关系",
     "MotionRelation": "运动关系（伴随/接近）", "Evidence": "证据", "TestArea": "试验海区",
+    "PassiveFix": "被动定位轨迹（A 类测向交会 + 到达相位测距）",
 }
 OBJ_PROPS = {
     "inScenario": "属于场景", "observedBy": "被节点观测", "partOf": "归并为", "hasRadarModel": "挂载型号",
     "mountedOn": "型号对应平台型号", "inCategory": "属于类别", "inDomain": "所在领域", "linkedTrack": "关联航迹",
     "tracker": "跟踪方", "trackedNode": "被跟踪节点", "relA": "关系一方", "relB": "关系另一方", "supportedBy": "证据支持",
+    "hasPassiveFix": "被动定位", "nearestTrack": "最近航迹",
 }
 
 
@@ -110,6 +112,16 @@ def build_graph(facts: dict, knowledge: dict) -> Graph:
             best = (o.get("link_candidates") or [{}])[0]
             ev(O, f"与航迹 {o['track_id']} 方位命中率 {best.get('hit')}，残差中位数 {best.get('med_res_deg')}°", "推断",
                hit=float(best.get("hit", 0)), med_res_deg=float(best.get("med_res_deg", 0)))
+    for pf in facts.get("passive", []):
+        O, PF = I[f"object_{pf['object_id']}"], I[f"passive_{pf['object_id']}"]
+        g.add((PF, RDF.type, ONT.PassiveFix)); g.add((O, ONT.hasPassiveFix, PF))
+        for k in ("t_first_s", "t_last_s", "reliable_frac", "phase_used", "phase_hit", "speed_med", "pattern", "extent_km",
+                  "in_area_frac", "height_m"):
+            if pf.get(k) is not None:
+                g.add((PF, ONT[k], _lit(pf[k])))
+        for d in pf.get("nearest_tracks", [])[:1]:
+            g.add((PF, ONT.nearestTrack, I[f"track_{d['track_id']}"]))
+            ev(PF, f"被动轨迹与航迹 {d['track_id']} 距离中位 {d['dist_med_m']:.0f} m", "推断", dist_med_m=float(d["dist_med_m"]))
     for r in facts.get("tracked_nodes", []):
         TR = I[f"tracking_{r['object_id']}_{r['node']}"]
         g.add((TR, RDF.type, ONT.TrackingRelation))

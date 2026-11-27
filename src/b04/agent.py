@@ -57,6 +57,9 @@ def _compact(facts: dict) -> dict:
         "tracked_nodes": [{k: r[k] for k in ("object_id", "node", "dwells")} for r in facts["tracked_nodes"]],
         "track_relations": [{k: r[k] for k in ("track_a", "track_b", "relation", "dist_med_m", "rel_speed_med")} for r in facts["track_relations"]],
         "unlinked_tracks": facts["unlinked_tracks"],
+        # 被动定位（A 类测向交会 + 到达相位测距）：无航迹对象的位置活动、与各航迹的距离
+        "passive_fix": [{k: p[k] for k in ("object_id", "reliable_frac", "phase_hit", "speed_med", "pattern", "extent_km",
+                                            "in_area_frac", "height_m", "nearest_tracks") if k in p} for p in facts.get("passive", [])],
     }
 
 

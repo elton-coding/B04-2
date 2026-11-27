@@ -223,6 +223,54 @@ def type_confidence(cp: pd.DataFrame, proba: pd.DataFrame) -> dict:
     return out
 
 
+def passive_facts(cp: pd.DataFrame, objects: list[dict], tracks: pd.DataFrame, cfg: dict, poly=None) -> list[dict]:
+    """A 类数据独立的被动定位（locate.passive_tracks）→ 每对象的定位事实：可靠时段、运动方式、与 B 航迹的距离。
+
+    已关联对象：被动轨迹与关联航迹的距离是独立于方位命中率的关联佐证；无航迹对象：给出其位置与活动。"""
+    from .locate import passive_tracks
+
+    dom = {o["object_id"] - 1: o["domain"] == "空中" for o in objects}
+    P = passive_tracks(cp, dom, cfg)
+    out = []
+    link = {o["object_id"] - 1: o["track_id"] for o in objects}
+    for o0, r in sorted(P.items()):
+        rel = r["reliable"]
+        if rel.sum() < 5:
+            continue
+        tk, lon, lat = r["tk"][rel], r["lon"][rel], r["lat"][rel]
+        X, Y = enu(lon, lat, float(np.mean(lon)), float(np.mean(lat)))
+        air = dom[o0]
+        f = {"object_id": o0 + 1, "domain": "空中" if air else "海面", "n_cpi": r["n_cpi"], "nodes": r["nodes"],
+             "phase_used": bool(r["phase_used"]), "phase_hit": round(float(r["phase_hit"]), 2),
+             "reliable_frac": round(float(rel.mean()), 2), "t_first_s": round(float(tk[0]), 1), "t_last_s": round(float(tk[-1]), 1),
+             "sd_med_m": round(float(np.median(r["sd"][rel])), 0),
+             "pos_start": [round(float(lon[0]), 5), round(float(lat[0]), 5)], "pos_end": [round(float(lon[-1]), 5), round(float(lat[-1]), 5)],
+             **motion_pattern(tk, X, Y, "air" if air else "sea")}
+        if air and r["phase_used"]:
+            f["height_m"] = round(r["z"], -2)
+        if poly is not None:
+            f["in_area_frac"] = round(float(_in_poly(lon, lat, poly).mean()), 2)
+        step = max(1, int(round(10.0 / max(np.median(np.diff(tk)), 1e-3))))
+        f["path"] = [[round(float(t), 1), round(float(x), 5), round(float(y), 5)] for t, x, y in zip(tk[::step], lon[::step], lat[::step])]
+        ds = []
+        if tracks is not None and len(tracks):
+            for tid, x in tracks.groupby("track_id"):
+                tt = x.t_us.values / 1e6
+                m = (tk >= tt[0]) & (tk <= tt[-1])
+                if m.sum() < 5:
+                    continue
+                d = dist_m(lon[m], lat[m], np.interp(tk[m], tt, x.target_longitude.values), np.interp(tk[m], tt, x.target_latitude.values))
+                ds.append({"track_id": int(tid), "dist_med_m": round(float(np.median(d)), 0), "dist_p90_m": round(float(np.percentile(d, 90)), 0),
+                           "dist_min_m": round(float(d.min()), 0), "overlap_s": round(float(m.sum() * np.median(np.diff(tk))), 0)})
+        ds.sort(key=lambda d: d["dist_med_m"])
+        f["nearest_tracks"] = ds[:3]
+        lk = link.get(o0)
+        if lk is not None:
+            f["linked_track_dist"] = next((d for d in ds if d["track_id"] == lk), None)
+        out.append(f)
+    return out
+
+
 def build_facts(a, b, pred, links, extras, knowledge, tracks) -> dict:
     sid, ver = str(a.scenario_id.iloc[0]), str(a.data_version.iloc[0])
     ann = knowledge.get("announcements", {}).get(f"{sid}_{ver}")
@@ -239,6 +287,12 @@ def build_facts(a, b, pred, links, extras, knowledge, tracks) -> dict:
         "tracked_nodes": tracked_nodes(cp).assign(object_id=lambda d: d.object_id + 1).to_dict("records"),
         "track_relations": track_pair_relations(tracks) if len(tracks) else [],
     }
+    try:
+        from .config import load_config
+        facts["passive"] = passive_facts(cp, facts["objects"], tracks, extras.get("cfg") or load_config(), poly)
+    except Exception as e:  # 定位失败不影响其余要素
+        facts["passive"] = []
+        facts["passive_error"] = repr(e)
     linked = {o["track_id"] for o in facts["objects"] if o["track_id"] is not None}
     facts["unlinked_tracks"] = sorted(set(facts["tracks"]) - linked)
     return facts

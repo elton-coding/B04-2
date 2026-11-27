@@ -42,6 +42,31 @@ def _table(rows, cols) -> str:
     return f"<table><thead><tr>{h}</tr></thead><tbody>{b}</tbody></table>"
 
 
+def _companion(d, max_m=5000.0, min_s=60.0) -> bool:
+    """被动轨迹与航迹的间距在共同时段内稳定（最大与最小相差 < 中位的 30%）→ 伴随关系候选。"""
+    return (d["dist_med_m"] <= max_m and d["overlap_s"] >= min_s
+            and d["dist_p90_m"] - d["dist_min_m"] <= 0.3 * d["dist_med_m"])
+
+
+def _passive_sentence(o, pf) -> str:
+    """无航迹对象的被动定位描述（第 5 章）。"""
+    s = (f" 被动定位（{len(pf['nodes'])} 个节点、{pf['n_cpi']} 个 CPI，{pf['t_first_s']}–{pf['t_last_s']} s，可靠时段占 {pf['reliable_frac']:.0%}，"
+         + (f"到达相位命中率 {pf['phase_hit']:.0%}" if pf["phase_used"] else "仅测向交会") + "）：")
+    near = pf.get("nearest_tracks") or []
+    if near:
+        d = near[0]
+        s += (f"距最近的航迹 {d['track_id']} 中位 {d['dist_med_m'] / 1000:.1f} km（最近 {d['dist_min_m'] / 1000:.1f} km），"
+              f"中位距离明显大于被动定位误差，不在任何 B 航迹上 {_tag('I')}{_ev(object_id=o['object_id'], nearest_track=d['track_id'], dist_med_m=int(d['dist_med_m']))}。")
+        comp = [q for q in near if _companion(q)]
+        if comp:
+            s += (f" 其与航迹 {'、'.join(str(q['track_id']) for q in comp)} 的间距在整个共同时段内稳定在 "
+                  + "、".join(f"{q['dist_min_m'] / 1000:.1f}–{q['dist_p90_m'] / 1000:.1f} km" for q in comp)
+                  + f"（同向同速）{_tag('I')}；{_tag('H')} 可能与其编队伴随，但运动关系不能单独作为编组依据（D4）。")
+    else:
+        s += f"其时段内无可比较的 B 航迹 {_tag('I')}。"
+    return s
+
+
 def fig_map(facts, a, tracks):
     fig, ax = plt.subplots(figsize=(8, 7))
     ann = facts["scenario"].get("announcement")
@@ -57,12 +82,21 @@ def fig_map(facts, a, tracks):
         ax.plot(x.target_longitude, x.target_latitude, ls, color=c, lw=1.6 if o else 0.9, alpha=0.9)
         lab = f"T{tid}" + (f"/O{o['object_id']} {o['type']}" if o else "")
         ax.annotate(lab, (x.target_longitude.iloc[-1], x.target_latitude.iloc[-1]), fontsize=7, color=c if o else "0.4")
+    for pf in facts.get("passive", []):
+        o = next((q for q in facts["objects"] if q["object_id"] == pf["object_id"]), None)
+        if o is None or o["track_id"] is not None or len(pf["path"]) < 2:
+            continue
+        pth = np.array(pf["path"])
+        c = cmap((o["object_id"] - 1) % 10)
+        ax.plot(pth[:, 1], pth[:, 2], ":", color=c, lw=2.0)
+        ax.annotate(f"O{o['object_id']} {o['type']} (passive fix, no track)", (pth[-1, 1], pth[-1, 2]), fontsize=7, color=c)
     for pid, x in a.groupby("platform_id"):
         x = x.iloc[:: max(1, len(x) // 300)]
         ax.plot(x.sensor_longitude, x.sensor_latitude, "k-", lw=2.4)
         ax.annotate(f"N{pid}", (x.sensor_longitude.iloc[-1], x.sensor_latitude.iloc[-1]), fontsize=8, weight="bold")
     ax.set_xlabel("Longitude"); ax.set_ylabel("Latitude"); ax.set_aspect(1 / np.cos(np.radians(24.7)))
-    ax.set_title("Nodes (black), tracks (colored = linked object, grey = unlinked)", fontsize=9)
+    ax.set_title("Nodes (black), tracks (colored = linked object, grey = unlinked), dotted = passive fix of emitters without track",
+                 fontsize=9)
     return _png(fig)
 
 
@@ -166,8 +200,15 @@ def build_html(facts: dict, a: pd.DataFrame, pred: pd.DataFrame, tracks: pd.Data
 
     # 5 A-B 关联
     P.append("<h2>5 A-B 关联</h2>")
+    pas = {p["object_id"]: p for p in facts.get("passive", [])}
+    if pas:
+        P.append(f"<p>{_tag('I')} 除方位命中外，另用 A 类数据独立估计各辐射源位置（被动定位）：多节点测向交会；并利用驻留起点到达时刻"
+                 f"落在公共 64 μs 时间格上的规律，由到达时刻对 64 μs 取模得到节点—辐射源斜距（单节点测距，19.2 km 模糊由测向交会与"
+                 f"轨迹连续性消解），空中目标高度由空中、海面节点斜距之差解出。训练数据上（不用航迹）与真航迹相比，可靠时段水平误差中位"
+                 f" 64–190 m、90% 分位 110–250 m，空中目标高度误差 ≤ 0.1 km，与 B 航迹自身的位置误差同量级。被动轨迹与关联航迹的距离是不依赖方位命中率的关联佐证。</p>")
     for o in objs:
         cands = o.get("link_candidates") or []
+        pf = pas.get(o["object_id"])
         if o["track_id"] is not None:
             alt = [c for c in cands if c["track_id"] != o["track_id"] and c["hit"] >= 0.9 and c["feasible"]]
             s = (f"<p>对象 {o['object_id']} ↔ 航迹 {o['track_id']}：多节点 DOA 与航迹方位命中率 {cands[0]['hit'] if cands else ''}、"
@@ -176,11 +217,18 @@ def build_html(facts: dict, a: pd.DataFrame, pred: pd.DataFrame, tracks: pd.Data
             if alt:
                 s += (f" 航迹 {', '.join(str(c['track_id']) for c in alt)} 与该对象方位同样吻合（命中率 ≥0.9），属近距伴随航迹，"
                       f"按残差最小选择 {o['track_id']}，存在竞争解释（见第 7 章）。")
+            ld = (pf or {}).get("linked_track_dist")
+            if ld:
+                nxt = next((d for d in pf["nearest_tracks"] if d["track_id"] != o["track_id"]), None)
+                s += (f" 被动定位轨迹与航迹 {o['track_id']} 的距离中位 {ld['dist_med_m']:.0f} m"
+                      + (f"（次近为航迹 {nxt['track_id']}，{nxt['dist_med_m']:.0f} m）" if nxt else "")
+                      + f" {_tag('I')}{_ev(object_id=o['object_id'], track_id=o['track_id'], passive_dist_med_m=int(ld['dist_med_m']))}。")
             P.append(s + "</p>")
         else:
             best = next((c for c in cands if c["feasible"]), None)
             P.append(f"<p>对象 {o['object_id']}（{o['type']}）无对应航迹 {_ev(object_id=o['object_id'], link_status='no_match')}："
                      + (f"可行航迹中最佳为 {best['track_id']}，方位命中率仅 {best['hit']}，不足以关联。" if best else "无领域/散射等级可行的航迹。")
+                     + (_passive_sentence(o, pf) if pf else "")
                      + f" {_tag('H')} 可能是 B 源未建立该平台航迹（没有航迹不等于不存在）。</p>")
     for t in unl:
         f = trk[t]
@@ -199,6 +247,14 @@ def build_html(facts: dict, a: pd.DataFrame, pred: pd.DataFrame, tracks: pd.Data
     P.append("<h2>6 活动与态势研判</h2>")
     for o in objs:
         if o["track_id"] is None:
+            pf = pas.get(o["object_id"])
+            if pf:
+                ina = pf.get("in_area_frac")
+                span = f"{pf['t_first_s']}–{pf['t_last_s']} s"
+                P.append(f"<p>对象 {o['object_id']}（{o['category']}，{o['type']}，无航迹）据被动定位以约 {pf['speed_med']} m/s {pf['pattern']}，"
+                         f"范围约 {pf['extent_km']} km" + (f"，{ina:.0%} 时间位于公告试验海区内" if ina is not None else "")
+                         + (f"，估计高度约 {pf['height_m'] / 1000:.1f} km" if pf.get("height_m") else "")
+                         + f" {_tag('I')}{_ev(object_id=o['object_id'], 时段=span)}。</p>")
             continue
         f = trk.get(o["track_id"], {})
         ina = f.get("in_area_frac")
@@ -230,8 +286,13 @@ def build_html(facts: dict, a: pd.DataFrame, pred: pd.DataFrame, tracks: pd.Data
         cands = o.get("link_candidates") or []
         alt = [c for c in cands if c["track_id"] != o["track_id"] and c["hit"] >= 0.9 and c["feasible"]]
         if o["track_id"] is not None and alt:
+            pd_ = {d["track_id"]: d["dist_med_m"] for d in (pas.get(o["object_id"]) or {}).get("nearest_tracks", [])}
+            extra = ""
+            if o["track_id"] in pd_ and all(c["track_id"] in pd_ for c in alt):
+                extra = ("，且被动定位轨迹离它更近（" + f"{pd_[o['track_id']]:.0f} m 对 "
+                         + "、".join(f"{pd_[c['track_id']]:.0f} m" for c in alt) + "）")
             items.append(f"<li>对象 {o['object_id']} 与航迹 {o['track_id']} 及 {', '.join(str(c['track_id']) for c in alt)} 方位均吻合："
-                         f"支持 {o['track_id']} 的证据为残差更小；反对证据为伴随航迹间距仅数百米，方位分辨力不足。{_ev(object_id=o['object_id'])}</li>")
+                         f"支持 {o['track_id']} 的证据为残差更小{extra}；反对证据为伴随航迹间距仅数百米，方位分辨力不足。{_ev(object_id=o['object_id'])}</li>")
     for o in objs:
         c = conf.get(o["object_id"], {})
         if c and c["margin_per_cpi"] < 2.0:
@@ -240,7 +301,11 @@ def build_html(facts: dict, a: pd.DataFrame, pred: pd.DataFrame, tracks: pd.Data
 
     # 8 无法确认的部分
     P.append("<h2>8 无法确认的部分</h2><ul>")
-    P.append("<li>无对应航迹的辐射源的位置与航迹：需 B 源补充航迹或本方节点多站交叉定位持续观测。</li>")
+    weak = [p for p in facts.get("passive", []) if p["object_id"] in {o["object_id"] for o in objs if o["track_id"] is None}
+            and (p["reliable_frac"] < 0.8 or not p["phase_used"] or p["phase_hit"] < 0.8)]
+    P.append("<li>无对应航迹的辐射源的位置与航迹：已由被动定位给出估计（第 5、6 章），"
+             + ("其中对象 " + "、".join(str(p["object_id"]) for p in weak) + " 主要由单个节点收到或观测间断，定位把握度中等；" if weak else "")
+             + "精确航迹仍需 B 源补充或其他信息源核实。</li>")
     P.append("<li>无辐射的航迹是否为静默平台或异常航迹：需其开机后的电磁观测，或其他信息源核实。</li>")
     P.append("<li>平台任务与编组关系：当前仅依据运动关系与类别推断，需更长时段观测其补给、核查等行为过程。</li>")
     P.append("<li>粗跟/精跟边界：受漏脉冲与旁瓣接收影响，存在一定误差。</li></ul>")
