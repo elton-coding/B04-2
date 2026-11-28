@@ -236,3 +236,35 @@ def passive_tracks(cp: pd.DataFrame, domain_air: dict, cfg: dict) -> dict:
         res["n_cpi"] = int(len(idx))
         out[int(o)] = res
     return out
+
+
+PSEUDO_ID_BASE = 900000
+
+
+def pseudo_tracks(cp: pd.DataFrame, knowledge: dict, cfg: dict, base, sid: str, ver: str) -> pd.DataFrame:
+    """航迹缺失时的伪航迹：对锚定脉冲占比低的对象做被动定位，可靠结点写成 B 类格式（track_id ≥ PSEUDO_ID_BASE，
+    散射等级 unknown），供第二轮锚定 / 精修 / 几何否决 / 相位改归使用；不参与 A-B 关联输出。"""
+    pc = cfg.get("pseudo_anchor", {})
+    models = knowledge.get("models", {})
+    w = cp.n.values.astype(float)
+    anc = (cp["anchor"].values >= 0) if "anchor" in cp.columns else np.zeros(len(cp), bool)
+    tot = pd.Series(w).groupby(cp.object_id.values).sum()
+    got = pd.Series(w * anc).groupby(cp.object_id.values).sum()
+    otype = cp.groupby("object_id").obj_type.first()
+    sel = {int(o): models.get(otype.loc[o], {}).get("domain") == "air" for o in tot.index
+           if got.loc[o] < pc.get("obj_max_anchor", 0.5) * tot.loc[o] and tot.loc[o] >= pc.get("min_pulses", 2000)}
+    if not sel:
+        return pd.DataFrame()
+    P = passive_tracks(cp, sel, cfg)
+    rows = []
+    for o, r in P.items():
+        rel = r["reliable"]
+        if rel.sum() < pc.get("min_knots", 10) or r["phase_hit"] < pc.get("min_phase_hit", 0.5):
+            continue
+        t = r["tk"][rel]
+        rows.append(pd.DataFrame({
+            "scenario_id": sid, "data_version": ver, "track_id": PSEUDO_ID_BASE + int(o),
+            "datetime": base + pd.to_timedelta(t, unit="s"), "target_longitude": r["lon"][rel], "target_latitude": r["lat"][rel],
+            "target_height": max(r["z"], 0.0), "target_type": "unknown", "target_class": "",
+            "preset_type": str(otype.loc[o])}))
+    return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()

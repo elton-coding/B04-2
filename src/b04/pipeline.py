@@ -210,6 +210,23 @@ def run_scenario(a: pd.DataFrame, b: pd.DataFrame, models: dict, knowledge: dict
     if dk:
         log.info("实测测向误差大于给定值，方位门限放大 %s", {k_: tuple(round(x, 2) for x in v) for k_, v in dk.items()})
     cpi_of, cp, proba = cluster_and_type(a, models, knowledge, cfg, b, ext)
+    pc = cfg.get("pseudo_anchor", {})
+    if pc.get("enabled", False) and len(cp):
+        # 航迹缺失多时：首轮对象做被动定位生成伪航迹，与真实航迹一起重跑对象形成（伪航迹不进入关联）
+        w = cp.n.values.astype(float)
+        frac = float(w[cp["anchor"].values >= 0].sum() / max(w.sum(), 1.0))
+        if frac < pc.get("max_anchor", 0.6):
+            from .locate import PSEUDO_ID_BASE, pseudo_tracks
+            pb = pseudo_tracks(cp, knowledge, cfg, scenario_base_time(a), str(a.scenario_id.iloc[0]), str(a.data_version.iloc[0]))
+            log.info("伪航迹锚定：锚定占比 %.2f，生成 %d 条伪航迹", frac, pb.track_id.nunique() if len(pb) else 0)
+            if len(pb):
+                ext2 = {}
+                bb = pd.concat([b, pb], ignore_index=True) if b is not None and len(b) else pb
+                cpi_of, cp, proba = cluster_and_type(a, models, knowledge, cfg, bb, ext2)
+                cp.loc[cp.anchor_track >= PSEUDO_ID_BASE, "anchor_track"] = -1  # 关联先验只用真实航迹
+                ext2["tdoa"] = ext.get("tdoa")  # 关联沿用首轮（只含真实航迹）的 TDOA 配对
+                ext2["track_dl"] = {k: v for k, v in (ext2.get("track_dl") or {}).items() if k < PSEUDO_ID_BASE}
+                ext = ext2
     feat = state_features(cp, models["type_codes"])
     cp["state"] = predict_states(models["state1"], models["state2"], feat)
     tm.lap("状态识别")

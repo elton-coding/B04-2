@@ -23,11 +23,27 @@ B_COLS = ["scenario_id", "data_version", "track_id", "datetime", "target_longitu
           "target_latitude", "target_height", "target_type", "target_class"]
 
 
-def _read_csv(path: str) -> pd.DataFrame:
+def _read_csv(path: str, usecols: list[str] | None = None) -> pd.DataFrame:
+    if usecols is not None:
+        have = _sniff_header(path)
+        usecols = [c for c in have if c in usecols] or None
     try:
-        return pd.read_csv(path, engine="pyarrow")
-    except Exception:  # pyarrow 解析失败时回退
-        return pd.read_csv(path, low_memory=False)
+        # 分块流式读取（64 MB 一块）再拼接：峰值内存约为结果表的 1.7 倍，整表读取约 3–5 倍
+        import pyarrow.csv as pacsv
+
+        r = pacsv.open_csv(path, read_options=pacsv.ReadOptions(block_size=64 << 20),
+                           convert_options=pacsv.ConvertOptions(include_columns=usecols) if usecols else None)
+        parts = [batch.to_pandas() for batch in r]
+        if not parts:
+            raise ValueError("空文件")
+        df = parts[0] if len(parts) == 1 else pd.concat(parts, ignore_index=True)
+        del parts
+        return df
+    except Exception:  # 类型推断跨块不一致等：回退为整表读取
+        try:
+            return pd.read_csv(path, engine="pyarrow", usecols=usecols)
+        except Exception:
+            return pd.read_csv(path, low_memory=False, usecols=usecols)
 
 
 def _sniff_header(path: str) -> list[str]:
@@ -50,15 +66,22 @@ def discover_inputs(data_root: str) -> tuple[list[str], list[str]]:
 
 def normalize_a(df: pd.DataFrame) -> pd.DataFrame:
     df = df.rename(columns={k: v for k, v in _RENAME.items() if k in df.columns and k.startswith("sensor")})
-    for c in ["scenario_id", "data_version"]:
-        df[c] = df[c].astype(str)
+    df = _dedup_columns(df)
+    for c in ["scenario_id", "data_version"]:  # 类别型：千万行时比逐行字符串省约 1 GB
+        df[c] = df[c].astype("category").cat.rename_categories(lambda x: str(x))
     df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
     for c in ["toa", "param1", "param2", "param3", "doa", "sensor_longitude", "sensor_latitude", "sensor_height"]:
         df[c] = pd.to_numeric(df[c], errors="coerce").astype("float64")
-    df["platform_id"] = df["platform_id"].astype("int64")
+    pid = pd.to_numeric(df["platform_id"], errors="coerce")
+    df["platform_id"] = pid.fillna(pid.mode().iloc[0] if pid.notna().any() else 0).astype("int64")
     df["pulse_id"] = df["pulse_id"].astype("int64")
-    # toa 单位自检：赛题约定 μs；若同节点相邻脉冲间隔中位数远超正常量级（交错脉冲流通常为数十~数百 μs），按 ns 换算
-    med = df.sort_values(["platform_id", "toa"]).groupby("platform_id").toa.diff().median()
+    # toa 单位自检：赛题约定 μs；若同节点相邻脉冲间隔中位数远超正常量级（交错脉冲流通常为数十~数百 μs），按 ns 换算。
+    # 只对 (节点, toa) 两列排序，避免整表复制（大场景内存峰值）
+    pv, tv = df["platform_id"].to_numpy(), df["toa"].to_numpy()
+    o = np.lexsort((tv, pv))
+    d = np.diff(tv[o])
+    d = d[(pv[o][1:] == pv[o][:-1]) & np.isfinite(d)]
+    med = float(np.median(d)) if len(d) else np.nan
     if np.isfinite(med) and med > 5000:
         import logging
         logging.getLogger("b04").warning("toa 相邻间隔中位数 %.0f 异常，按 ns→μs 换算", med)
@@ -66,29 +89,65 @@ def normalize_a(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _dedup_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """改名后出现同名列（两种拼写并存）：逐行取第一个非空值。"""
+    if not df.columns.duplicated().any():
+        return df
+    out = {}
+    for c in dict.fromkeys(df.columns):
+        x = df.loc[:, df.columns == c]
+        out[c] = x.bfill(axis=1).iloc[:, 0] if x.shape[1] > 1 else x.iloc[:, 0]
+    return pd.DataFrame(out)
+
+
 def normalize_b(df: pd.DataFrame) -> pd.DataFrame:
     df = df.rename(columns={k: v for k, v in _RENAME.items() if k in df.columns and not k.startswith("sensor")})
+    df = _dedup_columns(df)
+    for c, v in (("target_type", "unknown"), ("target_class", ""), ("target_height", 0.0)):
+        if c not in df.columns:  # 可选列缺失时补默认值
+            df[c] = v
     for c in ["scenario_id", "data_version"]:
         df[c] = df[c].astype(str)
     df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
     for c in ["target_longitude", "target_latitude", "target_height"]:
         df[c] = pd.to_numeric(df[c], errors="coerce").astype("float64")
-    df["track_id"] = df["track_id"].astype("int64")
+    tid = pd.to_numeric(df["track_id"], errors="coerce")
+    df = df[tid.notna()].copy()
+    df["track_id"] = tid[tid.notna()].astype("int64").values
     df["target_type"] = df["target_type"].astype(str).str.strip().str.lower()
     return df
 
 
-def load_inputs(data_root: str) -> dict[tuple[str, str], tuple[pd.DataFrame, pd.DataFrame]]:
-    """返回 {(scenario_id, data_version): (A, B)}。"""
+A_READ = A_COLS + ["sensor_lontitude"]
+TRUTH = ["target_id", "target_class", "target_state"]
+
+
+def load_inputs(data_root: str, keep_truth: bool = False) -> dict[tuple[str, str], tuple[pd.DataFrame, pd.DataFrame]]:
+    """返回 {(scenario_id, data_version): (A, B)}。推理时只读所需列（真值列仅训练 / 评估用，keep_truth=True），
+    单文件不做 concat、单场景不再复制，大场景内存峰值约减半。"""
     a_files, b_files = discover_inputs(data_root)
     if not a_files:
         raise FileNotFoundError(f"在 {data_root} 下未找到 A 类脉冲 CSV")
-    A = normalize_a(pd.concat([_read_csv(f) for f in a_files], ignore_index=True))
+    cols = A_READ + (TRUTH if keep_truth else [])
+    parts = [_read_csv(f, cols) for f in a_files]
+    A = parts[0] if len(parts) == 1 else pd.concat(parts, ignore_index=True)
+    del parts
+    A = normalize_a(A)
+    B = pd.DataFrame(columns=B_COLS)
     if b_files:
-        B = normalize_b(pd.concat([_read_csv(f) for f in b_files], ignore_index=True))
-    else:
-        B = pd.DataFrame(columns=B_COLS)
+        try:
+            B = normalize_b(pd.concat([_read_csv(f) for f in b_files], ignore_index=True))
+        except Exception:  # B 类读取失败不影响 A 类处理（按无航迹运行）
+            import logging
+            import traceback
+            logging.getLogger("b04").error("B 类数据读取失败，按无航迹运行：%s", traceback.format_exc())
+            B = pd.DataFrame(columns=B_COLS)
     out = {}
+    if A.scenario_id.nunique() == 1 and A.data_version.nunique() == 1:
+        key = (A.scenario_id.iloc[0], A.data_version.iloc[0])
+        b = B[(B.scenario_id == key[0]) & (B.data_version == key[1])] if len(B) else B
+        out[key] = (A, b.reset_index(drop=True))
+        return out
     for key, a in A.groupby(["scenario_id", "data_version"], sort=False):
         b = B[(B.scenario_id == key[0]) & (B.data_version == key[1])] if len(B) else B
         out[key] = (a.reset_index(drop=True), b.reset_index(drop=True))

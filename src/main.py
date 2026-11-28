@@ -12,12 +12,16 @@ import os
 import sys
 import traceback
 
+# Arrow 默认内存池（jemalloc / mimalloc）释放后不归还系统，CSV 读入后常驻内存多出 2–3 GB；改用系统分配器
+os.environ.setdefault("ARROW_DEFAULT_MEMORY_POOL", "system")
+
 import joblib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from b04 import io  # noqa: E402
 from b04.config import load_config, load_knowledge  # noqa: E402
 from b04.pipeline import run_scenario  # noqa: E402
+from b04.safety import run_with_fallback  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -72,7 +76,8 @@ def main():
         log.info("场景 %s_%s: A=%d 脉冲, B=%d 点 / %d 航迹", sid, ver, len(a), len(b),
                  b.track_id.nunique() if len(b) else 0)
         try:
-            pred, links, extras = run_scenario(a, b, models, kn, cfg)
+            # 分级降级：完整流程 → 安全模式 → 不用 B 航迹 → 应急基线；输出先修复再自检，保证总能写出合法结果
+            pred, links, extras, mode = run_with_fallback(a, b, models, kn, cfg, run_scenario)
             errs = io.validate_outputs(a, b, pred, links)
             if errs:
                 log.warning("格式自检问题: %s", errs)
@@ -80,7 +85,8 @@ def main():
             log.info("已写出 %s, %s", p1, p2)
             if args.report or args.task in ("report", "full") or os.environ.get("B04_REPORT") == "1":
                 try:
-                    make_report(a, b, pred, links, extras, kn, os.path.join(args.out_dir, "report"))
+                    if extras:
+                        make_report(a, b, pred, links, extras, kn, os.path.join(args.out_dir, "report"))
                 except Exception:  # 报告失败不影响结果表
                     traceback.print_exc()
         except Exception:

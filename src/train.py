@@ -50,7 +50,7 @@ def main():
     if args.type_model:
         cfg["recognize"]["type_model"] = args.type_model
     kn = load_knowledge(os.path.join(ROOT, "config", "knowledge.yaml"))
-    data = io.load_inputs(args.data_root)
+    data = io.load_inputs(args.data_root, keep_truth=True)
     for (sid, ver), (a, b) in data.items():
         logging.info("场景 %s_%s: A=%d B=%d", sid, ver, len(a), len(b))
         if args.drop_rate > 0:

@@ -220,13 +220,27 @@ def anchor_assign(cp: pd.DataFrame, proba: pd.DataFrame, emis: np.ndarray, track
             if __import__("os").environ.get("B04_DEBUG"):
                 print("航迹判型", tids[j], [(classes[x[2]], round(x[0], 2), -x[1], None if np.isnan(x[3]) else round(x[3], 2),
                                           None if np.isnan(x[4]) else round(x[4], 2)) for x in cand], "→", classes[best[2]], flush=True)
+    # 伪航迹（被动定位生成，locate.pseudo_tracks）带来源对象的型号：直接采用，不参与投票与伴随去重
+    preset = set()
+    if "preset_type" in tracks.columns:
+        pt = tracks.groupby("track_id").preset_type.first()
+        for j, tid in enumerate(tids):
+            v = pt.get(tid)
+            if isinstance(v, str) and v in classes:
+                ci = classes.index(v)
+                ttype[j] = ci
+                tmask[j] = geo_ok[:, j] & (best_t == ci)
+                cm = cost[tmask[j], j]
+                tmed[j] = float(np.median(cm)) if len(cm) else 0.0
+                tfine[j] = np.nan
+                preset.add(j)
     # 一个辐射源只对应一条航迹：同型号且支撑单元大量重合（同一辐射源同时符合两条近距伴随航迹）时，
     # 只保留残差更小的航迹，另一条视为静默伴随平台（不判型号）
     js = sorted(ttype)
     for x in range(len(js)):
         for y in range(x + 1, len(js)):
             ja, jb = js[x], js[y]
-            if ja not in ttype or jb not in ttype or ttype[ja] != ttype[jb]:
+            if ja not in ttype or jb not in ttype or ttype[ja] != ttype[jb] or ja in preset or jb in preset:
                 continue
             ov = ew[tmask[ja] & tmask[jb]].sum() / max(min(ew[tmask[ja]].sum(), ew[tmask[jb]].sum()), 1e-9)
             if ov > ac.get("dup_overlap", 0.5) and _track_dist_med(tracks, tids[ja], tids[jb]) < ac.get("dup_dist_m", 600.0):

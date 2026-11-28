@@ -117,8 +117,17 @@ def disp_w(s):
 def table(rows):
     ncol = len(rows[0])
     need = [max(max(disp_w(r[j]) for r in rows), 4) for j in range(ncol)]
-    tot = sum(need)
-    widths = [max(700, int(TEXT_W * n / tot)) for n in need]
+    # 短列（数字等）按内容给足宽度不换行，剩余宽度按内容长度分给长列（避免长文字列把数字列挤成两行）
+    body = [max([disp_w(r[j]) for r in rows[1:]] or [4]) for j in range(ncol)]  # 表头可换行，按表体定宽
+    req = [max(n, 4) * 115 + 240 for n in body]
+    short = [n <= 10 for n in body]
+    rest = TEXT_W - sum(r for r, sh in zip(req, short) if sh)
+    long_tot = sum(n for n, sh in zip(need, short) if not sh)  # noqa: E501
+    if long_tot and rest >= 1200 * sum(not x for x in short):
+        widths = [req[j] if short[j] else int(rest * need[j] / long_tot) for j in range(ncol)]
+    else:
+        tot = sum(need)
+        widths = [max(700, int(TEXT_W * n / tot)) for n in need]
     widths[-1] += TEXT_W - sum(widths)
     left = [need[j] > 22 for j in range(ncol)]
     grid = "".join(f'<w:gridCol w:w="{w}"/>' for w in widths)

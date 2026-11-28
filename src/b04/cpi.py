@@ -158,25 +158,36 @@ def extract_cpis(a: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, pd.DataFrame]:
     cpi_of = np.full(len(a), -1, np.int64)
     offset = 0
     for pid, idx in a.groupby("platform_id", sort=True).indices.items():
-        sub = a.iloc[idx]
-        order = np.argsort(sub.toa.values, kind="stable")
+        order = np.argsort(a.toa.values[idx], kind="stable")  # 只取所需列，不复制该节点整表
         ii = idx[order]
-        air = float(np.nanmedian(sub.sensor_height.values)) > 100.0
+        air = float(np.nanmedian(a.sensor_height.values[idx])) > 100.0
         doa_err = c["doa_err_air"] if air else c["doa_err_sea"]
-        ch = chain_pulses(a.toa.values[ii], a.param1.values[ii], a.param2.values[ii], a.param3.values[ii],
+        tq = a.toa.values[ii].astype(np.float64)
+        if len(tq) > 1 and (np.diff(tq) <= 0).any():
+            # 同节点到达时刻重复（碰撞 / 填补的缺失值）：串接只需严格递增，错开 1 ns（不改原数据）
+            k = np.arange(len(tq)) * 1e-3
+            tq = np.maximum.accumulate(tq - k) + k
+        ch = chain_pulses(tq, a.param1.values[ii], a.param2.values[ii], a.param3.values[ii],
                           a.doa.values[ii], 2.0 * doa_err + c["doa_w_extra"], c["min_pri"], c["max_pri"],
                           c["pri_tol"], c["jit_frac"], c["rf_w"], c["pw_w"], c["amp_w"], c["kmax"])
         cpi_of[ii] = ch + offset
         offset += int(ch.max()) + 1
+    # 按 (cpi, toa) 稳定排序后直接按排列取列（不先建整表再排序复制，大场景内存峰值更低；顺序与原 sort_values 相同）
+    o = np.lexsort((a.toa.values, cpi_of))
     t = pd.DataFrame({
-        "cpi": cpi_of, "platform_id": a.platform_id.values, "toa": a.toa.values, "rf": a.param1.values,
-        "pw": a.param2.values, "amp": a.param3.values, "doa": a.doa.values,
-        "slon": a.sensor_longitude.values, "slat": a.sensor_latitude.values, "sh": a.sensor_height.values,
-    }).sort_values(["cpi", "toa"], kind="stable")
-    t["dt"] = t.groupby("cpi").toa.diff()
+        "cpi": cpi_of[o], "platform_id": a.platform_id.values[o], "toa": a.toa.values[o], "rf": a.param1.values[o],
+        "pw": a.param2.values[o], "amp": a.param3.values[o], "doa": a.doa.values[o],
+        "slon": a.sensor_longitude.values[o], "slat": a.sensor_latitude.values[o], "sh": a.sensor_height.values[o],
+    }, index=o)
+    del o
+    first = np.r_[True, t.cpi.values[1:] != t.cpi.values[:-1]]
+    dtv = np.diff(t.toa.values, prepend=np.nan)
+    dtv[first] = np.nan
+    t["dt"] = dtv
     # DOA 圆周均值：以首脉冲为参考累加差值
-    ref = t.groupby("cpi").doa.transform("first")
-    t["ddoa"] = angdiff(t.doa.values, ref.values)
+    ref = t.doa.values[np.maximum.accumulate(np.where(first, np.arange(len(t)), 0))]
+    t["ddoa"] = angdiff(t.doa.values, ref)
+    del ref, dtv, first
     g = t.groupby("cpi", sort=True)
     cp = g.agg(platform_id=("platform_id", "first"), n=("toa", "size"), t0=("toa", "first"), t1=("toa", "last"),
                rf=("rf", "mean"), pw=("pw", "mean"), amp=("amp", "mean"), amp_sd=("amp", "std"),
@@ -186,7 +197,7 @@ def extract_cpis(a: pd.DataFrame, cfg: dict) -> tuple[np.ndarray, pd.DataFrame]:
     # 漏脉冲鲁棒的 PRI/抖动估计：以最小间隔为基准，取 1 倍间隔的中位数；抖动 = 间隔偏离整数倍的中位数
     t["pmin"] = t.cpi.map(cp.pri_min)
     one = t.dt <= 1.5 * t.pmin
-    cp["pri"] = t[one].groupby("cpi").dt.median().reindex(cp.index)
+    cp["pri"] = t.dt[one].groupby(t.cpi[one]).median().reindex(cp.index)
     t["pri1"] = t.cpi.map(cp.pri)
     dev = (t.dt - np.round(t.dt / t.pri1) * t.pri1).abs()
     cp["pri_dev"] = dev.groupby(t.cpi).median().reindex(cp.index)
@@ -202,14 +213,15 @@ def estimate_doa_halfwidth(a: pd.DataFrame, min_pairs: int = 2000) -> dict:
     （决定 CPI 内方位极差上限），90% 分位 = 2h(1 - √0.1) 给出与标准差相当的等效半宽（决定 CPI 级方位误差）。
     训练/测试集两种估计都是空中 1.5°、海面 3.0°，与赛题给定一致。返回 {platform_id: (支撑半宽, 等效半宽)}。"""
     out = {}
-    for pid, g in a.groupby("platform_id", sort=True):
-        g = g.sort_values("toa", kind="stable")
-        dt = np.diff(g.toa.values.astype(float))
+    for pid, idx in a.groupby("platform_id", sort=True).indices.items():
+        ii = idx[np.argsort(a.toa.values[idx], kind="stable")]  # 只取所需列，不复制整表
+        dt = np.diff(a.toa.values[ii].astype(float))
         if len(dt) < 3:
             continue
-        drf = np.abs(np.diff(g.param1.values))
-        dpw = np.abs(np.diff(g.param2.values))
-        dd = np.abs(angdiff(g.doa.values[1:], g.doa.values[:-1]))
+        drf = np.abs(np.diff(a.param1.values[ii]))
+        dpw = np.abs(np.diff(a.param2.values[ii]))
+        dv = a.doa.values[ii]
+        dd = np.abs(angdiff(dv[1:], dv[:-1]))
         same = (np.abs(dt[1:] - dt[:-1]) <= 0.05) & (dt[1:] <= 2000.0) & (drf[1:] <= 3.0) & (drf[:-1] <= 3.0) & (dpw[1:] <= 0.15)
         x = dd[1:][same]
         if len(x) < min_pairs:

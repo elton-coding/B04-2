@@ -105,7 +105,7 @@ def main():
     log = logging.getLogger("robust")
     cfg = load_config()
     kn = load_knowledge(os.path.join(ROOT, "config", "knowledge.yaml"))
-    (a, b), = io.load_inputs(args.data_root).values()
+    (a, b), = io.load_inputs(args.data_root, keep_truth=True).values()
     rng = np.random.default_rng(0)
     a = a[rng.random(len(a)) >= args.drop_rate].reset_index(drop=True)
     a["target_id"] = a.target_id.astype(np.int64)

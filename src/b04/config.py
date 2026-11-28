@@ -197,6 +197,14 @@ DEFAULT = {
         "conflict_frac": 0.06,      # 允许的冲突 CPI 比例（同源抖动串接伪影约 1–6%）
         "max_merges": 10,
     },
+    "pseudo_anchor": {              # 航迹缺失多时用被动定位伪航迹重跑对象形成（locate.pseudo_tracks）
+        "enabled": True,
+        "max_anchor": 0.6,           # 首轮锚定脉冲占比低于此值才启用
+        "obj_max_anchor": 0.5,       # 对象锚定占比低于此值才生成伪航迹
+        "min_pulses": 2000,
+        "min_knots": 10,
+        "min_phase_hit": 0.5,
+    },
     "link": {
         "res_margin_deg": 2.0,      # 方位残差容差 = 节点 DOA 误差 + 余量
         "min_hit": 0.85,
